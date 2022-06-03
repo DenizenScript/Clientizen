@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen;
 
+import com.denizenscript.clientizen.network.NetworkManager;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ public class Clientizen implements ClientModInitializer {
 	@Override
 	public void onInitializeClient(ModContainer mod) {
 		version = mod.metadata().version().raw();
+		NetworkManager.instance = new NetworkManager();
 		LOGGER.info("Loading Clientizen v" + version);
 	}
 }
