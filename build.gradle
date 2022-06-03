@@ -29,6 +29,8 @@ dependencies {
 	modImplementation libs.quilted.fabric.api
 
 	implementation("com.denizenscript:denizencore:1.90.1-SNAPSHOT")
+
+	include("com.denizenscript:denizencore:1.90.1-SNAPSHOT")
 }
 
 processResources {
