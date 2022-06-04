@@ -189,7 +189,10 @@ public class Debug {
 		}
 		if (throwErrorEvent) {
 			throwErrorEvent = false;
-			boolean cancel = ScriptGeneratesErrorScriptEvent.instance.handle(message, sourceQueue, sourceScript, source == null ? -1 : source.internal.lineNumber);
+			boolean cancel = false;
+			if (ScriptGeneratesErrorScriptEvent.instance != null) {
+				cancel = ScriptGeneratesErrorScriptEvent.instance.handle(message, sourceQueue, sourceScript, source == null ? - 1 : source.internal.lineNumber);
+			}
 			throwErrorEvent = true;
 			if (cancel) {
 				errorDuplicatePrevention = false;
@@ -270,7 +273,10 @@ public class Debug {
 			while (thrown.getCause() != null) {
 				thrown = thrown.getCause();
 			}
-			boolean cancel = ServerGeneratesExceptionScriptEvent.instance.handle(thrown, errorMessage, source == null || source.queue == null ? CommandExecutor.currentQueue : source.queue);
+			boolean cancel = false;
+			if (ServerGeneratesExceptionScriptEvent.instance != null) {
+				cancel = ServerGeneratesExceptionScriptEvent.instance.handle(thrown, errorMessage, source == null || source.queue == null ? CommandExecutor.currentQueue : source.queue);
+			}
 			throwErrorEvent = true;
 			if (cancel) {
 				return;
