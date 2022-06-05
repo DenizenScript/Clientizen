@@ -273,32 +273,8 @@ public class DenizenCoreImpl implements DenizenImplementation {
 		return Formatting.AQUA.toString();
 	}
 
-	public static ClassLoader loader = DenizenCoreImpl.class.getClassLoader();
-	public static Class<?> pluginClassLoaderClass;
-	public static boolean isPluginLoader;
-	public static Map<String, Class<?>> classMap;
-
-	static {
-		try {
-			pluginClassLoaderClass = Class.forName("org.bukkit.plugin.java.PluginClassLoader");
-			isPluginLoader = pluginClassLoaderClass.isAssignableFrom(loader.getClass());
-			if (isPluginLoader) {
-				classMap = ReflectionHelper.getFieldValue(pluginClassLoaderClass, "classes", loader);
-			}
-		}
-		catch (Throwable ex) {
-			Debug.echoError(ex);
-		}
-	}
-
 	@Override
 	public void saveClassToLoader(Class<?> clazz) {
-		if (!isPluginLoader) {
-			return;
-		}
-		if (classMap.containsKey(clazz.getName())) {
-			Debug.echoError("Class " + clazz.getName() + " already defined?");
-		}
-		classMap.put(clazz.getName(), clazz);
+		return;
 	}
 }
