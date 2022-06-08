@@ -1,12 +1,17 @@
 package com.denizenscript.clientizen.network;
 
+import com.denizenscript.clientizen.Clientizen;
+import com.denizenscript.denizencore.scripts.ScriptHelper;
+import com.denizenscript.denizencore.scripts.ScriptRegistry;
+import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientPlayConnectionEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
+
+import java.util.Map;
 
 public class NetworkManager {
 
@@ -16,20 +21,29 @@ public class NetworkManager {
 	public NetworkManager() {
 		Debug.log("NetworkManager", "Initializing NetworkManager...");
 		instance = this;
+		registerInChannel(Channel.RECIVE_SCRIPTS);
 		ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
 			Debug.log("NetworkManager", "Sending confirmation packet...");
 			send(Channel.SEND_CONFIRM, null);
 		}));
 	}
 
-	public void handlePluginMessage(Channel channel, MinecraftClient client, PacketByteBuf buf) {
+	public void handlePluginMessage(Channel channel, MinecraftClient client, DataDeserializer data) {
 		Debug.log("NetworkManager", "Received plugin message on channel '" + channel + "'");
+		switch (channel) {
+			case RECIVE_SCRIPTS:
+				for (Map.Entry<String, String> entry : data.readStringMap().entrySet()) {
+					ScriptHelper.additionalScripts.add(YamlConfiguration.load(
+							ScriptHelper.clearComments(entry.getKey(), entry.getValue(), true)));
+				}
+
+		}
 	}
 
 	public void registerInChannel(Channel channel) {
 		Debug.log("NetworkManager", "Registering in channel " + channel);
 		ClientPlayNetworking.registerGlobalReceiver(channel.getIdentifier(), (client, handler, buf, responseSender) -> {
-			handlePluginMessage(channel, client, buf);
+			handlePluginMessage(channel, client, new DataDeserializer(buf));
 		});
 	}
 
@@ -45,7 +59,8 @@ public class NetworkManager {
 	}
 
 	enum Channel {
-		SEND_CONFIRM("receive_confirmation");
+		SEND_CONFIRM("receive_confirmation"),
+		RECIVE_SCRIPTS("set_scripts");
 
 		private final String channel;
 

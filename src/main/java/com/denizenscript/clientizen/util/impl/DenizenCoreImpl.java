@@ -7,21 +7,17 @@ import com.denizenscript.denizencore.DenizenImplementation;
 import com.denizenscript.denizencore.flags.FlaggableObject;
 import com.denizenscript.denizencore.objects.Argument;
 import com.denizenscript.denizencore.objects.ObjectTag;
-import com.denizenscript.denizencore.objects.core.ScriptTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.ScriptEntryData;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
 import com.denizenscript.denizencore.scripts.queues.ScriptQueue;
 import com.denizenscript.denizencore.tags.TagContext;
-import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
-import com.denizenscript.denizencore.utilities.ReflectionHelper;
 import com.denizenscript.denizencore.utilities.debugging.Debuggable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Formatting;
 
 import java.io.File;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import static com.denizenscript.denizencore.utilities.debugging.Debug.DebugElement;
@@ -30,7 +26,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
 	@Override
 	public File getScriptFolder() {
-		return new File(MinecraftClient.getInstance().runDirectory + File.separator + "scripts");
+		return null;
 	}
 
 	@Override
