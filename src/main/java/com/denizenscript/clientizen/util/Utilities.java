@@ -1,8 +1,10 @@
 package com.denizenscript.clientizen.util;
 
 import com.denizenscript.clientizen.util.debugging.Debug;
+import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
+import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
 import java.util.Arrays;
@@ -58,5 +60,14 @@ public class Utilities {
 		}
 		int dot = lown.lastIndexOf('.');
 		return dot == -1 || !FORBIDDEN_EXTENSIONS.contains(lown.substring(dot + 1));
+	}
+
+	public static void runOnRenderThread(Runnable runnable) {
+		if (DenizenCore.implementation.isSafeThread()) {
+			runnable.run();
+		}
+		else {
+			MinecraftClient.getInstance().execute(runnable);
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.denizenscript.clientizen.util.impl;
 
 import com.denizenscript.clientizen.Clientizen;
+import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.clientizen.util.debugging.Debug;
 import com.denizenscript.denizencore.DenizenImplementation;
@@ -26,7 +27,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
 	@Override
 	public File getScriptFolder() {
-		return null;
+		return new File(MinecraftClient.getInstance().runDirectory + File.separator + "clientizen/scripts");
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
 	@Override
 	public ScriptEntryData getEmptyScriptEntryData() {
-		return null;
+		return new ClientizenScriptEntryData();
 	}
 
 	@Override
@@ -126,12 +127,12 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
 	@Override
 	public TagContext getTagContext(ScriptContainer scriptContainer) {
-		return null;
+		return new ClientizenTagContext(scriptContainer);
 	}
 
 	@Override
 	public TagContext getTagContext(ScriptEntry scriptEntry) {
-		return null;
+		return new ClientizenTagContext(scriptEntry);
 	}
 
 	@Override

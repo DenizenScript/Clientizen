@@ -1,8 +1,8 @@
 package com.denizenscript.clientizen.network;
 
-import com.denizenscript.clientizen.Clientizen;
+import com.denizenscript.clientizen.util.Utilities;
+import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.scripts.ScriptHelper;
-import com.denizenscript.denizencore.scripts.ScriptRegistry;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +21,7 @@ public class NetworkManager {
 	public NetworkManager() {
 		Debug.log("NetworkManager", "Initializing NetworkManager...");
 		instance = this;
-		registerInChannel(Channel.RECIVE_SCRIPTS);
+		registerInChannel(Channel.SET_SCRIPTS);
 		ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
 			Debug.log("NetworkManager", "Sending confirmation packet...");
 			send(Channel.SEND_CONFIRM, null);
@@ -31,12 +31,16 @@ public class NetworkManager {
 	public void handlePluginMessage(Channel channel, MinecraftClient client, DataDeserializer data) {
 		Debug.log("NetworkManager", "Received plugin message on channel '" + channel + "'");
 		switch (channel) {
-			case RECIVE_SCRIPTS:
-				for (Map.Entry<String, String> entry : data.readStringMap().entrySet()) {
-					ScriptHelper.additionalScripts.add(YamlConfiguration.load(
-							ScriptHelper.clearComments(entry.getKey(), entry.getValue(), true)));
-				}
-
+			case SET_SCRIPTS:
+				Map<String, String> scripts = data.readStringMap();
+				Utilities.runOnRenderThread(() -> {
+					ScriptHelper.additionalScripts.clear();
+					for (Map.Entry<String, String> entry : scripts.entrySet()) {
+						ScriptHelper.additionalScripts.add(YamlConfiguration.load(
+								ScriptHelper.clearComments(entry.getKey(), entry.getValue(), true)));
+					}
+					DenizenCore.reloadScripts();
+				});
 		}
 	}
 
@@ -60,7 +64,7 @@ public class NetworkManager {
 
 	enum Channel {
 		SEND_CONFIRM("receive_confirmation"),
-		RECIVE_SCRIPTS("set_scripts");
+		SET_SCRIPTS("set_scripts");
 
 		private final String channel;
 

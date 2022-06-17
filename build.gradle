@@ -28,9 +28,10 @@ dependencies {
 	// Quilted Fabric API will automatically pull in the correct QSL version.
 	modImplementation libs.quilted.fabric.api
 
-	implementation("com.denizenscript:denizencore:1.90.1-SNAPSHOT")
+	implementation include ("com.denizenscript:denizencore:1.90.1-SNAPSHOT")
 
-	include("com.denizenscript:denizencore:1.90.1-SNAPSHOT")
+
+	implementation include ("org.yaml:snakeyaml:1.30")
 }
 
 processResources {
