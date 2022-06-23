@@ -473,7 +473,8 @@ public class Debug {
 	}
 
 	public static String cleanTextForDebugOutput(String message) {
-		return message
+		// Remove colors as they don't render in the log file
+		/*return message
 				.replace("<Y>", Formatting.YELLOW.toString())
 				.replace("<O>", Formatting.GOLD.toString()) // 'orange'
 				.replace("<G>", Formatting.DARK_GRAY.toString())
@@ -482,7 +483,17 @@ public class Debug {
 				.replace("<A>", Formatting.AQUA.toString())
 				.replace("<R>", Formatting.DARK_RED.toString())
 				.replace("<LR>", Formatting.RED.toString())
-				.replace("<W>", Formatting.WHITE.toString());
+				.replace("<W>", Formatting.WHITE.toString());*/
+		return message
+				.replace("<Y>", "")
+				.replace("<O>", "")
+				.replace("<G>", "")
+				.replace("<LG>", "")
+				.replace("<GR>", "")
+				.replace("<A>", "")
+				.replace("<R>", "")
+				.replace("<LR>", "")
+				.replace("<W>", "");
 	}
 
 	public static int outputThisTick = 0;
