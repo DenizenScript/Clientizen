@@ -48,5 +48,6 @@ public class ClientizenCommandRegistry extends CommandRegistry {
 		this.registerCommand(WhileCommand.class);
 
 		registerCommand(NarrateCommand.class);
+		registerCommand(GuiCommand.class);
 	}
 }
