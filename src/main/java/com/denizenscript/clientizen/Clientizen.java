@@ -1,12 +1,12 @@
 package com.denizenscript.clientizen;
 
-import com.denizenscript.clientizen.events.ClientizenScriptEventRegistery;
+import com.denizenscript.clientizen.events.ClientizenScriptEventRegistry;
 import com.denizenscript.clientizen.network.NetworkManager;
-import com.denizenscript.clientizen.objects.ClientizenObjectRegistery;
+import com.denizenscript.clientizen.objects.ClientizenObjectRegistry;
 import com.denizenscript.clientizen.scripts.commands.ClientizenCommandRegistry;
-import com.denizenscript.clientizen.scripts.containers.ClientizenContainerRegistery;
+import com.denizenscript.clientizen.scripts.containers.ClientizenContainerRegistry;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
-import com.denizenscript.clientizen.tags.ClientizenTagRegistery;
+import com.denizenscript.clientizen.tags.ClientizenTagRegistry;
 import com.denizenscript.clientizen.util.impl.DenizenCoreImpl;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.DenizenImplementation;
@@ -14,7 +14,7 @@ import com.denizenscript.denizencore.scripts.ScriptHelper;
 import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import org.apache.logging.log4j.core.Core;
+import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
@@ -30,31 +30,49 @@ public class Clientizen implements ClientModInitializer {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ID);
 
+	public static Identifier id(String path) {
+		return new Identifier(ID, path);
+	}
+
 	public static String version;
 
 	public DenizenImplementation coreImplementation = new DenizenCoreImpl();
 
 	@Override
 	public void onInitializeClient(ModContainer mod) {
+		initCore();
+		version = mod.metadata().version().raw();
+		Debug.log("Clientizen", "Initializing Clientizen v" + version);
+		NetworkManager.instance = new NetworkManager();
+		registerAll();
+		applyConfig();
+		checkScriptsFolder();
+		ClientTickEvents.START.register(client -> DenizenCore.tick(50));
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			ScriptHelper.additionalScripts.clear();
+			DenizenCore.reloadScripts();
+		});
+	}
+
+	public void initCore() {
 		CoreUtilities.noDebugContext = new ClientizenTagContext(false, null, null);
 		CoreUtilities.noDebugContext.showErrors = () -> false;
 		CoreUtilities.basicContext = new ClientizenTagContext(true, null, null);
 		CoreUtilities.errorButNoDebugContext = new ClientizenTagContext(false, null, null);
 		DenizenCore.init(coreImplementation);
+	}
 
-		version = mod.metadata().version().raw();
-		Debug.log("Clientizen", "Loading Clientizen v" + version);
-		NetworkManager.instance = new NetworkManager();
-
+	public static void registerAll() {
 		ClientizenCommandRegistry commandRegistry = new ClientizenCommandRegistry();
 		commandRegistry.registerCommands();
 		DenizenCore.commandRegistry = commandRegistry;
-		ClientizenContainerRegistery.registerContainers();
-		ClientizenScriptEventRegistery.registerEvents();
-		ClientizenObjectRegistery.registerObjects();
-		ClientizenTagRegistery.registerTagHandlers();
+		ClientizenContainerRegistry.registerContainers();
+		ClientizenScriptEventRegistry.registerEvents();
+		ClientizenObjectRegistry.registerObjects();
+		ClientizenTagRegistry.registerTagHandlers();
+	}
 
-
+	public static void applyConfig() {
 		CoreConfiguration.allowConsoleRedirection = false;
 		CoreConfiguration.allowFileCopy = false;
 		CoreConfiguration.allowFileRead = false;
@@ -65,21 +83,13 @@ public class Clientizen implements ClientModInitializer {
 		CoreConfiguration.allowSQL = false;
 		CoreConfiguration.allowStrangeFileSaves = false;
 		CoreConfiguration.allowWebget = false;
+	}
 
+	public static void checkScriptsFolder() {
 		File scriptsFolder = DenizenCore.implementation.getScriptFolder();
 		if (!scriptsFolder.exists()) {
 			Debug.log("Creating scripts folder at " + scriptsFolder);
 			scriptsFolder.mkdir();
 		}
-
-		ClientTickEvents.START.register((event) -> {
-			DenizenCore.tick(50);
-		});
-
-		// Clear scripts received from the server on disconnect
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-			ScriptHelper.additionalScripts.clear();
-			DenizenCore.reloadScripts();
-		});
 	}
 }

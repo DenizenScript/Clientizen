@@ -1,6 +1,6 @@
 package com.denizenscript.clientizen.events;
 
-public class ClientizenScriptEventRegistery {
+public class ClientizenScriptEventRegistry {
 
 	public static void registerEvents() {
 
