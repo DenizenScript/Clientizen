@@ -7,6 +7,7 @@ import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 
 public class NarrateCommand extends AbstractCommand {
 
@@ -34,6 +35,6 @@ public class NarrateCommand extends AbstractCommand {
 		if (scriptEntry.dbCallShouldDebug()) {
 			Debug.report(scriptEntry, getName(), db("Narrating", text));
 		}
-		MinecraftClient.getInstance().player.sendChatMessage(text.asString());
+		MinecraftClient.getInstance().player.sendMessage(Text.literal(text.asString()), false);
 	}
 }
