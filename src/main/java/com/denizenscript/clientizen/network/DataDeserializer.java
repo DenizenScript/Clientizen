@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class DataDeserializer {
 
-	private ByteBuf buf;
+	private final ByteBuf buf;
 
 	public DataDeserializer(ByteBuf buf) {
 		this.buf = buf;

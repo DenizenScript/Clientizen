@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "clientizen",
+  "version": "${version}",
+  "name": "Clientizen",
+  "description": "Run DenizenScript on the client with platform-specific features",
+  "authors": [
+    "Aya",
+    "acikek"
+  ],
+  "contact": {
+    "homepage": "https://denizenscript.com/",
+    "sources": "https://github.com/acikek/Clientizen"
+  },
+  "license": "MIT",
+  "icon": "assets/clientizen/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.denizenscript.clientizen.Clientizen"
+    ]
+  },
+  "mixins": [
+    "clientizen.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric-api": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  }
+}

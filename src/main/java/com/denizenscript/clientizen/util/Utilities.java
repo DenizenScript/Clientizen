@@ -63,7 +63,7 @@ public class Utilities {
 	}
 
 	public static void runOnRenderThread(Runnable runnable) {
-		if (DenizenCore.implementation.isSafeThread()) {
+		if (/* DenizenCore.implementation.isSafeThread() */ true) {
 			runnable.run();
 		}
 		else {

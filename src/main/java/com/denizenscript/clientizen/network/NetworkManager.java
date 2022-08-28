@@ -6,14 +6,11 @@ import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.scripts.ScriptHelper;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import org.quiltmc.qsl.networking.api.PacketByteBufs;
-import org.quiltmc.qsl.networking.api.PacketSender;
-import org.quiltmc.qsl.networking.api.client.ClientPlayConnectionEvents;
-import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 import java.util.Map;
 
@@ -55,7 +52,7 @@ public class NetworkManager {
 //			Debug.echoError("Cannot send to channel " + channel);
 //			return;
 //		}
-		log("Sending message on channel '" + channel + "'");
+		log("Sending message on channel " + channel);
 		ClientPlayNetworking.send(channel.id, serializer == null ? PacketByteBufs.empty() : serializer.getByteBuf());
 	}
 
@@ -71,16 +68,16 @@ public class NetworkManager {
 		}
 
 		public void register(ClientizenReceiver receiver) {
-			log("Registering receiver on channel '" + this + "'");
+			log("Registering receiver on channel " + this);
 			ClientPlayNetworking.registerGlobalReceiver(id, (client, handler, buf, responseSender) -> {
-				log("Received plugin message on channel '" + this + "'");
+				log("Received plugin message on channel " + this);
 				receiver.receive(client, new DataDeserializer(buf));
 			});
 		}
 
 		@Override
 		public String toString() {
-			return id.toString();
+			return "'" + id.toString() + "'";
 		}
 	}
 

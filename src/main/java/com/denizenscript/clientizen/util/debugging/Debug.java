@@ -275,7 +275,7 @@ public class Debug {
 			}
 			boolean cancel = false;
 			if (ServerGeneratesExceptionScriptEvent.instance != null) {
-				cancel = ServerGeneratesExceptionScriptEvent.instance.handle(thrown, errorMessage, source == null || source.queue == null ? CommandExecutor.currentQueue : source.queue);
+				cancel = ServerGeneratesExceptionScriptEvent.instance.handle(thrown, errorMessage, source == null || source.queue == null ? CommandExecutor.currentQueue : source.queue, source.getScript(), 0);
 			}
 			throwErrorEvent = true;
 			if (cancel) {

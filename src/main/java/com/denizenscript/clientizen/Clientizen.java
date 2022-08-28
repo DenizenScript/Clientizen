@@ -14,11 +14,11 @@ import com.denizenscript.denizencore.scripts.ScriptHelper;
 import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
-import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
-import org.quiltmc.qsl.networking.api.client.ClientPlayConnectionEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,15 +39,15 @@ public class Clientizen implements ClientModInitializer {
 	public DenizenImplementation coreImplementation = new DenizenCoreImpl();
 
 	@Override
-	public void onInitializeClient(ModContainer mod) {
+	public void onInitializeClient() {
 		initCore();
-		version = mod.metadata().version().raw();
+		version = FabricLoader.getInstance().getModContainer(ID).get().getMetadata().getVersion().toString();
 		Debug.log("Clientizen", "Initializing Clientizen v" + version);
 		NetworkManager.instance = new NetworkManager();
 		registerAll();
 		applyConfig();
 		checkScriptsFolder();
-		ClientTickEvents.START.register(client -> DenizenCore.tick(50));
+		ClientTickEvents.START_CLIENT_TICK.register(client -> DenizenCore.tick(50));
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 			ScriptHelper.additionalScripts.clear();
 			DenizenCore.reloadScripts();
