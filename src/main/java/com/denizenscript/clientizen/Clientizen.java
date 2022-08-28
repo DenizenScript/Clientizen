@@ -63,9 +63,7 @@ public class Clientizen implements ClientModInitializer {
 	}
 
 	public static void registerAll() {
-		ClientizenCommandRegistry commandRegistry = new ClientizenCommandRegistry();
-		commandRegistry.registerCommands();
-		DenizenCore.commandRegistry = commandRegistry;
+		ClientizenCommandRegistry.registerCommands();
 		ClientizenContainerRegistry.registerContainers();
 		ClientizenScriptEventRegistry.registerEvents();
 		ClientizenObjectRegistry.registerObjects();

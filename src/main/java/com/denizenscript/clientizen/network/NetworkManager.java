@@ -1,7 +1,6 @@
 package com.denizenscript.clientizen.network;
 
 import com.denizenscript.clientizen.Clientizen;
-import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.scripts.ScriptHelper;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
@@ -34,7 +33,7 @@ public class NetworkManager {
 	public void registerReceivers() {
 		Channel.SET_SCRIPTS.register((client, data) -> {
 			Map<String, String> scripts = data.readStringMap();
-			Utilities.runOnRenderThread(() -> {
+			DenizenCore.runOnMainThread(() -> {
 				ScriptHelper.additionalScripts.clear();
 				for (Map.Entry<String, String> entry : scripts.entrySet()) {
 					ScriptHelper.additionalScripts.add(YamlConfiguration.load(
