@@ -120,11 +120,13 @@ public class DenizenCoreImpl implements DenizenImplementation {
 		return false;
 	}
 
-	private static final List<Formatting> colors = Arrays.stream(Formatting.values()).filter(Formatting::isColor).collect(Collectors.toList());
+//	private static final List<Formatting> colors = Arrays.stream(Formatting.values()).filter(Formatting::isColor).toList();
 
 	@Override
 	public String getRandomColor() {
-		return colors.get(CoreUtilities.getRandom().nextInt(colors.size())).toString();
+//		The only place debug currently goes to is log files, which have no color
+//		return colors.get(CoreUtilities.getRandom().nextInt(colors.size())).toString();
+		return "";
 	}
 
 	@Override
