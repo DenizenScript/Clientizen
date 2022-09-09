@@ -16,7 +16,8 @@ public class NarrateCommand extends AbstractCommand {
 		autoCompile();
 	}
 
-	public static void autoExecute(ScriptEntry scriptEntry, @ArgLinear @ArgName("text") String text) {
+	public static void autoExecute(ScriptEntry scriptEntry,
+								   @ArgLinear @ArgName("text") String text) {
 		MinecraftClient.getInstance().player.sendMessage(Text.of(text), false);
 	}
 }

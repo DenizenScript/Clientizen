@@ -15,10 +15,10 @@ import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,50 +27,25 @@ import java.io.File;
 public class Clientizen implements ClientModInitializer {
 
 	public static final String ID = "clientizen";
-
 	public static final Logger LOGGER = LoggerFactory.getLogger(ID);
-
-	public static Identifier id(String path) {
-		return new Identifier(ID, path);
-	}
-
 	public static String version;
 
 	public DenizenImplementation coreImplementation = new DenizenCoreImpl();
 
 	@Override
 	public void onInitializeClient() {
-		initCore();
+		// Note: intentionally before initializing Denizen-Core as it reads the implementation version
 		version = FabricLoader.getInstance().getModContainer(ID).get().getMetadata().getVersion().toString();
-		Debug.log("Clientizen", "Initializing Clientizen v" + version);
-		NetworkManager.instance = new NetworkManager();
-		registerAll();
-		applyConfig();
-		checkScriptsFolder();
-		ClientTickEvents.START_CLIENT_TICK.register(client -> DenizenCore.tick(50));
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-			ScriptHelper.additionalScripts.clear();
-			DenizenCore.reloadScripts();
-		});
-	}
+		LOGGER.info("Initializing Clientizen v" + version);
 
-	public void initCore() {
+		// Initialize Denizen-Core
 		CoreUtilities.noDebugContext = new ClientizenTagContext(false, null, null);
 		CoreUtilities.noDebugContext.showErrors = () -> false;
 		CoreUtilities.basicContext = new ClientizenTagContext(true, null, null);
 		CoreUtilities.errorButNoDebugContext = new ClientizenTagContext(false, null, null);
 		DenizenCore.init(coreImplementation);
-	}
 
-	public static void registerAll() {
-		ClientizenCommandRegistry.registerCommands();
-		ClientizenContainerRegistry.registerContainers();
-		ClientizenScriptEventRegistry.registerEvents();
-		ClientizenObjectRegistry.registerObjects();
-		ClientizenTagRegistry.registerTagHandlers();
-	}
-
-	public static void applyConfig() {
+		// Configure Denizen-Core
 		CoreConfiguration.allowConsoleRedirection = false;
 		CoreConfiguration.allowFileCopy = false;
 		CoreConfiguration.allowFileRead = false;
@@ -81,13 +56,34 @@ public class Clientizen implements ClientModInitializer {
 		CoreConfiguration.allowSQL = false;
 		CoreConfiguration.allowStrangeFileSaves = false;
 		CoreConfiguration.allowWebget = false;
-	}
 
-	public static void checkScriptsFolder() {
+		// Initialize NetworkManager
+		NetworkManager.init();
+
+		// Register commands, script containers, events, objects, and tag handlers
+		ClientizenCommandRegistry.registerCommands();
+		ClientizenContainerRegistry.registerContainers();
+		ClientizenScriptEventRegistry.registerEvents();
+		ClientizenObjectRegistry.registerObjects();
+		ClientizenTagRegistry.registerTagHandlers();
+
+		// Check for the client scripts folder
 		File scriptsFolder = DenizenCore.implementation.getScriptFolder();
 		if (!scriptsFolder.exists()) {
 			Debug.log("Creating scripts folder at " + scriptsFolder);
-			scriptsFolder.mkdir();
+			scriptsFolder.mkdirs();
 		}
+
+		// Tick Denizen-Core
+		ClientTickEvents.START_CLIENT_TICK.register(client -> DenizenCore.tick(50));
+
+		// Shutdown Denizen-Core when the client is stopping
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> DenizenCore.shutdown());
+
+		// Remove scripts received from the server once the client disconnects from it
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			ScriptHelper.additionalScripts.clear();
+			DenizenCore.reloadScripts();
+		});
 	}
 }
