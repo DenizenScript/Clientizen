@@ -35,8 +35,8 @@ public class NetworkManager {
 		});
 	}
 
-	public static void registerInChannel(String channel, ClientizenReceiver receiver) {
-		if (!ClientPlayNetworking.registerGlobalReceiver(new Identifier(channel), (client, handler, buf, responseSender) -> {
+	public static void registerInChannel(Identifier channel, ClientizenReceiver receiver) {
+		if (!ClientPlayNetworking.registerGlobalReceiver(channel, (client, handler, buf, responseSender) -> {
 			Debug.log("Received plugin message on channel " + channel);
 			receiver.receive(new DataDeserializer(buf));
 		})) {
@@ -44,14 +44,14 @@ public class NetworkManager {
 		}
 	}
 
-	public static void send(String channel, DataSerializer serializer) {
+	public static void send(Identifier channel, DataSerializer serializer) {
 //		TODO: re-add this check? doesn't work on ClientPlayConnectionEvents.JOIN, might be too early
 //		if (!ClientPlayNetworking.canSend(identifier)) {
 //			Debug.echoError("Cannot send to channel " + channel);
 //			return;
 //		}
 		Debug.log("Sending message on channel " + channel);
-		ClientPlayNetworking.send(new Identifier(channel), serializer != null ? serializer.getByteBuf() : PacketByteBufs.empty());
+		ClientPlayNetworking.send(channel, serializer != null ? serializer.getByteBuf() : PacketByteBufs.empty());
 	}
 
 	@FunctionalInterface
