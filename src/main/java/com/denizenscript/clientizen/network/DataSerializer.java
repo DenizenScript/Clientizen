@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class DataSerializer {
 
-	private final PacketByteBuf byteBuf;
+	public final PacketByteBuf byteBuf;
 
 	public DataSerializer() {
 		byteBuf = PacketByteBufs.create();
@@ -56,9 +56,5 @@ public class DataSerializer {
 			writeString(entry.getValue());
 		}
 		return this;
-	}
-
-	public PacketByteBuf getByteBuf() {
-		return byteBuf;
 	}
 }

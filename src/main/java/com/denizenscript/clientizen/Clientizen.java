@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,11 @@ public class Clientizen implements ClientModInitializer {
 
 	public static final String ID = "clientizen";
 	public static final Logger LOGGER = LoggerFactory.getLogger(ID);
+
+	public static Identifier id(String path) {
+		return new Identifier(ID, path);
+	}
+
 	public static String version;
 
 	public DenizenImplementation coreImplementation = new DenizenCoreImpl();

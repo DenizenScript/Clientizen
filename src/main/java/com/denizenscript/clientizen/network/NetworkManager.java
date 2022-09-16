@@ -20,9 +20,7 @@ public class NetworkManager {
 			send(Channels.SEND_CONFIRM, null);
 		}));
 
-		////////////////////////
-		// Register receivers //
-		////////////////////////
+		// Register receivers
 		registerInChannel(Channels.SET_SCRIPTS, (message) -> {
 			Map<String, String> scripts = message.readStringMap();
 			DenizenCore.runOnMainThread(() -> {
@@ -51,7 +49,7 @@ public class NetworkManager {
 //			return;
 //		}
 		Debug.log("Sending message on channel " + channel);
-		ClientPlayNetworking.send(channel, serializer != null ? serializer.getByteBuf() : PacketByteBufs.empty());
+		ClientPlayNetworking.send(channel, serializer != null ? serializer.byteBuf : PacketByteBufs.empty());
 	}
 
 	@FunctionalInterface
