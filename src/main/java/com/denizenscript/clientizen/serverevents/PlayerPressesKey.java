@@ -16,7 +16,7 @@ public class PlayerPressesKey extends ServerEvent {
 	}
 
 	public void handleKeyPress(int key) {
-		if (listenToKeys.contains(key)) {
+		if (listenToKeys.contains(key) || listenToKeys.isEmpty()) {
 			fire(new DataSerializer().writeInt(key));
 		}
 	}
