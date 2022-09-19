@@ -30,9 +30,18 @@ public class DataDeserializer {
 		return new String(readByteArray(), StandardCharsets.UTF_8);
 	}
 
-	public List<String> readStringList() {
-		List<String> stringList = new ArrayList<>();
+	public List<Integer> readIntList() {
 		int size = readInt();
+		List<Integer> intList = new ArrayList<>(size);
+		for (int i = 0; i < size; i++) {
+			intList.add(readInt());
+		}
+		return intList;
+	}
+
+	public List<String> readStringList() {
+		int size = readInt();
+		List<String> stringList = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
 			stringList.add(readString());
 		}
@@ -40,8 +49,8 @@ public class DataDeserializer {
 	}
 
 	public Map<String, String> readStringMap() {
-		Map<String, String> stringMap = new HashMap<>();
 		int size = readInt();
+		Map<String, String> stringMap = new HashMap<>(size);
 		for (int i = 0; i < size; i++) {
 			String key = readString();
 			String value = readString();
@@ -51,8 +60,8 @@ public class DataDeserializer {
 	}
 
 	public Map<String, List<String>> readStringListMap() {
-		Map<String, List<String>> stringListMap = new HashMap<>();
 		int size = readInt();
+		Map<String, List<String>> stringListMap = new HashMap<>(size);
 		for (int i = 0; i < size; i++) {
 			String key = readString();
 			List<String> value = readStringList();

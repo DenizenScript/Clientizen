@@ -21,15 +21,17 @@ public class DataSerializer {
 		return this;
 	}
 
-	public DataSerializer writeByteArray(@NotNull byte[] bytes) {
-		writeInt(bytes.length);
+	public DataSerializer writeBytes(@NotNull byte[] bytes) {
 		byteBuf.writeBytes(bytes);
 		return this;
 	}
 
+	public DataSerializer writeByteArray(@NotNull byte[] bytes) {
+		return writeInt(bytes.length).writeBytes(bytes);
+	}
+
 	public DataSerializer writeString(@NotNull String s) {
-		writeByteArray(s.getBytes(StandardCharsets.UTF_8));
-		return this;
+		return writeByteArray(s.getBytes(StandardCharsets.UTF_8));
 	}
 
 	public DataSerializer writeStringList(@NotNull Collection<String> strings) {
