@@ -37,6 +37,10 @@ public class ServerEventManager {
 	public static void registerEvent(Class<? extends ServerEvent> event) {
 		try {
 			ServerEvent instance = event.getConstructor().newInstance();
+			if (serverEvents.containsKey(instance.id)) {
+				Debug.echoError("Tried registering event '" + instance.id + "' but an event with that ID is already registered.");
+				return;
+			}
 			serverEvents.put(instance.id, instance);
 		}
 		catch (Exception ex) {
