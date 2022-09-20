@@ -13,6 +13,7 @@ public class PlayerPressesKey extends ServerEvent {
 
 	public PlayerPressesKey() {
 		instance = this;
+		id = "PlayerPressesKey";
 	}
 
 	public void handleKeyPress(int key) {

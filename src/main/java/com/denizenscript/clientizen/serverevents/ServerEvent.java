@@ -6,6 +6,7 @@ import com.denizenscript.clientizen.network.DataSerializer;
 public abstract class ServerEvent {
 
 	public boolean enabled;
+	public String id;
 
 	public void enable(DataDeserializer data) {}
 

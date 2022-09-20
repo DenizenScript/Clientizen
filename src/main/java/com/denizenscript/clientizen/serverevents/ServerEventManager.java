@@ -22,21 +22,22 @@ public class ServerEventManager {
 			}
 			int size = message.readInt();
 			for (int i = 0; i < size; i++) {
-				String name = message.readString();
-				ServerEvent event = serverEvents.get(name);
+				String id = message.readString();
+				ServerEvent event = serverEvents.get(id);
 				if (event == null) {
-					Debug.echoError("Invalid event '" + name + "' received from the server!");
+					Debug.echoError("Invalid event '" + id + "' received from server!");
 					return;
 				}
-				event.enable(message);
 				event.enabled = true;
+				event.enable(message);
 			}
 		});
 	}
 
 	public static void registerEvent(Class<? extends ServerEvent> event) {
 		try {
-			serverEvents.put(event.getSimpleName(), event.getConstructor().newInstance());
+			ServerEvent instance = event.getConstructor().newInstance();
+			serverEvents.put(instance.id, instance);
 		}
 		catch (Exception ex) {
 			Debug.echoError("Something went wrong while registering server event '" + event.getName() + "':");
@@ -45,7 +46,7 @@ public class ServerEventManager {
 	}
 
 	public static void fire(ServerEvent event, DataSerializer data) {
-		DataSerializer eventData = new DataSerializer().writeString(event.getClass().getSimpleName());
+		DataSerializer eventData = new DataSerializer().writeString(event.id);
 		if (data != null) {
 			eventData.writeBytes(data.byteBuf.array());
 		}
