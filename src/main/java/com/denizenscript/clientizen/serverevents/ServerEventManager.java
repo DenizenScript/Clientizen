@@ -25,7 +25,7 @@ public class ServerEventManager {
 				String id = message.readString();
 				ServerEvent event = serverEvents.get(id);
 				if (event == null) {
-					Debug.echoError("Invalid event '" + id + "' received from server!");
+					Debug.echoError("Invalid event '" + id + "' received from server! is your Clientizen version out of date?");
 					return;
 				}
 				event.enabled = true;

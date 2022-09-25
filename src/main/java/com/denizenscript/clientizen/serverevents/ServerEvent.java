@@ -8,6 +8,7 @@ public abstract class ServerEvent {
 	public boolean enabled;
 	public String id;
 
+	// enable and disable aren't abstract to avoid events that don't need to send / receive data having empty impls
 	public void enable(DataDeserializer data) {}
 
 	public void disable() {}
