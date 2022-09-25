@@ -65,10 +65,6 @@ public class Clientizen implements ClientModInitializer {
 		CoreConfiguration.allowStrangeFileSaves = false;
 		CoreConfiguration.allowWebget = false;
 
-		// Initialize Clientizen systems
-		ServerEventManager.init();
-		NetworkManager.init();
-
 		// Register commands, script containers, events, objects, and tag handlers
 		ServerEventRegistry.registerEvents();
 		ClientizenCommandRegistry.registerCommands();
@@ -76,6 +72,10 @@ public class Clientizen implements ClientModInitializer {
 		ClientizenScriptEventRegistry.registerEvents();
 		ClientizenObjectRegistry.registerObjects();
 		ClientizenTagRegistry.registerTagHandlers();
+
+		// Initialize Clientizen systems
+		ServerEventManager.init();
+		NetworkManager.init();
 
 		// Check for the client scripts folder
 		File scriptsFolder = DenizenCore.implementation.getScriptFolder();
