@@ -54,7 +54,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 	}
 
 	@Override
-	public boolean handleCustomArgs(ScriptEntry scriptEntry, Argument argument, boolean b) {
+	public boolean handleCustomArgs(ScriptEntry scriptEntry, Argument argument) {
 		return false;
 	}
 
