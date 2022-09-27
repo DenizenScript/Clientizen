@@ -21,6 +21,11 @@ public class DataSerializer {
 		return this;
 	}
 
+	public DataSerializer writeBoolean(boolean bool) {
+		byteBuf.writeBoolean(bool);
+		return this;
+	}
+
 	public DataSerializer writeBytes(@NotNull byte[] bytes) {
 		byteBuf.writeBytes(bytes);
 		return this;
