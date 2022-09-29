@@ -1,4 +1,4 @@
-package com.denizenscript.clientizen.serverevents;
+package com.denizenscript.clientizen.events.server;
 
 import com.denizenscript.clientizen.network.Channels;
 import com.denizenscript.clientizen.network.DataSerializer;
@@ -25,7 +25,7 @@ public class ServerEventManager {
 				String id = message.readString();
 				ServerEvent event = serverEvents.get(id);
 				if (event == null) {
-					Debug.echoError("Invalid event '" + id + "' received from server! is your Clientizen version out of date?");
+					Debug.echoError("Invalid event '" + id + "' received from server! Is your Clientizen version out of date?");
 					return;
 				}
 				event.enabled = true;

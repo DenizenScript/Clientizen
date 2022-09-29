@@ -1,4 +1,4 @@
-package com.denizenscript.clientizen.serverevents;
+package com.denizenscript.clientizen.events.server;
 
 import com.denizenscript.clientizen.network.DataDeserializer;
 import com.denizenscript.clientizen.network.DataSerializer;
