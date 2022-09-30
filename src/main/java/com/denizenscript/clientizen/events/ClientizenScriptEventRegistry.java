@@ -6,5 +6,6 @@ public class ClientizenScriptEventRegistry {
 
 	public static void registerEvents() {
 		ScriptEvent.registerScriptEvent(KeyPressReleaseEvent.class);
+		ScriptEvent.registerScriptEvent(ScreenOpenCloseEvent.class);
 	}
 }

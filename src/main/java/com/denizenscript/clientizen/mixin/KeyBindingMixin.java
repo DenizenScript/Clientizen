@@ -17,7 +17,7 @@ public class KeyBindingMixin {
 
 	@Inject(method = "setKeyPressed", at = @At("HEAD"))
 	private static void clientizen$onKeyPressStateChanged(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
-		if (KeyPressReleaseEvent.instance != null && key.getCategory() == InputUtil.Type.KEYSYM) {
+		if (key.getCategory() == InputUtil.Type.KEYSYM) {
 			int code = key.getCode();
 			if (!pressed || !pressedKeys.contains(code)) {
 				KeyPressReleaseEvent.instance.handleKeyPressStateChange(code, pressed);
