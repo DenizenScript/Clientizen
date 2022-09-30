@@ -27,7 +27,7 @@ public class KeyPressReleaseEvent extends ScriptEvent {
 		if (!keyMatcher.equals("key") && !runGenericCheck(keyMatcher, key.getName())) {
 			return false;
 		}
-		if (pressed && !path.eventArgLowerAt(2).equals("pressed")) {
+		if (pressed != path.eventArgLowerAt(2).equals("pressed")) {
 			return false;
 		}
 		return super.matches(path);
