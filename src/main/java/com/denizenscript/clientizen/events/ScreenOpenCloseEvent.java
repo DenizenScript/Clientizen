@@ -32,17 +32,17 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
 	public boolean switched;
 
 	public ScreenOpenCloseEvent() {
-		registerCouldMatcher("(inventory|creative|pause|options|advancements) screen opened|closed");
+		registerCouldMatcher("<'type'> screen opened|closed");
 		instance = this;
 	}
 
 	@Override
 	public boolean matches(ScriptPath path) {
 		String screenMatcher = path.eventArgLowerAt(0);
-		if (!screenMatcher.equals("screen") && !runGenericCheck(screenMatcher, type)) {
+		if (!runGenericCheck(screenMatcher, type)) {
 			return false;
 		}
-		if (opened && !path.eventArgLowerAt(path.eventArgs.length == 3 ? 2 : 1).equals("opens")) {
+		if (opened != path.eventArgLowerAt(2).equals("opened")) {
 			return false;
 		}
 		return super.matches(path);
