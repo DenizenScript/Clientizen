@@ -7,11 +7,6 @@ import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import com.denizenscript.denizencore.scripts.commands.Holdable;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgLinear;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
-import dev.lambdaurora.spruceui.Position;
-import dev.lambdaurora.spruceui.screen.SpruceScreen;
-import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 
 public class GuiCommand extends AbstractCommand implements Holdable {
 
@@ -25,7 +20,7 @@ public class GuiCommand extends AbstractCommand implements Holdable {
 	public static void autoExecute(ScriptEntry scriptEntry,
 								   @ArgLinear @ArgName("script") ScriptTag script) {
 		if (script.getContainer() instanceof GuiScriptContainer gui) {
-			SpruceScreen screen = new SpruceScreen(Text.literal("Test GUI screen")) {
+			/*SpruceScreen screen = new SpruceScreen(Text.literal("Test GUI screen")) {
 
 				@Override
 				protected void init() {
@@ -35,7 +30,7 @@ public class GuiCommand extends AbstractCommand implements Holdable {
 					}));
 				}
 			};
-			screen.init(MinecraftClient.getInstance(), 500, 500);
+			screen.init(MinecraftClient.getInstance(), 500, 500);*/
 		}
 	}
 }
