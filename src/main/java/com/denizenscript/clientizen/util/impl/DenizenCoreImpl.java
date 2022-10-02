@@ -155,9 +155,6 @@ public class DenizenCoreImpl implements DenizenImplementation {
 	}
 
 	@Override
-	public void saveClassToLoader(Class<?> clazz) {}
-
-	@Override
 	public void addExtraErrorHeaders(StringBuilder stringBuilder, ScriptEntry scriptEntry) {}
 
 	@Override
