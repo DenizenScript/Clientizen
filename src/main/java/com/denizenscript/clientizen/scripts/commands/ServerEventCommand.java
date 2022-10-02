@@ -30,7 +30,7 @@ public class ServerEventCommand extends AbstractCommand {
 		Map<String, String> data = new HashMap<>();
 		if (dataInput != null) {
 			for (Map.Entry<StringHolder, ObjectTag> entry : dataInput.map.entrySet()) {
-				data.put(entry.getKey().str, entry.getValue().identify());
+				data.put(entry.getKey().str, entry.getValue().savable());
 			}
 		}
 		NetworkManager.send(Channels.FIRE_EVENT, new DataSerializer().writeString(id).writeStringMap(data));
