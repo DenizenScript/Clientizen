@@ -8,6 +8,7 @@ public class ClientizenCommandRegistry {
 	public static void registerCommands() {
 		registerCommand(NarrateCommand.class);
 		registerCommand(GuiCommand.class);
+		registerCommand(ServerEventCommand.class);
 	}
 
 	private static void registerCommand(Class<? extends AbstractCommand> command) {
