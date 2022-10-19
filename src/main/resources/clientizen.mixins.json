@@ -6,7 +6,9 @@
   "mixins": [],
   "client": [
     "KeyBindingMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "render.EntityRenderDispatcherMixin",
+    "render.EntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
