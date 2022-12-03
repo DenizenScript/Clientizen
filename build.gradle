@@ -34,8 +34,8 @@ dependencies {
 
 	modImplementation include("dev.lambdaurora:spruceui:${project.spruceui_version}")
 
-	implementation include("com.denizenscript:denizencore:1.90.1-SNAPSHOT")
-	implementation include("org.yaml:snakeyaml:1.30")
+	implementation include("com.denizenscript:denizencore:${project.denizencore_version}")
+	implementation include("org.yaml:snakeyaml:${project.snakeyaml_version}")
 }
 
 
