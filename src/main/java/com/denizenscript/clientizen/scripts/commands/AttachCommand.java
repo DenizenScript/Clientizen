@@ -1,6 +1,7 @@
 package com.denizenscript.clientizen.scripts.commands;
 
 import com.denizenscript.clientizen.objects.EntityTag;
+import com.denizenscript.denizencore.objects.core.ListTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgLinear;
@@ -25,10 +26,10 @@ public class AttachCommand extends AbstractCommand {
 	}
 
 	public static void autoExecute(ScriptEntry scriptEntry,
-								   @ArgLinear @ArgName("entities") List<EntityTag> attachingEntities,
+								   @ArgLinear @ArgName("entities") ListTag attachingEntities,
 								   @ArgPrefixed @ArgName("to") EntityTag entity,
 								   @ArgName("cancel") boolean cancel) {
-		for (EntityTag attachingEntity : attachingEntities) {
+		for (EntityTag attachingEntity : attachingEntities.filter(EntityTag.class, scriptEntry.context)) {
 			if (cancel) {
 				attachedEntities.remove(attachingEntity.uuid);
 			}
