@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.network;
 
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.scripts.ScriptHelper;
+import com.denizenscript.denizencore.utilities.ReflectionHelper;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -9,6 +10,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.util.Identifier;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class NetworkManager {
@@ -21,14 +23,19 @@ public class NetworkManager {
 		}));
 
 		// Register receivers
+		Map<String, String> scriptSources = ReflectionHelper.getFieldValue(ScriptHelper.class, "scriptSources", null);
 		registerInChannel(Channels.SET_SCRIPTS, (message) -> {
 			Map<String, String> scripts = message.readStringMap();
 			DenizenCore.runOnMainThread(() -> {
 				ScriptHelper.additionalScripts.clear();
+				scriptSources.clear();
 				for (Map.Entry<String, String> entry : scripts.entrySet()) {
 					ScriptHelper.additionalScripts.add(YamlConfiguration.load(ScriptHelper.clearComments(entry.getKey(), entry.getValue(), true)));
 				}
+				Map<String, String> backupSources = new HashMap<>(scriptSources);
 				DenizenCore.reloadScripts();
+				// TODO: this is a temporary hack, should be properly fixed in core / Clientizen
+				scriptSources.putAll(backupSources);
 			});
 		});
 	}
