@@ -1,6 +1,6 @@
 package com.denizenscript.clientizen.scripts.commands;
 
-import com.denizenscript.clientizen.tags.EntityTag;
+import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgLinear;

@@ -1,4 +1,4 @@
-package com.denizenscript.clientizen.tags;
+package com.denizenscript.clientizen.objects;
 
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.ObjectTag;
