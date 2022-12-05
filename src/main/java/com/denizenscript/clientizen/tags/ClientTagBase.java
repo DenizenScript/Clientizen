@@ -29,5 +29,8 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
 			Entity target = MinecraftClient.getInstance().targetedEntity;
 			return target != null ? new EntityTag(target) : null;
 		});
+		tagProcessor.registerTag(EntityTag.class, "self_entity", (attribute, object) -> {
+			return new EntityTag(MinecraftClient.getInstance().player);
+		});
 	}
 }
