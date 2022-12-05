@@ -1,9 +1,11 @@
 package com.denizenscript.clientizen.scripts.commands;
 
 import com.denizenscript.clientizen.objects.EntityTag;
+import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException;
 import com.denizenscript.denizencore.objects.core.ListTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
+import com.denizenscript.denizencore.scripts.commands.generator.ArgDefaultNull;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgLinear;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgPrefixed;
@@ -27,14 +29,17 @@ public class AttachCommand extends AbstractCommand {
 
 	public static void autoExecute(ScriptEntry scriptEntry,
 								   @ArgLinear @ArgName("entities") ListTag attachingEntities,
-								   @ArgPrefixed @ArgName("to") EntityTag entity,
+								   @ArgDefaultNull @ArgPrefixed @ArgName("to") EntityTag toEntity,
 								   @ArgName("cancel") boolean cancel) {
+		if (!cancel && toEntity == null) {
+			throw new InvalidArgumentsRuntimeException("Must specify an entity to attach to");
+		}
 		for (EntityTag attachingEntity : attachingEntities.filter(EntityTag.class, scriptEntry.context)) {
 			if (cancel) {
 				attachedEntities.remove(attachingEntity.uuid);
 			}
 			else {
-				attachedEntities.put(attachingEntity.uuid, entity);
+				attachedEntities.put(attachingEntity.uuid, toEntity);
 			}
 		}
 	}
