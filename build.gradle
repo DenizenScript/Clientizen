@@ -12,14 +12,13 @@ group = project.maven_group
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 	maven {
 		url "https://repo.citizensnpcs.co"
 	}
-
-	mavenLocal()
 	maven {
-		name 'Gegy'
-		url 'https://maven.gegy.dev'
+		name = "CottonMC"
+		url = "https://server.bbkr.space/artifactory/libs-release"
 	}
 }
 
@@ -31,8 +30,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	modImplementation include("dev.lambdaurora:spruceui:${project.spruceui_version}")
+	modImplementation include("io.github.cottonmc:LibGui:${project.libgui_version}")
 
 	implementation include("com.denizenscript:denizencore:${project.denizencore_version}")
 	implementation include("org.yaml:snakeyaml:${project.snakeyaml_version}")

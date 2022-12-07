@@ -1,6 +1,7 @@
 package com.denizenscript.clientizen.util.impl;
 
 import com.denizenscript.clientizen.Clientizen;
+import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.DenizenImplementation;
 import com.denizenscript.denizencore.flags.FlaggableObject;
@@ -179,6 +180,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 	@Override
 	public void doFinalDebugOutput(String text) {
 		Clientizen.LOGGER.info(text);
+		ClientizenDebugScreen.debug.add(text);
 	}
 
 	@Override
