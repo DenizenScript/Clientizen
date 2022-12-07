@@ -17,9 +17,11 @@ public class ClientizenDebugGUI extends LightweightGuiDescription {
 		int height = MinecraftClient.getInstance().getWindow().getScaledHeight();
 		WPlainPanel panel = new WPlainPanel();
 		panel.setSize(width, height);
+		WPlainPanel consolePanel = new WPlainPanel();
+		consolePanel.setSize(width - 15, width - 15);
 		WText debugConsole = new WText(Text.literal(String.join("\n", ClientizenDebugScreen.debug)));
-		debugConsole.setSize(width - 15, height - 15);
-		WScrollPanel scrollPanel = new WScrollPanel(debugConsole);
+		consolePanel.add(debugConsole, 0, 0, width - 15, height - 15);
+		WScrollPanel scrollPanel = new WScrollPanel(consolePanel);
 		scrollPanel.setScrollingHorizontally(TriState.FALSE);
 		scrollPanel.setScrollingVertically(TriState.TRUE);
 		panel.add(scrollPanel, 5, 5, width - 10, height - 10);
