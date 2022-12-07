@@ -1,8 +1,10 @@
 package com.denizenscript.clientizen.debuggui;
 
+import com.denizenscript.denizencore.utilities.ReflectionHelper;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
+import io.github.cottonmc.cotton.gui.widget.WScrollBar;
 import io.github.cottonmc.cotton.gui.widget.WScrollPanel;
 import io.github.cottonmc.cotton.gui.widget.WText;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
@@ -21,11 +23,12 @@ public class ClientizenDebugGUI extends LightweightGuiDescription {
 		panel.setSize(width, height);
 		setRootPanel(panel);
 		// panel to hold the console
+		int totalTextHeight = MinecraftClient.getInstance().textRenderer.fontHeight * ClientizenDebugScreen.debug.size();
 		WPlainPanel consolePanel = new WPlainPanel();
-		consolePanel.setSize(width - 15, width - 15);
+		consolePanel.setSize(width - 15, totalTextHeight);
 		// the console text area
 		WText debugConsole = new WText(Text.literal(String.join("\n", ClientizenDebugScreen.debug)));
-		consolePanel.add(debugConsole, 0, 0, width - 15, height - 15);
+		consolePanel.add(debugConsole, 0, 0, width - 15, totalTextHeight);
 		// scroll panel for the console
 		WScrollPanel scrollPanel = new WScrollPanel(consolePanel);
 		scrollPanel.setScrollingHorizontally(TriState.FALSE);
@@ -37,6 +40,6 @@ public class ClientizenDebugGUI extends LightweightGuiDescription {
 
 	@Override
 	public void addPainters() {
-		getRootPanel().setBackgroundPainter(BackgroundPainter.createColorful(Color.rgb(256, 0, 0,0).toRgb()));
+		getRootPanel().setBackgroundPainter(BackgroundPainter.createColorful(Color.BLACK.toRgb()));
 	}
 }
