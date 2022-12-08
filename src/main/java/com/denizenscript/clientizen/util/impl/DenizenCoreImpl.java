@@ -18,8 +18,6 @@ import net.minecraft.util.Formatting;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DenizenCoreImpl implements DenizenImplementation {
 
@@ -176,6 +174,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
 	@Override
 	public void doFinalDebugOutput(String text) {
+		text = text.replace("<FORCE_ALIGN>", "");
 		Clientizen.LOGGER.info(Formatting.strip(text));
 		ClientizenDebugScreen.debug.add(text);
 	}
