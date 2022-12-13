@@ -1,15 +1,19 @@
 package com.denizenscript.clientizen.debuggui;
 
 import com.denizenscript.denizencore.utilities.CoreConfiguration;
+import com.denizenscript.denizencore.utilities.CoreUtilities;
+import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 public class DebugOptionsMenu extends WPlainPanel {
@@ -62,12 +66,15 @@ public class DebugOptionsMenu extends WPlainPanel {
 		public static final Text ON = Text.translatable("options.on").formatted(Formatting.GREEN);
 		public static final Text OFF = Text.translatable("options.off").formatted(Formatting.RED);
 
+		public Text tooltip;
 		public Text prefix;
 		public BooleanSupplier getter;
 		public BooleanConsumer setter;
 
 		public BooleanOptionButton(String id, BooleanSupplier getter, BooleanConsumer setter) {
-			prefix = Text.translatable("clientizen.debug.options." + id).append(": ");
+			String key = "clientizen.debug.options." + id;
+			prefix = Text.translatable(key).append(": ");
+			tooltip = Text.translatable(key + ".description");
 			this.getter = getter;
 			this.setter = setter;
 			updateLabel();
@@ -80,6 +87,21 @@ public class DebugOptionsMenu extends WPlainPanel {
 
 		public void updateLabel() {
 			setLabel(prefix.copy().append(getter.getAsBoolean() ? ON : OFF));
+		}
+
+		@Override
+		public void addTooltip(TooltipBuilder builder) {
+			String translated = tooltip.getString();
+			if (!CoreUtilities.contains(translated, '\n')) {
+				builder.add(tooltip);
+				return;
+			}
+			List<String> splitLines = CoreUtilities.split(translated, '\n');
+			OrderedText[] lines = new OrderedText[splitLines.size()];
+			for (int i = 0; i < splitLines.size(); i++) {
+				lines[i] = Text.literal(splitLines.get(i)).asOrderedText();
+			}
+			builder.add(lines);
 		}
 	}
 

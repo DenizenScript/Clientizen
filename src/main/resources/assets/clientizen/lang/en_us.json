@@ -11,6 +11,16 @@
   "clientizen.debug.options.stack_traces": "Stack Traces",
   "clientizen.debug.options.extra_info": "Extra Info",
   "clientizen.debug.options.script_builder": "Script Builder",
+  "clientizen.debug.options.verbose.description": "Verbose internal information. WARNING: this will flood your console.",
+  "clientizen.debug.options.ultra_verbose.description": "Ultra verbose internal information, mainly intended for use by developers.\nWARNING: this will FLOOD your console.",
+  "clientizen.debug.options.override.description": "Displays debug output for all scripts, ignoring their debug setting.",
+  "clientizen.debug.options.future_warnings.description": "Warnings for changes that will occur in the future, such as upcoming deprecations.",
+  "clientizen.debug.options.show_sources.description": "Shows where debug output came from, when possible.",
+  "clientizen.debug.options.trimming.description": "Trims messages longer then 1024 characters.",
+  "clientizen.debug.options.loading_info.description": "Extra script loading information.\nWhen enabled, reloading will have a potentially large debug output.",
+  "clientizen.debug.options.stack_traces.description": "Whether stack traces should be included in debug output.",
+  "clientizen.debug.options.extra_info.description": "Extra internal debug information, mainly intended for use by developers.",
+  "clientizen.debug.options.script_builder.description": "Information about script and argument building.\nWARNING: can produce large debug output.",
   "clientizen.debug.tab.console": "Console",
   "clientizen.debug.tab.options": "Debug Options"
 }
