@@ -1,0 +1,16 @@
+{
+  "key.clientizen.open_debug_screen": "Debug Screen",
+  "category.clientizen.keys": "Clientizen Keybindings",
+  "clientizen.debug.options.verbose": "Verbose",
+  "clientizen.debug.options.ultra_verbose": "Ultra Verbose",
+  "clientizen.debug.options.override": "Override",
+  "clientizen.debug.options.future_warnings": "Future Warnings",
+  "clientizen.debug.options.show_sources": "Show Sources",
+  "clientizen.debug.options.trimming": "Trimming",
+  "clientizen.debug.options.loading_info": "Loading Info",
+  "clientizen.debug.options.stack_traces": "Stack Traces",
+  "clientizen.debug.options.extra_info": "Extra Info",
+  "clientizen.debug.options.script_builder": "Script Builder",
+  "clientizen.debug.tab.console": "Console",
+  "clientizen.debug.tab.options": "Debug Options"
+}

@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.util.impl;
 
 import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
+import com.denizenscript.clientizen.debuggui.DebugConsole;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.DenizenImplementation;
 import com.denizenscript.denizencore.flags.FlaggableObject;
@@ -176,7 +177,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 	public void doFinalDebugOutput(String text) {
 		text = text.replace("<FORCE_ALIGN>", "");
 		Clientizen.LOGGER.info(Formatting.strip(text));
-		ClientizenDebugScreen.debug.add(text);
+		DebugConsole.addDebug(text);
 	}
 
 	@Override

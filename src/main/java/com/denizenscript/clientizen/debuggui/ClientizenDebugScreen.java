@@ -7,19 +7,13 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ClientizenDebugScreen extends CottonClientScreen {
 
-	public static KeyBinding openDebugScreenKey;
-	public static final List<String> debug = new ArrayList<>();
-
 	public static void register() {
-		openDebugScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		KeyBinding openDebugScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				"key.clientizen.open_debug_screen",
 				GLFW.GLFW_KEY_R,
-				"category.clientizen.debug"
+				"category.clientizen.keys"
 		));
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (openDebugScreenKey.wasPressed()) {
@@ -28,7 +22,12 @@ public class ClientizenDebugScreen extends CottonClientScreen {
 		});
 	}
 
-	public ClientizenDebugScreen(GuiDescription description) {
+	public ClientizenDebugScreen(ClientizenDebugGUI description) {
 		super(description);
+	}
+
+	@Override
+	public void removed() {
+		((ClientizenDebugGUI) description).onClose();
 	}
 }
