@@ -1,5 +1,7 @@
 package com.denizenscript.clientizen.debuggui;
 
+import com.denizenscript.clientizen.mixin.gui.WScrollPanelAccessor;
+import com.denizenscript.clientizen.mixin.gui.WTextAccessor;
 import com.denizenscript.denizencore.utilities.ReflectionHelper;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
@@ -53,32 +55,20 @@ public class DebugConsole extends WScrollPanel {
 		setBackgroundPainter(BackgroundPainter.createColorful(Color.BLACK.toRgb()));
 		setSize(window.getScaledWidth(), window.getScaledHeight() - ClientizenDebugGUI.TAB_HEIGHT);
 
-		children.remove(getVerticalScrollBar());
-		CustomScrollBar customScrollBar = new CustomScrollBar(Axis.VERTICAL, 20);
-		customScrollBar.setParent(this);
-		children.add(customScrollBar);
-		setVerticalScrollBar(customScrollBar);
+		children.remove(verticalScrollBar);
+		verticalScrollBar = new CustomScrollBar(Axis.VERTICAL, 20);
+		verticalScrollBar.setParent(this);
+		children.add(verticalScrollBar);
 
-		getHeldPanel().setInsets(new Insets(5, 5, 0, 0));
+		WPlainPanel heldPanel = (WPlainPanel) ((WScrollPanelAccessor) this).getWidget();
+		heldPanel.setInsets(new Insets(5, 5, 0, 0));
 		textArea = new ConsoleTextArea(debugText.toString());
-		getHeldPanel().setSize(window.getScaledWidth(), textArea.getHeight());
-		getHeldPanel().add(textArea, 0, 0);
+		heldPanel.setSize(window.getScaledWidth(), textArea.getHeight());
+		heldPanel.add(textArea, 0, 0);
 	}
 
 	public void onClose() {
 		textArea = null;
-	}
-
-	public WPlainPanel getHeldPanel() { // TODO: Mixins
-		return ReflectionHelper.getFieldValue(WScrollPanel.class, "widget", this);
-	}
-
-	public WScrollBar getVerticalScrollBar() { // TODO: Mixins
-		return ReflectionHelper.getFieldValue(WScrollPanel.class, "verticalScrollBar", this);
-	}
-
-	public void setVerticalScrollBar(WScrollBar scrollBar) { // TODO: Mixins
-		ReflectionHelper.setFieldValue(WScrollPanel.class, "verticalScrollBar", this, scrollBar);
 	}
 
 	public static class CustomScrollBar extends WScrollBar {
@@ -99,45 +89,34 @@ public class DebugConsole extends WScrollPanel {
 
 	public class ConsoleTextArea extends WText {
 
+		public WTextAccessor accessor = (WTextAccessor) this;
+
 		public ConsoleTextArea(String debug) {
 			super(Text.literal(debug));
-			setWrappedLines(new ArrayList<>(client.textRenderer.wrapLines(getText(), client.getWindow().getScaledWidth())));
+			accessor.setWrappedLines(new ArrayList<>(client.textRenderer.wrapLines(text, client.getWindow().getScaledWidth())));
 			updateSize(false);
 		}
 
 		public void addLine(String line) {
-			getWrappedLines().addAll(client.textRenderer.wrapLines(Text.literal(line), client.getWindow().getScaledWidth()));
+			accessor.getWrappedLines().addAll(client.textRenderer.wrapLines(Text.literal(line), client.getWindow().getScaledWidth()));
 			updateSize(true);
 		}
 
 		public void updateSize(boolean updateScroll) {
-			setSize(width, client.textRenderer.fontHeight * getWrappedLines().size());
+			setSize(width, client.textRenderer.fontHeight * accessor.getWrappedLines().size());
 			if (updateScroll) {
-				WScrollBar scrollBar = getVerticalScrollBar();
-				boolean wasAtBottom = scrollBar.getValue() == scrollBar.getMaxScrollValue();
+				boolean wasAtBottom = verticalScrollBar.getValue() == verticalScrollBar.getMaxScrollValue();
 				DebugConsole.this.layout(); // update the scroll panel to resize the scroll bar
 				if (wasAtBottom) {
-					scrollBar.setValue(scrollBar.getMaxScrollValue());
+					verticalScrollBar.setValue(verticalScrollBar.getMaxScrollValue());
 				}
 			}
-			setWrappingScheduled(false);
+			accessor.setWrappingScheduled(false);
 		}
 
 		@Override
 		public boolean canResize() {
 			return false;
-		}
-
-		public void setWrappedLines(List<OrderedText> wrappedLines) { // TODO: Mixins
-			ReflectionHelper.setFieldValue(WText.class, "wrappedLines", this, wrappedLines);
-		}
-
-		public List<OrderedText> getWrappedLines() { // TODO: Mixins
-			return ReflectionHelper.getFieldValue(WText.class, "wrappedLines", this);
-		}
-
-		public void setWrappingScheduled(boolean value) { // TODO: Mixins
-			ReflectionHelper.setFieldValue(WText.class, "wrappingScheduled", this, value);
 		}
 
 	}

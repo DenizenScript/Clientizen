@@ -6,7 +6,9 @@
   "mixins": [],
   "client": [
     "KeyBindingMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "gui.WScrollPanelAccessor",
+    "gui.WTextAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
