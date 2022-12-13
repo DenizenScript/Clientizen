@@ -60,7 +60,7 @@ public class DebugConsole extends WScrollPanel {
 		setVerticalScrollBar(customScrollBar);
 
 		getHeldPanel().setInsets(new Insets(5, 5, 0, 0));
-		textArea = new ConsoleTextArea();
+		textArea = new ConsoleTextArea(debugText.toString());
 		getHeldPanel().setSize(window.getScaledWidth(), textArea.getHeight());
 		getHeldPanel().add(textArea, 0, 0);
 	}
@@ -99,8 +99,8 @@ public class DebugConsole extends WScrollPanel {
 
 	public class ConsoleTextArea extends WText {
 
-		public ConsoleTextArea() {
-			super(Text.literal(debugText.toString()));
+		public ConsoleTextArea(String debug) {
+			super(Text.literal(debug));
 			setWrappedLines(new ArrayList<>(client.textRenderer.wrapLines(getText(), client.getWindow().getScaledWidth())));
 			updateSize(false);
 		}
@@ -115,7 +115,7 @@ public class DebugConsole extends WScrollPanel {
 			if (updateScroll) {
 				WScrollBar scrollBar = getVerticalScrollBar();
 				boolean wasAtBottom = scrollBar.getValue() == scrollBar.getMaxScrollValue();
-				DebugConsole.this.layout();
+				DebugConsole.this.layout(); // update the scroll panel to resize the scroll bar
 				if (wasAtBottom) {
 					scrollBar.setValue(scrollBar.getMaxScrollValue());
 				}

@@ -39,11 +39,11 @@ public class DebugOptionsMenu extends WPlainPanel {
 		int x = OFFSET, y = -BUTTON_HEIGHT;
 		for (WWidget child : children) {
 			y += BUTTON_HEIGHT + OFFSET;
-			if (y + BUTTON_HEIGHT > height - OFFSET) { // if the button is too low
+			if (y + BUTTON_HEIGHT > height - OFFSET) { // if the button is too low, move to the next column
 				y = OFFSET;
 				x += BUTTON_WIDTH + OFFSET;
 			}
-			if (x + BUTTON_WIDTH > width - OFFSET) { // if the button is too far right
+			if (x + BUTTON_WIDTH > width - OFFSET) { // if the button is too far right then the panel is full
 				break;
 			}
 			child.setLocation(x, y);
