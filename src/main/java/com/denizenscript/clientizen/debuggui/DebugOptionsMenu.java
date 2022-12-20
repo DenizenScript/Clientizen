@@ -96,12 +96,9 @@ public class DebugOptionsMenu extends WPlainPanel {
 				builder.add(tooltip);
 				return;
 			}
-			List<String> splitLines = CoreUtilities.split(translated, '\n');
-			OrderedText[] lines = new OrderedText[splitLines.size()];
-			for (int i = 0; i < splitLines.size(); i++) {
-				lines[i] = Text.literal(splitLines.get(i)).asOrderedText();
+			for (String splitLine : CoreUtilities.split(translated, '\n')) {
+				builder.add(Text.literal(splitLine).asOrderedText());
 			}
-			builder.add(lines);
 		}
 	}
 
