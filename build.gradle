@@ -12,9 +12,11 @@ group = project.maven_group
 
 repositories {
 	mavenCentral()
-	mavenLocal()
+    // Uncomment to build with local Denizen-Core changes
+    // mavenLocal()
 	maven {
-		url "https://repo.citizensnpcs.co"
+		name "Denizen"
+		url "https://maven.citizensnpcs.co/repo"
 	}
 	maven {
 		name = "CottonMC"
