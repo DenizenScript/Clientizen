@@ -15,6 +15,8 @@ import java.util.Map;
 
 public class NetworkManager {
 
+	public static final Map<String, String> scriptSources = ReflectionHelper.getFieldValue(ScriptHelper.class, "scriptSources", null);
+
 	public static void init() {
 		Debug.log("Initializing NetworkManager...");
 		ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
@@ -23,7 +25,6 @@ public class NetworkManager {
 		}));
 
 		// Register receivers
-		Map<String, String> scriptSources = ReflectionHelper.getFieldValue(ScriptHelper.class, "scriptSources", null);
 		registerInChannel(Channels.SET_SCRIPTS, (message) -> {
 			Map<String, String> scripts = message.readStringMap();
 			DenizenCore.runOnMainThread(() -> {
