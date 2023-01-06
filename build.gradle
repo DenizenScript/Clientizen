@@ -26,6 +26,8 @@ repositories {
 		name = "CottonMC"
 		url = "https://server.bbkr.space/artifactory/libs-release"
 	}
+
+	maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
 }
 
 dependencies {
@@ -39,6 +41,8 @@ dependencies {
 
 	implementation include("com.denizenscript:denizencore:${project.denizencore_version}")
 	implementation include("org.yaml:snakeyaml:${project.snakeyaml_version}")
+
+	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauth_version}")
 }
 
 

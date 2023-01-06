@@ -12,11 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin {
 
-	/*@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
-	private static <E extends Entity> void clientizen$cancelRenderIfAttached(
+	@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
+	private <E extends Entity> void clientizen$cancelRenderIfAttached(
 			E entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
-		if (AttachCommand.attachedEntities.containsKey(entity.getUuid())) {
+		if (AttachCommand.attachedEntities.contains(entity.getUuid())) {
 			cir.setReturnValue(false);
 		}
-	}*/
+	}
 }
