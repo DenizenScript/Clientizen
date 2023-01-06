@@ -1,6 +1,8 @@
 package com.denizenscript.clientizen.util.impl;
 
 import com.denizenscript.clientizen.Clientizen;
+import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
+import com.denizenscript.clientizen.debuggui.DebugConsole;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.DenizenImplementation;
 import com.denizenscript.denizencore.flags.FlaggableObject;
@@ -17,8 +19,6 @@ import net.minecraft.util.Formatting;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DenizenCoreImpl implements DenizenImplementation {
 
@@ -120,13 +120,11 @@ public class DenizenCoreImpl implements DenizenImplementation {
 		return false;
 	}
 
-//	private static final List<Formatting> colors = Arrays.stream(Formatting.values()).filter(Formatting::isColor).toList();
+	private static final Formatting[] colors = Arrays.stream(Formatting.values()).filter(Formatting::isColor).toArray(Formatting[]::new);
 
 	@Override
 	public String getRandomColor() {
-//		The only place debug currently goes to is log files, which have no color
-//		return colors.get(CoreUtilities.getRandom().nextInt(colors.size())).toString();
-		return "";
+		return colors[CoreUtilities.getRandom().nextInt(colors.length)].toString();
 	}
 
 	@Override
@@ -162,27 +160,34 @@ public class DenizenCoreImpl implements DenizenImplementation {
 		if (!CoreUtilities.contains(uncolored, '<') || !CoreUtilities.contains(uncolored, '>')) {
 			return uncolored;
 		}
-		// The only place logs currently go to is log files, so remove all colors
 		return uncolored
-				.replace("<Y>", "")
-				.replace("<O>", "")
-				.replace("<G>", "")
-				.replace("<LG>", "")
-				.replace("<GR>", "")
-				.replace("<A>", "")
-				.replace("<R>", "")
-				.replace("<LR>", "")
-				.replace("<LP>", "")
-				.replace("<W>", "");
+				.replace("<Y>", Formatting.YELLOW.toString())
+				.replace("<O>", Formatting.GOLD.toString())
+				.replace("<G>", Formatting.DARK_GRAY.toString())
+				.replace("<LG>", Formatting.GRAY.toString())
+				.replace("<GR>", Formatting.GREEN.toString())
+				.replace("<A>", Formatting.AQUA.toString())
+				.replace("<R>", Formatting.DARK_RED.toString())
+				.replace("<LR>", Formatting.RED.toString())
+				.replace("<LP>", Formatting.LIGHT_PURPLE.toString())
+				.replace("<W>", Formatting.WHITE.toString());
 	}
 
 	@Override
 	public void doFinalDebugOutput(String text) {
-		Clientizen.LOGGER.info(text);
+		text = text.replace("<FORCE_ALIGN>", "");
+		Clientizen.LOGGER.info(Formatting.strip(text));
+		DebugConsole.addDebug(text);
 	}
 
 	@Override
 	public String stripColor(String text) {
 		return Formatting.strip(text);
 	}
+
+	@Override
+	public void reloadConfig() {}
+
+	@Override
+	public void reloadSaves() {}
 }

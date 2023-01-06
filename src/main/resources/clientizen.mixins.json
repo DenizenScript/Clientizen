@@ -8,7 +8,9 @@
     "KeyBindingMixin",
     "MinecraftClientMixin",
     "render.EntityRenderDispatcherMixin",
-    "render.EntityRendererMixin"
+    "render.EntityRendererMixin",
+    "gui.WScrollPanelAccessor",
+    "gui.WTextAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen;
 
+import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
 import com.denizenscript.clientizen.events.ClientizenScriptEventRegistry;
 import com.denizenscript.clientizen.network.NetworkManager;
 import com.denizenscript.clientizen.objects.ClientizenObjectRegistry;
@@ -72,6 +73,7 @@ public class Clientizen implements ClientModInitializer {
 
 		// Initialize Clientizen systems
 		NetworkManager.init();
+		ClientizenDebugScreen.register();
 
 		// Check for the client scripts folder
 		File scriptsFolder = DenizenCore.implementation.getScriptFolder();
@@ -79,6 +81,9 @@ public class Clientizen implements ClientModInitializer {
 			Debug.log("Creating scripts folder at " + scriptsFolder);
 			scriptsFolder.mkdirs();
 		}
+
+		// Load all scripts in
+		DenizenCore.reloadScripts(false, null);
 
 		// Tick Denizen-Core
 		ClientTickEvents.START_CLIENT_TICK.register(client -> DenizenCore.tick(50));
@@ -88,8 +93,8 @@ public class Clientizen implements ClientModInitializer {
 
 		// Remove scripts received from the server once the client disconnects from it
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-			ScriptHelper.additionalScripts.clear();
-			DenizenCore.reloadScripts();
+			ScriptHelper.buildAdditionalScripts.clear();
+			DenizenCore.reloadScripts(false, null);
 		});
 	}
 }
