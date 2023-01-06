@@ -82,6 +82,9 @@ public class Clientizen implements ClientModInitializer {
 			scriptsFolder.mkdirs();
 		}
 
+		// Load all scripts in
+		DenizenCore.reloadScripts(false, null);
+
 		// Tick Denizen-Core
 		ClientTickEvents.START_CLIENT_TICK.register(client -> DenizenCore.tick(50));
 
@@ -90,8 +93,8 @@ public class Clientizen implements ClientModInitializer {
 
 		// Remove scripts received from the server once the client disconnects from it
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-			ScriptHelper.additionalScripts.clear();
-			DenizenCore.reloadScripts();
+			ScriptHelper.buildAdditionalScripts.clear();
+			DenizenCore.reloadScripts(false, null);
 		});
 	}
 }

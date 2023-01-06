@@ -184,4 +184,10 @@ public class DenizenCoreImpl implements DenizenImplementation {
 	public String stripColor(String text) {
 		return Formatting.strip(text);
 	}
+
+	@Override
+	public void reloadConfig() {}
+
+	@Override
+	public void reloadSaves() {}
 }
