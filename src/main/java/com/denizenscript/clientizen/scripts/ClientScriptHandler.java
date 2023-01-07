@@ -16,11 +16,11 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 
 import java.util.Map;
 
-public class ClientScriptHelper {
+public class ClientScriptHandler {
 
 	public static void init() {
-		NetworkManager.registerInChannel(Channels.SET_SCRIPTS, ClientScriptHelper::loadScriptsFrom);
-		NetworkManager.registerInChannel(Channels.RUN_SCRIPT, ClientScriptHelper::handleScriptRun);
+		NetworkManager.registerInChannel(Channels.SET_SCRIPTS, ClientScriptHandler::loadScriptsFrom);
+		NetworkManager.registerInChannel(Channels.RUN_SCRIPT, ClientScriptHandler::handleScriptRun);
 	}
 
 	public static void loadScriptsFrom(DataDeserializer data) {
