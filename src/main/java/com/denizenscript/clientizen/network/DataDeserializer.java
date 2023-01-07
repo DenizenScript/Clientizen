@@ -16,6 +16,10 @@ public class DataDeserializer {
 		this.buf = buf;
 	}
 
+	public boolean readBoolean() {
+		return buf.readBoolean();
+	}
+
 	public int readInt() {
 		return buf.readInt();
 	}
