@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class DataDeserializer {
 
@@ -72,5 +73,9 @@ public class DataDeserializer {
 			stringListMap.put(key, value);
 		}
 		return stringListMap;
+	}
+
+	public <T> T readNullable(Supplier<T> readMethod) {
+		return readBoolean() ? readMethod.get() : null;
 	}
 }

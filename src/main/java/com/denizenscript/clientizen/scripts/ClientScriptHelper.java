@@ -35,18 +35,18 @@ public class ClientScriptHelper {
 	}
 
 	public static void handleScriptRun(DataDeserializer data) {
-		String scriptName = data.readString();
-		String path = data.readString();
+		String scriptStr = data.readString();
+		String path = data.readNullable(data::readString);
 		Map<String, String> defMap = data.readStringMap();
 		DenizenCore.runOnMainThread(() -> {
-			ScriptTag script = ScriptTag.valueOf(scriptName, CoreUtilities.noDebugContext);
+			ScriptTag script = ScriptTag.valueOf(scriptStr, CoreUtilities.noDebugContext);
 			if (script == null) {
 				if (CoreConfiguration.debugExtraInfo) {
-					Debug.echoError("Invalid script name to run received from server: " + scriptName + ".");
+					Debug.echoError("Invalid script name to run received from server: " + scriptStr + ".");
 				}
 				return;
 			}
-			ScriptUtilities.createAndStartQueue(script.getContainer(), path.isEmpty() ? null : path, null, null, queue -> {
+			ScriptUtilities.createAndStartQueue(script.getContainer(), path, null, null, queue -> {
 				TagContext context = DenizenCore.implementation.getTagContext(script.getContainer());
 				for (Map.Entry<String, String> entry : defMap.entrySet()) {
 					queue.addDefinition(entry.getKey(), ObjectFetcher.pickObjectFor(entry.getValue(), context));
