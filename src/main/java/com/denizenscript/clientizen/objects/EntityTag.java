@@ -88,11 +88,6 @@ public class EntityTag implements ObjectTag {
 	}
 
 	@Override
-	public String debuggable() {
-		return "<LG>e@<Y>" + uuid + (getEntity() != null ? " <GR>(" + getEntity().getType().getUntranslatedName() + ")" : "");
-	}
-
-	@Override
 	public String toString() {
 		return identify();
 	}
