@@ -9,7 +9,6 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
@@ -21,17 +20,14 @@ public class ClientizenAttachedEntityFeatureRenderer<T extends Entity, M extends
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		List<EntityTag> attached = AttachCommand.attachMap.get(entity.getUuid());
-		if (attached == null) {
+		List<EntityTag> attachedEntities = AttachCommand.attachMap.get(entity.getUuid());
+		if (attachedEntities == null) {
 			return;
 		}
-		for (EntityTag entityTag : attached) {
-			//System.out.println(entityTag);
+		for (EntityTag attached : attachedEntities) {
 			matrices.push();
 			matrices.scale(1, -1, 1);
-			// Empty vector = the client player's center position more or less
-			Vec3d pos = MinecraftClient.getInstance().player.getPos().subtract(entity.getPos());
-			MinecraftClient.getInstance().getEntityRenderDispatcher().render(entityTag.entity, pos.x, pos.y, pos.z, entityTag.entity.getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
+			MinecraftClient.getInstance().getEntityRenderDispatcher().render(attached.getEntity(), 0, 0, 0, attached.getEntity().getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
 			matrices.pop();
 		}
 	}
