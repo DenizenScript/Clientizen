@@ -15,8 +15,12 @@ repositories {
     // Uncomment to build with local Denizen-Core changes
     // mavenLocal()
 	maven {
-		name "Denizen"
-		url "https://maven.citizensnpcs.co/repo"
+		name = "Denizen"
+		url = "https://maven.citizensnpcs.co/repo"
+	}
+	maven {
+		name = "DevAuth"
+		url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
 	}
 	maven {
 		name = "CottonMC"
@@ -35,6 +39,8 @@ dependencies {
 
 	implementation include("com.denizenscript:denizencore:${project.denizencore_version}")
 	implementation include("org.yaml:snakeyaml:${project.snakeyaml_version}")
+
+	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauth_version}")
 }
 
 
