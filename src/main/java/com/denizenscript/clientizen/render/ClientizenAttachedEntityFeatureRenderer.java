@@ -30,8 +30,8 @@ public class ClientizenAttachedEntityFeatureRenderer<T extends Entity, M extends
 			matrices.push();
 			matrices.scale(1, -1, 1);
 			// Empty vector = the client player's center position more or less
-			Vec3d pos = MinecraftClient.getInstance().player.getPos().subtract(entity.getPos());
-			MinecraftClient.getInstance().getEntityRenderDispatcher().render(entityTag.entity, pos.x, pos.y, pos.z, entityTag.entity.getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
+			Vec3d pos = entity.getPos().subtract(entity.getPos());
+			MinecraftClient.getInstance().getEntityRenderDispatcher().render(entityTag.getEntity(), pos.x, pos.y, pos.z, entityTag.getEntity().getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
 			matrices.pop();
 		}
 	}
