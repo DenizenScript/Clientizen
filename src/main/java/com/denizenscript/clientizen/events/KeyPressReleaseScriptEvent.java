@@ -3,28 +3,31 @@ package com.denizenscript.clientizen.events;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.client.util.InputUtil;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
+public class KeyPressReleaseScriptEvent extends ScriptEvent {
 
-public class KeyPressReleaseEvent extends ScriptEvent {
+	public static KeyPressReleaseScriptEvent instance;
 
-	public static KeyPressReleaseEvent instance;
-
-	public KeyboardKeys key;
+	public Keys key;
 	public boolean pressed;
+	public KeyType type;
 
 
-	public KeyPressReleaseEvent() {
-		registerCouldMatcher("keyboard <'key'> pressed|released");
+	public KeyPressReleaseScriptEvent() {
+		registerCouldMatcher("keyboard|mouse pressed|released");
+		registerSwitches("key");
 		instance = this;
 	}
 
 	@Override
 	public boolean matches(ScriptPath path) {
-		String keyMatcher = path.eventArgLowerAt(1);
-		if (!keyMatcher.equals("key") && !runGenericCheck(keyMatcher, key.getName())) {
+		if (!runGenericSwitchCheck(path, "key", key.getName())) {
+			return false;
+		}
+		if (!runGenericCheck(path.eventArgLowerAt(0), type.name())) {
 			return false;
 		}
 		if (pressed != path.eventArgLowerAt(2).equals("pressed")) {
@@ -35,20 +38,25 @@ public class KeyPressReleaseEvent extends ScriptEvent {
 
 	@Override
 	public ObjectTag getContext(String name) {
-		switch (name) {
-			case "key": return new ElementTag(key.getName());
-		}
-		return super.getContext(name);
+		return switch (name) {
+			case "key" -> new ElementTag(key.getName(), true);
+			case "type" -> new ElementTag(type);
+			default -> super.getContext(name);
+		};
 	}
 
-	public void handleKeyPressStateChange(int code, boolean pressed) {
-		key = KeyboardKeys.keysByCode.get(code);
+	public void handleKeyPressStateChange(InputUtil.Key key, boolean pressed) {
+		this.key = Keys.keysByCode.get(key.getCode());
 		this.pressed = pressed;
+		this.type = key.getCategory() == InputUtil.Type.KEYSYM ? KeyType.KEYBOARD : KeyType.MOUSE;
 		fire();
 	}
 
-	enum KeyboardKeys {
+	enum KeyType { KEYBOARD, MOUSE }
+
+	enum Keys {
 		UNKNOWN(-1),
+		// Keyboard keys
 		SPACE(32),
 		APOSTROPHE(39),
 		COMMA(44),
@@ -168,16 +176,26 @@ public class KeyPressReleaseEvent extends ScriptEvent {
 		RIGHT_CONTROL(345),
 		RIGHT_ALT(346),
 		RIGHT_SUPER(347),
-		MENU(348);
+		MENU(348),
+
+		// Mouse buttons
+		MOUSE_LEFT(0),
+		MOUSE_RIGHT(1),
+		MOUSE_MIDDLE(2),
+		MOUSE_BUTTON_4(3),
+		MOUSE_BUTTON_5(4),
+		MOUSE_BUTTON_6(5),
+		MOUSE_BUTTON_7(6),
+		MOUSE_BUTTON_8(7);
 
 		public final int code;
 		public String alternateName;
 
-		KeyboardKeys(int code) {
+		Keys(int code) {
 			this.code = code;
 		}
 
-		KeyboardKeys(int code, String alternateName) {
+		Keys(int code, String alternateName) {
 			this.code = code;
 			this.alternateName = alternateName;
 		}
@@ -186,6 +204,14 @@ public class KeyPressReleaseEvent extends ScriptEvent {
 			return alternateName == null ? name() : alternateName;
 		}
 
-		public static final Map<Integer, KeyboardKeys> keysByCode = Arrays.stream(KeyboardKeys.values()).collect(Collectors.toMap(key -> key.code, key -> key));
+		public static final Int2ObjectMap<Keys> keysByCode;
+
+		static {
+			Keys[] keys = Keys.values();
+			keysByCode = new Int2ObjectOpenHashMap<>(keys.length);
+			for (Keys key : keys) {
+				keysByCode.put(key.code, key);
+			}
+		}
 	}
 }

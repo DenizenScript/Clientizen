@@ -5,7 +5,7 @@ import com.denizenscript.denizencore.events.ScriptEvent;
 public class ClientizenScriptEventRegistry {
 
 	public static void registerEvents() {
-		ScriptEvent.registerScriptEvent(KeyPressReleaseEvent.class);
+		ScriptEvent.registerScriptEvent(KeyPressReleaseScriptEvent.class);
 		ScriptEvent.registerScriptEvent(ScreenOpenCloseEvent.class);
 	}
 }
