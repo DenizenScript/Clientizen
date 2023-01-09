@@ -19,8 +19,12 @@ repositories {
     // Uncomment to build with local Denizen-Core changes
     // mavenLocal()
 	maven {
-		name "Denizen"
-		url "https://maven.citizensnpcs.co/repo"
+		name = "Denizen"
+		url = "https://maven.citizensnpcs.co/repo"
+	}
+	maven {
+		name = "DevAuth"
+		url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
 	}
 	maven {
 		url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"

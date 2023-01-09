@@ -1,15 +1,10 @@
 package com.denizenscript.clientizen.network;
 
-import com.denizenscript.denizencore.DenizenCore;
-import com.denizenscript.denizencore.scripts.ScriptHelper;
-import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.util.Identifier;
-
-import java.util.Map;
 
 public class NetworkManager {
 
@@ -19,18 +14,6 @@ public class NetworkManager {
 			Debug.log("Sending join confirmation packet...");
 			send(Channels.SEND_CONFIRM, null);
 		}));
-
-		// Register receivers
-		registerInChannel(Channels.SET_SCRIPTS, (message) -> {
-			Map<String, String> scriptsMap = message.readStringMap();
-			DenizenCore.runOnMainThread(() -> {
-				ScriptHelper.buildAdditionalScripts.clear();
-				for (Map.Entry<String, String> entry : scriptsMap.entrySet()) {
-					ScriptHelper.buildAdditionalScripts.add(scripts -> scripts.add(YamlConfiguration.load(ScriptHelper.clearComments(entry.getKey(), entry.getValue(), true))));
-				}
-				DenizenCore.reloadScripts(true, null);
-			});
-		});
 	}
 
 	public static void registerInChannel(Identifier channel, ClientizenReceiver receiver) {
