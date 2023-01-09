@@ -17,7 +17,7 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 
 
 	public KeyPressReleaseScriptEvent() {
-		registerCouldMatcher("key pressed|released");
+		registerCouldMatcher("key pressed|released|toggled");
 		registerSwitches("key", "type");
 		instance = this;
 	}
@@ -30,7 +30,11 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 		if (!runGenericSwitchCheck(path, "type", type.name())) {
 			return false;
 		}
-		if (pressed != path.eventArgLowerAt(2).equals("pressed")) {
+		String operation = path.eventArgLowerAt(1);
+		if (operation.equals("pressed") && !pressed) {
+			return false;
+		}
+		if (operation.equals("released") && pressed) {
 			return false;
 		}
 		return super.matches(path);
