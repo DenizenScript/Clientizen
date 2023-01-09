@@ -17,8 +17,8 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 
 
 	public KeyPressReleaseScriptEvent() {
-		registerCouldMatcher("keyboard|mouse pressed|released");
-		registerSwitches("key");
+		registerCouldMatcher("key pressed|released");
+		registerSwitches("key", "type");
 		instance = this;
 	}
 
@@ -27,7 +27,7 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 		if (!runGenericSwitchCheck(path, "key", key.getName())) {
 			return false;
 		}
-		if (!runGenericCheck(path.eventArgLowerAt(0), type.name())) {
+		if (!runGenericSwitchCheck(path, "type", type.name())) {
 			return false;
 		}
 		if (pressed != path.eventArgLowerAt(2).equals("pressed")) {
