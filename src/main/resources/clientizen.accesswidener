@@ -3,3 +3,5 @@ accessWidener v2 named
 accessible method net/minecraft/client/world/ClientWorld getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;
 
 accessible method net/minecraft/client/render/entity/LivingEntityRenderer addFeature (Lnet/minecraft/client/render/entity/feature/FeatureRenderer;)Z
+
+accessible method net/minecraft/client/render/entity/EntityRenderer getBlockLight (Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/BlockPos;)I
