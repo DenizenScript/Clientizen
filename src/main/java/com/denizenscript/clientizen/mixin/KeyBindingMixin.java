@@ -1,6 +1,6 @@
 package com.denizenscript.clientizen.mixin;
 
-import com.denizenscript.clientizen.events.KeyPressReleaseEvent;
+import com.denizenscript.clientizen.events.KeyPressReleaseScriptEvent;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.client.option.KeyBinding;
@@ -17,16 +17,15 @@ public class KeyBindingMixin {
 
 	@Inject(method = "setKeyPressed", at = @At("HEAD"))
 	private static void clientizen$onKeyPressStateChanged(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
-		if (key.getCategory() == InputUtil.Type.KEYSYM) {
-			int code = key.getCode();
-			if (!pressed || !pressedKeys.contains(code)) {
-				KeyPressReleaseEvent.instance.handleKeyPressStateChange(code, pressed);
+		if (key.getCategory() == InputUtil.Type.KEYSYM || key.getCategory() == InputUtil.Type.MOUSE) {
+			if (!pressed || !pressedKeys.contains(key.getCode())) {
+				KeyPressReleaseScriptEvent.instance.handleKeyPressStateChange(key, pressed);
 			}
 			if (pressed) {
-				pressedKeys.add(code);
+				pressedKeys.add(key.getCode());
 			}
 			else {
-				pressedKeys.remove(code);
+				pressedKeys.remove(key.getCode());
 			}
 		}
 	}
