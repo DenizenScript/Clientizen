@@ -11,7 +11,7 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 
 	public static KeyPressReleaseScriptEvent instance;
 
-	public Keys key;
+	public Key key;
 	public boolean pressed;
 	public InputDevice device;
 
@@ -50,7 +50,7 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 	}
 
 	public void handleKeyPressStateChange(InputUtil.Key key, boolean pressed) {
-		this.key = Keys.keysByCode.get(key.getCode());
+		this.key = Key.keysByCode.get(key.getCode());
 		this.pressed = pressed;
 		this.device = key.getCategory() == InputUtil.Type.KEYSYM ? InputDevice.KEYBOARD : InputDevice.MOUSE;
 		fire();
@@ -58,7 +58,7 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 
 	enum InputDevice { KEYBOARD, MOUSE }
 
-	enum Keys {
+	enum Key {
 		UNKNOWN(-1),
 		// Keyboard keys
 		SPACE(32),
@@ -195,11 +195,11 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 		public final int code;
 		public String alternateName;
 
-		Keys(int code) {
+		Key(int code) {
 			this.code = code;
 		}
 
-		Keys(int code, String alternateName) {
+		Key(int code, String alternateName) {
 			this.code = code;
 			this.alternateName = alternateName;
 		}
@@ -208,12 +208,12 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 			return alternateName == null ? name() : alternateName;
 		}
 
-		public static final Int2ObjectMap<Keys> keysByCode;
+		public static final Int2ObjectMap<Key> keysByCode;
 
 		static {
-			Keys[] keys = Keys.values();
+			Key[] keys = Key.values();
 			keysByCode = new Int2ObjectOpenHashMap<>(keys.length);
-			for (Keys key : keys) {
+			for (Key key : keys) {
 				keysByCode.put(key.code, key);
 			}
 		}
