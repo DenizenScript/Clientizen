@@ -13,24 +13,24 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 
 	public Keys key;
 	public boolean pressed;
-	public KeyType type;
+	public InputDevice device;
 
 
 	public KeyPressReleaseScriptEvent() {
-		registerCouldMatcher("key pressed|released|toggled");
-		registerSwitches("key", "type");
+		registerCouldMatcher("<'input_device'> key pressed|released|toggled");
+		registerSwitches("name");
 		instance = this;
 	}
 
 	@Override
 	public boolean matches(ScriptPath path) {
-		if (!runGenericSwitchCheck(path, "key", key.getName())) {
+		if (!runGenericSwitchCheck(path, "name", key.getName())) {
 			return false;
 		}
-		if (!runGenericSwitchCheck(path, "type", type.name())) {
+		if (!runGenericCheck(path.eventArgLowerAt(0), device.name())) {
 			return false;
 		}
-		String operation = path.eventArgLowerAt(1);
+		String operation = path.eventArgLowerAt(2);
 		if (operation.equals("pressed") && !pressed) {
 			return false;
 		}
@@ -44,7 +44,7 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 	public ObjectTag getContext(String name) {
 		return switch (name) {
 			case "key" -> new ElementTag(key.getName(), true);
-			case "type" -> new ElementTag(type);
+			case "device" -> new ElementTag(device);
 			default -> super.getContext(name);
 		};
 	}
@@ -52,11 +52,11 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
 	public void handleKeyPressStateChange(InputUtil.Key key, boolean pressed) {
 		this.key = Keys.keysByCode.get(key.getCode());
 		this.pressed = pressed;
-		this.type = key.getCategory() == InputUtil.Type.KEYSYM ? KeyType.KEYBOARD : KeyType.MOUSE;
+		this.device = key.getCategory() == InputUtil.Type.KEYSYM ? InputDevice.KEYBOARD : InputDevice.MOUSE;
 		fire();
 	}
 
-	enum KeyType { KEYBOARD, MOUSE }
+	enum InputDevice { KEYBOARD, MOUSE }
 
 	enum Keys {
 		UNKNOWN(-1),
