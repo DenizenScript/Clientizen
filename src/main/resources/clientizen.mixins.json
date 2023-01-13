@@ -7,10 +7,10 @@
   "client": [
     "KeyBindingMixin",
     "MinecraftClientMixin",
-    "render.EntityRenderDispatcherMixin",
-    "render.EntityRendererMixin",
     "gui.WScrollPanelAccessor",
-    "gui.WTextAccessor"
+    "gui.WTextAccessor",
+    "render.EntityRenderDispatcherMixin",
+    "render.LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
