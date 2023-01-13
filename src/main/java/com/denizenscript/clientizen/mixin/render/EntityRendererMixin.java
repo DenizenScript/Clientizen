@@ -25,14 +25,8 @@ public abstract class EntityRendererMixin<T extends LivingEntity, M extends Enti
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void clientizen$addAttachFeatureRenderer(EntityRendererFactory.Context ctx, EntityModel<T> model, float shadowRadius, CallbackInfo ci) {
+		@SuppressWarnings("unchecked")
 		LivingEntityRenderer<T, M> renderer = (LivingEntityRenderer<T, M>) (Object) this;
 		addFeature(new ClientizenAttachedEntityFeatureRenderer<>(renderer));
 	}
-
-	/*@Inject(method = "getPositionOffset", cancellable = true, at = @At("HEAD"))
-	private void clientizen$getAttachedOffset(T entity, float tickDelta, CallbackInfoReturnable<Vec3d> cir) {
-		if (AttachCommand.attachedEntities.containsKey(entity.getUuid())) {
-			cir.setReturnValue(AttachCommand.attachedEntities.get(entity.getUuid()).getEntity().getLerpedPos(tickDelta).subtract(entity.getLerpedPos(tickDelta)));
-		}
-	}*/
 }
