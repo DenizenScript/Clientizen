@@ -12,6 +12,8 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 
 import java.util.List;
@@ -30,10 +32,8 @@ public class ClientizenAttachedEntityFeatureRenderer<T extends Entity, M extends
 		}
 		for (EntityTag attached : attachedEntities) {
 			matrices.push();
-			matrices.scale(1, -1, 1);
-			EntityRenderer<? super Entity> renderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(attached.getEntity());
-			BlockPos blockPos = entity.getBlockPos().add(0, 1, 0);
-			light = LightmapTextureManager.pack(renderer.getBlockLight(attached.getEntity(), blockPos), entity.world.getLightLevel(LightType.SKY, blockPos));
+			matrices.scale(1, 1, 1);
+			matrices.multiply(Direction.DOWN.getRotationQuaternion());
 			MinecraftClient.getInstance().getEntityRenderDispatcher().render(attached.getEntity(), 0, 0, 0, attached.getEntity().getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
 			matrices.pop();
 		}
