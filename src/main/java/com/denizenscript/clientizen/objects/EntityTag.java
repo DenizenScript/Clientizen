@@ -6,6 +6,7 @@ import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
+import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -39,13 +40,16 @@ public class EntityTag implements ObjectTag {
 		}
 		catch (Exception ignored) {}
 		if (context == null || context.showErrors()) {
-			Debug.log("valueOf EntityTag returning null: " + string);
+			Debug.echoError("valueOf EntityTag returning null: " + string);
 		}
 		return null;
 	}
 
 	public static boolean matches(String string) {
-		return string.startsWith("e@");
+		if (string.startsWith("e@")) {
+			return true;
+		}
+		return valueOf(string, CoreUtilities.noDebugContext) != null;
 	}
 
 	public Entity getEntity() {
