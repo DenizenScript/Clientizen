@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.render;
 
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.clientizen.scripts.commands.AttachCommand;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -14,6 +15,12 @@ import net.minecraft.util.math.Direction;
 import java.util.List;
 
 public class ClientizenAttachedEntityFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
+
+	public static void init() {
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+			registrationHelper.register(new ClientizenAttachedEntityFeatureRenderer<>(entityRenderer));
+		});
+	}
 
 	public ClientizenAttachedEntityFeatureRenderer(FeatureRendererContext<T, M> context) {
 		super(context);
