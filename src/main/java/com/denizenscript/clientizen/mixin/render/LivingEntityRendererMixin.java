@@ -51,6 +51,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 	private void clienizen$disableAnimations(M instance, Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 		AttachCommand.AttachData data = AttachCommand.attachedEntities.get(entity.getUuid());
 		if (data == null || !data.noAnimation()) {
+			//noinspection unchecked
 			instance.setAngles((T) entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
 		}
 	}
