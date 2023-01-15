@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.tags;
 
+import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -8,6 +9,8 @@ import com.denizenscript.denizencore.objects.core.MapTag;
 import com.denizenscript.denizencore.objects.core.TimeTag;
 import com.denizenscript.denizencore.tags.PseudoObjectTagBase;
 import com.denizenscript.denizencore.tags.TagManager;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 
 public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
 
@@ -20,20 +23,20 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
 
     @Override
     public void register() {
-//        tagProcessor.registerTag(ListTag.class, "loaded_entities", (attribute, object) -> {
-//            ListTag list = new ListTag();
-//            for (Entity entity : MinecraftClient.getInstance().world.getEntities()) {
-//                list.addObject(new EntityTag(entity));
-//            }
-//            return list;
-//        });
-//        tagProcessor.registerTag(EntityTag.class, "target", (attribute, object) -> {
-//            Entity target = MinecraftClient.getInstance().targetedEntity;
-//            return target != null ? new EntityTag(target) : null;
-//        });
-//        tagProcessor.registerTag(EntityTag.class, "self_entity", (attribute, object) -> {
-//            return new EntityTag(MinecraftClient.getInstance().player);
-//        });
+        tagProcessor.registerTag(ListTag.class, "loaded_entities", (attribute, object) -> {
+            ListTag list = new ListTag();
+            for (Entity entity : MinecraftClient.getInstance().world.getEntities()) {
+                list.addObject(new EntityTag(entity));
+            }
+            return list;
+        });
+        tagProcessor.registerTag(EntityTag.class, "target", (attribute, object) -> {
+            Entity target = MinecraftClient.getInstance().targetedEntity;
+            return target != null ? new EntityTag(target) : null;
+        });
+        tagProcessor.registerTag(EntityTag.class, "self_entity", (attribute, object) -> {
+            return new EntityTag(MinecraftClient.getInstance().player);
+        });
         tagProcessor.registerTag(ElementTag.class, ElementTag.class, "has_flag", (attribute, object, param) -> {
             return new ElementTag(DenizenCore.serverFlagMap.hasFlag(param.asString()));
         });
