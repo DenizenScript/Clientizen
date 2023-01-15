@@ -53,6 +53,7 @@ public class Clientizen implements ClientModInitializer {
 		CoreUtilities.basicContext = new ClientizenTagContext(true, null, null);
 		CoreUtilities.errorButNoDebugContext = new ClientizenTagContext(false, null, null);
 		DenizenCore.init(coreImplementation);
+		DenizenCore.reloadSaves();
 
 		// Configure Denizen-Core
 		CoreConfiguration.allowConsoleRedirection = false;
