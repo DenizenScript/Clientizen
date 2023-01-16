@@ -74,7 +74,7 @@ public class EntityTag implements ObjectTag {
         });
     }
 
-    public static ObjectTagProcessor<EntityTag> tagProcessor = new ObjectTagProcessor<>();
+    public static final ObjectTagProcessor<EntityTag> tagProcessor = new ObjectTagProcessor<>();
 
     @Override
     public ObjectTag getObjectAttribute(Attribute attribute) {
@@ -97,7 +97,7 @@ public class EntityTag implements ObjectTag {
         if (getEntity() != null) {
             debuggable += " <GR>(" + entity.getType().getUntranslatedName();
             if (entity.hasCustomName()) {
-                debuggable += "<Y>/<GR>" + entity.getCustomName().getString();
+                debuggable += "<LG>/<GR>" + entity.getCustomName().getString();
             }
             debuggable += ")";
         }
