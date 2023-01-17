@@ -1,6 +1,5 @@
 package com.denizenscript.clientizen.objects;
 
-import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -25,7 +24,7 @@ public class LocationTag implements ObjectTag {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.yaw = Utilities.normalizeYaw(yaw);
+        this.yaw = normalizeYaw(yaw);
         this.pitch = pitch;
     }
 
@@ -43,6 +42,15 @@ public class LocationTag implements ObjectTag {
 
     public LocationTag(Vec3i intVector) {
         this(intVector.getX(), intVector.getY(), intVector.getZ());
+    }
+
+    public LocationTag(LocationTag toCopy) {
+        x = toCopy.x;
+        y = toCopy.y;
+        z = toCopy.z;
+        yaw = toCopy.yaw;
+        pitch = toCopy.pitch;
+        world = toCopy.world;
     }
 
     public LocationTag setWorld(String world) {
@@ -119,26 +127,117 @@ public class LocationTag implements ObjectTag {
     }
 
     public static void register() {
+
+        // <--[tag]
+        // @attribute <LocationTag.x>
+        // @returns ElementTag(Decimal)
+        // @group identity
+        // @description
+        // Returns the X coordinate of the location.
+        // -->
         tagProcessor.registerStaticTag(ElementTag.class, "x", (attribute, object) -> {
             return new ElementTag(object.x);
         });
+
+        // <--[tag]
+        // @attribute <LocationTag.y>
+        // @returns ElementTag(Decimal)
+        // @group identity
+        // @description
+        // Returns the Y coordinate of the location.
+        // -->
         tagProcessor.registerStaticTag(ElementTag.class, "y", (attribute, object) -> {
             return new ElementTag(object.y);
         });
+
+        // <--[tag]
+        // @attribute <LocationTag.z>
+        // @returns ElementTag(Decimal)
+        // @group identity
+        // @description
+        // Returns the Z coordinate of the location.
+        // -->
         tagProcessor.registerStaticTag(ElementTag.class, "z", (attribute, object) -> {
             return new ElementTag(object.z);
         });
+
+        // <--[tag]
+        // @attribute <LocationTag.yaw>
+        // @returns ElementTag(Decimal)
+        // @group identity
+        // @description
+        // Returns the location's normalized yaw.
+        // -->
         tagProcessor.registerStaticTag(ElementTag.class, "yaw", (attribute, object) -> {
+            return new ElementTag(normalizeYaw(object.yaw));
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.yaw.raw>
+        // @returns ElementTag(Decimal)
+        // @group identity
+        // @description
+        // Returns the location's raw (un-normalized) yaw.
+        // -->
+        tagProcessor.registerStaticTag(ElementTag.class, "raw_yaw", (attribute, object) -> {
             return new ElementTag(object.yaw);
         });
+
+        // <--[tag]
+        // @attribute <LocationTag.pitch>
+        // @returns ElementTag(Decimal)
+        // @group identity
+        // @description
+        // Returns the location's pitch.
+        // -->
         tagProcessor.registerStaticTag(ElementTag.class, "pitch", (attribute, object) -> {
             return new ElementTag(object.pitch);
         });
+
+        // <--[tag]
+        // @attribute <LocationTag.world>
+        // @returns ElementTag
+        // @group identity
+        // @description
+        // Returns the name of the world that the location is in.
+        // -->
         tagProcessor.registerStaticTag(ElementTag.class, "world", (attribute, object) -> {
             return new ElementTag(object.world);
         });
+
+        // <--[tag]
+        // @attribute <LocationTag.block>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location of the block this location is on,
+        // i.e. returns a location without decimals or direction.
+        // Note that you almost never actually need this tag. This does not "get the block", this just rounds coordinates down.
+        // If you have this in a script, it is more likely to be a mistake than actually needed.
+        // Consider using <@link tag LocationTag.round_down> instead.
+        // -->
         tagProcessor.registerStaticTag(LocationTag.class, "block", (attribute, object) -> {
             return new LocationTag(object.getBlockX(), object.getBlockY(), object.getBlockZ()).setWorld(object.world);
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.round_down>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns a rounded-downward version of the LocationTag's coordinates.
+        // That is, each component (X, Y, Z, Yaw, Pitch) is rounded downward
+        // (eg, 0.1 becomes 0.0, 0.5 becomes 0.0, 0.9 becomes 0.0).
+        // This is equivalent to the block coordinates of the location.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "round_down", (attribute, object) -> {
+            LocationTag result = object.duplicate();
+            result.x = Math.floor(result.x);
+            result.y = Math.floor(result.y);
+            result.z = Math.floor(result.z);
+            result.yaw = (float) Math.floor((result.yaw));
+            result.pitch = (float) Math.floor(result.pitch);
+            return result;
         });
     }
 
@@ -147,6 +246,11 @@ public class LocationTag implements ObjectTag {
     @Override
     public ObjectTag getObjectAttribute(Attribute attribute) {
         return tagProcessor.getObjectAttribute(this, attribute);
+    }
+
+    @Override
+    public LocationTag duplicate() {
+        return new LocationTag(this);
     }
 
     public String identify(String separator) {
@@ -186,6 +290,14 @@ public class LocationTag implements ObjectTag {
     @Override
     public boolean isUnique() {
         return false;
+    }
+
+    public static float normalizeYaw(float yaw) {
+        yaw = yaw % 360;
+        if (yaw < 0) {
+            yaw += 360.0;
+        }
+        return yaw;
     }
 
     private String prefix = "Location";
