@@ -1,6 +1,7 @@
 package com.denizenscript.clientizen.tags;
 
 import com.denizenscript.clientizen.objects.EntityTag;
+import com.denizenscript.clientizen.objects.LocationTag;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -11,6 +12,7 @@ import com.denizenscript.denizencore.tags.PseudoObjectTagBase;
 import com.denizenscript.denizencore.tags.TagManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.hit.BlockHitResult;
 
 public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
 
@@ -33,6 +35,12 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
         tagProcessor.registerTag(EntityTag.class, "target", (attribute, object) -> {
             Entity target = MinecraftClient.getInstance().targetedEntity;
             return target != null ? new EntityTag(target) : null;
+        });
+        tagProcessor.registerTag(LocationTag.class, "cursor_on", (attribute, object) -> {
+            return MinecraftClient.getInstance().crosshairTarget instanceof BlockHitResult blockHit ? new LocationTag(blockHit.getBlockPos()) : null;
+        });
+        tagProcessor.registerTag(LocationTag.class, "cursor_on_precise", (attribute, object) -> {
+            return MinecraftClient.getInstance().crosshairTarget instanceof BlockHitResult blockHit ? new LocationTag(blockHit.getPos()) : null;
         });
         tagProcessor.registerTag(EntityTag.class, "self_entity", (attribute, object) -> {
             return new EntityTag(MinecraftClient.getInstance().player);
