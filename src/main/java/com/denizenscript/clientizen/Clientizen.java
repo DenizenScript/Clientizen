@@ -4,6 +4,7 @@ import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
 import com.denizenscript.clientizen.events.ClientizenScriptEventRegistry;
 import com.denizenscript.clientizen.network.NetworkManager;
 import com.denizenscript.clientizen.objects.ClientizenObjectRegistry;
+import com.denizenscript.clientizen.objects.properties.PropertyRegistry;
 import com.denizenscript.clientizen.scripts.ClientScriptHandler;
 import com.denizenscript.clientizen.scripts.commands.ClientizenCommandRegistry;
 import com.denizenscript.clientizen.scripts.containers.ClientizenContainerRegistry;
@@ -72,6 +73,7 @@ public class Clientizen implements ClientModInitializer {
 		ClientizenScriptEventRegistry.registerEvents();
 		ClientizenObjectRegistry.registerObjects();
 		ClientizenTagRegistry.registerTagHandlers();
+		PropertyRegistry.register();
 
 		// Initialize Clientizen systems
 		NetworkManager.init();
