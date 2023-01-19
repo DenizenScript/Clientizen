@@ -17,9 +17,19 @@ public class IntMaterialProperty extends MojangMaterialProperty<IntProperty, Int
             return new ElementTag(object.material.state.get(object.internalProperty));
         });
         registerMechanism(ElementTag.class, currentlyRegistering, (IntMaterialProperty object, Mechanism mechanism, ElementTag input) -> {
-            if (mechanism.requireInteger()) {
-                object.material.state = (State<?, ?>) object.material.state.with(object.internalProperty, input.asInt());
+            if (!mechanism.requireInteger()) {
+                return;
             }
+            int newValue = input.asInt();
+            if (newValue < object.internalProperty.min) {
+                mechanism.echoError("Invalid number '" + newValue + "' specified: must be at least '" + object.internalProperty.min + "'.");
+                return;
+            }
+            if (newValue > object.internalProperty.max) {
+                mechanism.echoError("Invalid number '" + newValue + "' specified: cannot be more than '" + object.internalProperty.max + "'.");
+                return;
+            }
+            object.material.state = (State<?, ?>) object.material.state.with(object.internalProperty, newValue);
         });
     }
 }
