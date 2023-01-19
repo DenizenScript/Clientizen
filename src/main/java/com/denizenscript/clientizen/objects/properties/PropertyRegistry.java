@@ -1,11 +1,9 @@
 package com.denizenscript.clientizen.objects.properties;
 
 import com.denizenscript.clientizen.objects.MaterialTag;
+import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.*;
 
 public class PropertyRegistry {
 
@@ -23,47 +21,47 @@ public class PropertyRegistry {
         registerBooleanProperty(property, property.getName());
     }
 
-    public static void registerBooleanProperty(BooleanProperty property, String name) {
-        PropertyParser.PropertyGetter getter = object -> {
-            if (!(object instanceof MaterialTag material) || material.state == null || !material.state.contains(property)) {
-                return null;
-            }
-            return new BooleanMaterialProperty(name, material, property);
-        };
-        BooleanMaterialProperty.currentlyRegistering = name;
-        PropertyParser.registerPropertyGetter(getter, MaterialTag.class, null, null, BooleanMaterialProperty.class);
-        BooleanMaterialProperty.currentlyRegistering = null;
-    }
-
     public static void registerEnumProperty(EnumProperty<?> property) {
         registerEnumProperty(property, property.getName());
-    }
-
-    public static void registerEnumProperty(EnumProperty<?> property, String name) {
-        PropertyParser.PropertyGetter getter = object -> {
-            if (!(object instanceof MaterialTag material) || material.state == null || !material.state.contains(property)) {
-                return null;
-            }
-            return new EnumMaterialProperty<>(name, material, property);
-        };
-        EnumMaterialProperty.currentlyRegistering = name;
-        PropertyParser.registerPropertyGetter(getter, MaterialTag.class, null, null, EnumMaterialProperty.class);
-        EnumMaterialProperty.currentlyRegistering = null;
     }
 
     public static void registerIntProperty(IntProperty property) {
         registerIntProperty(property, property.getName());
     }
 
+    public static void registerBooleanProperty(BooleanProperty property, String name) {
+        registerPropertyGetter(new MaterialInternalPropertyGetter<>(name, property, BooleanMaterialProperty::new), BooleanMaterialProperty.class);
+    }
+
+    public static void registerEnumProperty(EnumProperty<?> property, String name) {
+        registerPropertyGetter(new MaterialInternalPropertyGetter<>(name, property, EnumMaterialProperty::new), EnumMaterialProperty.class);
+    }
+
     public static void registerIntProperty(IntProperty property, String name) {
-        PropertyParser.PropertyGetter getter = object -> {
-            if (!(object instanceof MaterialTag material) || material.state == null || !material.state.contains(property)) {
-                return null;
+        registerPropertyGetter(new MaterialInternalPropertyGetter<>(name, property, IntMaterialProperty::new), IntMaterialProperty.class);
+    }
+
+    public static void registerPropertyGetter(MaterialInternalPropertyGetter<?, ?> getter, Class<? extends com.denizenscript.denizencore.objects.properties.Property> propertyClass) {
+        MinecraftMaterialProperty.currentlyRegistering = getter.name();
+        PropertyParser.registerPropertyGetter(getter, MaterialTag.class, null, null, propertyClass);
+        MinecraftMaterialProperty.currentlyRegistering = null;
+    }
+
+    public record MaterialInternalPropertyGetter<T extends Property<V>, V extends Comparable<V>>
+            (String name, T internalProperty, MinecraftMaterialPropertySupplier<T> supplier) implements PropertyParser.PropertyGetter {
+
+        @Override
+        public com.denizenscript.denizencore.objects.properties.Property get(ObjectTag object) {
+            if (object instanceof MaterialTag material && material.state != null && material.state.contains(internalProperty)) {
+                return supplier.create(name, material, internalProperty);
             }
-            return new IntMaterialProperty(name, material, property);
-        };
-        IntMaterialProperty.currentlyRegistering = name;
-        PropertyParser.registerPropertyGetter(getter, MaterialTag.class, null, null, IntMaterialProperty.class);
-        IntMaterialProperty.currentlyRegistering = null;
+            return null;
+        }
+    }
+
+    @FunctionalInterface
+    public interface MinecraftMaterialPropertySupplier<T extends net.minecraft.state.property.Property<?>> {
+
+        MinecraftMaterialProperty<?, ?> create(String name, MaterialTag material, T internalProperty);
     }
 }
