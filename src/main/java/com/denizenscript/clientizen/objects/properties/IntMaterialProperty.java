@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.objects.properties;
 
+import com.denizenscript.clientizen.mixin.IntPropertyAccessor;
 import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -20,12 +21,13 @@ public class IntMaterialProperty extends MinecraftMaterialProperty<IntProperty, 
                 return;
             }
             int newValue = input.asInt();
-            if (newValue < object.internalProperty.min) {
-                mechanism.echoError("Invalid number '" + newValue + "' specified: must be at least '" + object.internalProperty.min + "'.");
+            IntPropertyAccessor accessor = (IntPropertyAccessor) object.internalProperty;
+            if (newValue < accessor.getMin()) {
+                mechanism.echoError("Invalid number '" + newValue + "' specified: must be at least '" + accessor.getMin() + "'.");
                 return;
             }
-            if (newValue > object.internalProperty.max) {
-                mechanism.echoError("Invalid number '" + newValue + "' specified: cannot be more than '" + object.internalProperty.max + "'.");
+            if (newValue > accessor.getMax()) {
+                mechanism.echoError("Invalid number '" + newValue + "' specified: cannot be more than '" + accessor.getMax() + "'.");
                 return;
             }
             object.material.state = object.material.state.with(object.internalProperty, newValue);
