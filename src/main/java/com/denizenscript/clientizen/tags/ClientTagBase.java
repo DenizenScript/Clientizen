@@ -67,7 +67,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
         tagProcessor.registerMechanism("modifyblock", false, MaterialTag.class, (object, mechanism, input) -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.crosshairTarget instanceof BlockHitResult blockHitResult) {
-                client.world.setBlockState(blockHitResult.getBlockPos(), (BlockState) input.state);
+                client.world.setBlockState(blockHitResult.getBlockPos(), input.state);
             }
         });
     }

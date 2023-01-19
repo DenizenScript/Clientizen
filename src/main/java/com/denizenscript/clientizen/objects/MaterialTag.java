@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 
 public class MaterialTag implements ObjectTag, Adjustable {
 
-    public State<?, ?> state;
+    public BlockState state;
     public Item item;
 
     public MaterialTag(BlockState state) {
@@ -69,12 +69,8 @@ public class MaterialTag implements ObjectTag, Adjustable {
         return valueOf(string, CoreUtilities.noDebugContext) != null;
     }
 
-    public Block getBlock() {
-        return state instanceof BlockState blockState ? blockState.getBlock() : null;
-    }
-
     public String getName() {
-        return Utilities.stringifyIdentifier(state != null ? Registries.BLOCK.getId(getBlock()) : Registries.ITEM.getId(item));
+        return Utilities.stringifyIdentifier(state != null ? Registries.BLOCK.getId(state.getBlock()) : Registries.ITEM.getId(item));
     }
 
     public static void register() {

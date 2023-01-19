@@ -4,7 +4,6 @@ import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.tags.Attribute;
-import net.minecraft.state.State;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 
@@ -20,7 +19,7 @@ public class EnumMaterialProperty<T extends Enum<T> & StringIdentifiable> extend
         });
         registerMechanism(ElementTag.class, currentlyRegistering, (EnumMaterialProperty<T> object, Mechanism mechanism, ElementTag input) -> {
             if (mechanism.requireEnum(object.internalProperty.getType())) {
-                object.material.state = (State<?, ?>) object.material.state.with(object.internalProperty, input.asEnum(object.internalProperty.getType()));
+                object.material.state = object.material.state.with(object.internalProperty, input.asEnum(object.internalProperty.getType()));
             }
         });
     }

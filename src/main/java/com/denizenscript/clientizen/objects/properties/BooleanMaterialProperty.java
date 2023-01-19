@@ -4,7 +4,6 @@ import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.tags.Attribute;
-import net.minecraft.state.State;
 import net.minecraft.state.property.BooleanProperty;
 
 public class BooleanMaterialProperty extends MinecraftMaterialProperty<BooleanProperty, Boolean> {
@@ -19,7 +18,7 @@ public class BooleanMaterialProperty extends MinecraftMaterialProperty<BooleanPr
         });
         registerMechanism(ElementTag.class, currentlyRegistering, (BooleanMaterialProperty object, Mechanism mechanism, ElementTag input) -> {
             if (mechanism.requireBoolean()) {
-                object.material.state = (State<?, ?>) object.material.state.with(object.internalProperty, input.asBoolean());
+                object.material.state = object.material.state.with(object.internalProperty, input.asBoolean());
             }
         });
     }

@@ -4,7 +4,6 @@ import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.tags.Attribute;
-import net.minecraft.state.State;
 import net.minecraft.state.property.IntProperty;
 
 public class IntMaterialProperty extends MinecraftMaterialProperty<IntProperty, Integer> {
@@ -29,7 +28,7 @@ public class IntMaterialProperty extends MinecraftMaterialProperty<IntProperty, 
                 mechanism.echoError("Invalid number '" + newValue + "' specified: cannot be more than '" + object.internalProperty.max + "'.");
                 return;
             }
-            object.material.state = (State<?, ?>) object.material.state.with(object.internalProperty, newValue);
+            object.material.state = object.material.state.with(object.internalProperty, newValue);
         });
     }
 }
