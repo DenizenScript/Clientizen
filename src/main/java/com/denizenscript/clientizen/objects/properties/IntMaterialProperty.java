@@ -23,11 +23,11 @@ public class IntMaterialProperty extends MinecraftMaterialProperty<IntProperty, 
             int newValue = input.asInt();
             IntPropertyAccessor accessor = (IntPropertyAccessor) object.internalProperty;
             if (newValue < accessor.getMin()) {
-                mechanism.echoError("Invalid number '" + newValue + "' specified: must be at least '" + accessor.getMin() + "'.");
+                mechanism.echoError("Invalid input number, must be at least " + accessor.getMin() + ".");
                 return;
             }
             if (newValue > accessor.getMax()) {
-                mechanism.echoError("Invalid number '" + newValue + "' specified: cannot be more than '" + accessor.getMax() + "'.");
+                mechanism.echoError("Invalid input number, cannot be more than '" + accessor.getMax() + "'.");
                 return;
             }
             object.material.state = object.material.state.with(object.internalProperty, newValue);
