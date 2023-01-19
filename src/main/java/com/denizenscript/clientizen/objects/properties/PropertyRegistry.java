@@ -30,24 +30,24 @@ public class PropertyRegistry {
     }
 
     public static void registerBooleanProperty(BooleanProperty property, String name) {
-        registerPropertyGetter(new MaterialInternalPropertyGetter<>(name, property, BooleanMaterialProperty::new), BooleanMaterialProperty.class);
+        registerPropertyGetter(new MinecraftMaterialPropertyGetter<>(name, property, BooleanMaterialProperty::new), BooleanMaterialProperty.class);
     }
 
     public static void registerEnumProperty(EnumProperty<?> property, String name) {
-        registerPropertyGetter(new MaterialInternalPropertyGetter<>(name, property, EnumMaterialProperty::new), EnumMaterialProperty.class);
+        registerPropertyGetter(new MinecraftMaterialPropertyGetter<>(name, property, EnumMaterialProperty::new), EnumMaterialProperty.class);
     }
 
     public static void registerIntProperty(IntProperty property, String name) {
-        registerPropertyGetter(new MaterialInternalPropertyGetter<>(name, property, IntMaterialProperty::new), IntMaterialProperty.class);
+        registerPropertyGetter(new MinecraftMaterialPropertyGetter<>(name, property, IntMaterialProperty::new), IntMaterialProperty.class);
     }
 
-    public static void registerPropertyGetter(MaterialInternalPropertyGetter<?, ?> getter, Class<? extends com.denizenscript.denizencore.objects.properties.Property> propertyClass) {
+    public static void registerPropertyGetter(MinecraftMaterialPropertyGetter<?, ?> getter, Class<? extends com.denizenscript.denizencore.objects.properties.Property> propertyClass) {
         MinecraftMaterialProperty.currentlyRegistering = getter.name();
         PropertyParser.registerPropertyGetter(getter, MaterialTag.class, null, null, propertyClass);
         MinecraftMaterialProperty.currentlyRegistering = null;
     }
 
-    public record MaterialInternalPropertyGetter<T extends Property<V>, V extends Comparable<V>>
+    public record MinecraftMaterialPropertyGetter<T extends Property<V>, V extends Comparable<V>>
             (String name, T internalProperty, MinecraftMaterialPropertySupplier<T> supplier) implements PropertyParser.PropertyGetter {
 
         @Override
