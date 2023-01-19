@@ -8,7 +8,7 @@ import net.minecraft.state.State;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 
-public class EnumMaterialProperty<T extends Enum<T> & StringIdentifiable> extends MojangMaterialProperty<EnumProperty<T>, T> {
+public class EnumMaterialProperty<T extends Enum<T> & StringIdentifiable> extends MinecraftMaterialProperty<EnumProperty<T>, T> {
 
     public EnumMaterialProperty(String name, MaterialTag material, EnumProperty<T> internalProperty) {
         super(name, material, internalProperty);

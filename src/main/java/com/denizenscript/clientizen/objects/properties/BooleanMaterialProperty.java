@@ -7,7 +7,7 @@ import com.denizenscript.denizencore.tags.Attribute;
 import net.minecraft.state.State;
 import net.minecraft.state.property.BooleanProperty;
 
-public class BooleanMaterialProperty extends MojangMaterialProperty<BooleanProperty, Boolean> {
+public class BooleanMaterialProperty extends MinecraftMaterialProperty<BooleanProperty, Boolean> {
 
     public BooleanMaterialProperty(String name, MaterialTag material, BooleanProperty internalProperty) {
         super(name, material, internalProperty);

@@ -7,7 +7,7 @@ import com.denizenscript.denizencore.tags.Attribute;
 import net.minecraft.state.State;
 import net.minecraft.state.property.IntProperty;
 
-public class IntMaterialProperty extends MojangMaterialProperty<IntProperty, Integer> {
+public class IntMaterialProperty extends MinecraftMaterialProperty<IntProperty, Integer> {
     public IntMaterialProperty(String name, MaterialTag material, IntProperty internalProperty) {
         super(name, material, internalProperty);
     }
