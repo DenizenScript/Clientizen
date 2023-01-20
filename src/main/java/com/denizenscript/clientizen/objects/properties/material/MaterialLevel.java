@@ -1,7 +1,8 @@
-package com.denizenscript.clientizen.objects.properties;
+package com.denizenscript.clientizen.objects.properties.material;
 
 import com.denizenscript.clientizen.mixin.IntPropertyAccessor;
 import com.denizenscript.clientizen.objects.MaterialTag;
+import com.denizenscript.clientizen.objects.properties.material.internal.IntMaterialProperty;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;

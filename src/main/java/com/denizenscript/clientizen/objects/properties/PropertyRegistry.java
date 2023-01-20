@@ -1,6 +1,11 @@
 package com.denizenscript.clientizen.objects.properties;
 
 import com.denizenscript.clientizen.objects.MaterialTag;
+import com.denizenscript.clientizen.objects.properties.material.MaterialLevel;
+import com.denizenscript.clientizen.objects.properties.material.internal.BooleanMaterialProperty;
+import com.denizenscript.clientizen.objects.properties.material.internal.EnumMaterialProperty;
+import com.denizenscript.clientizen.objects.properties.material.internal.IntMaterialProperty;
+import com.denizenscript.clientizen.objects.properties.material.internal.MinecraftMaterialProperty;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.utilities.debugging.Debug;

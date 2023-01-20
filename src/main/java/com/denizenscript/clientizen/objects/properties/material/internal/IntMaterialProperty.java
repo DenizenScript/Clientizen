@@ -1,4 +1,4 @@
-package com.denizenscript.clientizen.objects.properties;
+package com.denizenscript.clientizen.objects.properties.material.internal;
 
 import com.denizenscript.clientizen.mixin.IntPropertyAccessor;
 import com.denizenscript.clientizen.objects.MaterialTag;
