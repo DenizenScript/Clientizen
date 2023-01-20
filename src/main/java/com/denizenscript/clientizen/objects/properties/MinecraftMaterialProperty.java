@@ -33,10 +33,11 @@ public abstract class MinecraftMaterialProperty<T extends net.minecraft.state.pr
     @SuppressWarnings("unchecked")
     public static <T extends MinecraftMaterialProperty<?, ?>, R extends ObjectTag> void registerTag(Class<R> returnType, String name, PropertyParser.PropertyTagWithReturn<T, R> runnable) {
         final PropertyParser.PropertyGetter getter = PropertyParser.currentlyRegisteringProperty;
+        final String propertyName = currentlyRegistering;
         MaterialTag.tagProcessor.registerTag(returnType, name, (attribute, object) -> {
             Property prop = getter.get(object);
             if (prop == null) {
-                attribute.echoError("Property 'MaterialTag." + name + "' does not describe the input object.");
+                attribute.echoError("Property 'MaterialTag." + propertyName + "' does not describe the input object.");
                 return null;
             }
             return runnable.run(attribute, (T) prop);
@@ -46,10 +47,11 @@ public abstract class MinecraftMaterialProperty<T extends net.minecraft.state.pr
     @SuppressWarnings("unchecked")
     public static <T extends MinecraftMaterialProperty<?, ?>, P extends ObjectTag> void registerMechanism(Class<P> paramType, String name, PropertyParser.PropertyMechanismWithParam<T, P> runner) {
         final PropertyParser.PropertyGetter getter = PropertyParser.currentlyRegisteringProperty;
+        final String propertyName = currentlyRegistering;
         MaterialTag.tagProcessor.registerMechanism(name, true, (object, mechanism) -> {
             Property prop = getter.get(object);
             if (prop == null) {
-                mechanism.echoError("Property 'MaterialTag." + name + "' does not describe the input object.");
+                mechanism.echoError("Property 'MaterialTag." + propertyName + "' does not describe the input object.");
                 return;
             }
             if (mechanism.value == null) {

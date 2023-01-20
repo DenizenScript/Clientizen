@@ -27,7 +27,7 @@ public class IntMaterialProperty extends MinecraftMaterialProperty<IntProperty, 
                 return;
             }
             if (newValue > accessor.getMax()) {
-                mechanism.echoError("Invalid input number, cannot be more than '" + accessor.getMax() + "'.");
+                mechanism.echoError("Invalid input number, cannot be more than " + accessor.getMax() + ".");
                 return;
             }
             object.material.state = object.material.state.with(object.internalProperty, newValue);
