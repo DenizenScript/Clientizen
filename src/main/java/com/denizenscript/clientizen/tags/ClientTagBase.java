@@ -1,8 +1,8 @@
 package com.denizenscript.clientizen.tags;
 
 import com.denizenscript.clientizen.objects.EntityTag;
-import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.clientizen.objects.LocationTag;
+import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -12,7 +12,6 @@ import com.denizenscript.denizencore.objects.core.TimeTag;
 import com.denizenscript.denizencore.scripts.commands.core.AdjustCommand;
 import com.denizenscript.denizencore.tags.PseudoObjectTagBase;
 import com.denizenscript.denizencore.tags.TagManager;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
