@@ -6,7 +6,7 @@ import com.denizenscript.denizencore.objects.properties.Property;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 
-public abstract class MinecraftMaterialProperty<T extends net.minecraft.state.property.Property<V>, V extends Comparable<V>> implements Property {
+public abstract class MaterialMinecraftProperty<T extends net.minecraft.state.property.Property<V>, V extends Comparable<V>> implements Property {
 
     public static String currentlyRegistering;
 
@@ -14,7 +14,7 @@ public abstract class MinecraftMaterialProperty<T extends net.minecraft.state.pr
     public MaterialTag material;
     public String name;
 
-    public MinecraftMaterialProperty(String name, MaterialTag material, T internalProperty) {
+    public MaterialMinecraftProperty(String name, MaterialTag material, T internalProperty) {
         this.name = name;
         this.material = material;
         this.internalProperty = internalProperty;
@@ -31,7 +31,7 @@ public abstract class MinecraftMaterialProperty<T extends net.minecraft.state.pr
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends MinecraftMaterialProperty<?, ?>, R extends ObjectTag> void registerTag(Class<R> returnType, String name, PropertyParser.PropertyTagWithReturn<T, R> runnable) {
+    public static <T extends MaterialMinecraftProperty<?, ?>, R extends ObjectTag> void registerTag(Class<R> returnType, String name, PropertyParser.PropertyTagWithReturn<T, R> runnable) {
         final PropertyParser.PropertyGetter getter = PropertyParser.currentlyRegisteringProperty;
         final String propertyName = currentlyRegistering;
         MaterialTag.tagProcessor.registerTag(returnType, name, (attribute, object) -> {
@@ -45,7 +45,7 @@ public abstract class MinecraftMaterialProperty<T extends net.minecraft.state.pr
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends MinecraftMaterialProperty<?, ?>, P extends ObjectTag> void registerMechanism(Class<P> paramType, String name, PropertyParser.PropertyMechanismWithParam<T, P> runner) {
+    public static <T extends MaterialMinecraftProperty<?, ?>, P extends ObjectTag> void registerMechanism(Class<P> paramType, String name, PropertyParser.PropertyMechanismWithParam<T, P> runner) {
         final PropertyParser.PropertyGetter getter = PropertyParser.currentlyRegisteringProperty;
         final String propertyName = currentlyRegistering;
         MaterialTag.tagProcessor.registerMechanism(name, true, (object, mechanism) -> {

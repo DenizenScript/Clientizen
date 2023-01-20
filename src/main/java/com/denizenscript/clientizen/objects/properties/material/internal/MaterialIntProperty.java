@@ -7,16 +7,16 @@ import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.tags.Attribute;
 import net.minecraft.state.property.IntProperty;
 
-public class IntMaterialProperty extends MinecraftMaterialProperty<IntProperty, Integer> {
-    public IntMaterialProperty(String name, MaterialTag material, IntProperty internalProperty) {
+public class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
+    public MaterialIntProperty(String name, MaterialTag material, IntProperty internalProperty) {
         super(name, material, internalProperty);
     }
 
     public static void register() {
-        registerTag(ElementTag.class, currentlyRegistering, (Attribute attribute, IntMaterialProperty object) -> {
+        registerTag(ElementTag.class, currentlyRegistering, (Attribute attribute, MaterialIntProperty object) -> {
             return new ElementTag(object.material.state.get(object.internalProperty));
         });
-        registerMechanism(ElementTag.class, currentlyRegistering, (IntMaterialProperty object, Mechanism mechanism, ElementTag input) -> {
+        registerMechanism(ElementTag.class, currentlyRegistering, (MaterialIntProperty object, Mechanism mechanism, ElementTag input) -> {
             if (!mechanism.requireInteger()) {
                 return;
             }

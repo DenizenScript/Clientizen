@@ -2,10 +2,10 @@ package com.denizenscript.clientizen.objects.properties;
 
 import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.clientizen.objects.properties.material.MaterialLevel;
-import com.denizenscript.clientizen.objects.properties.material.internal.BooleanMaterialProperty;
-import com.denizenscript.clientizen.objects.properties.material.internal.EnumMaterialProperty;
-import com.denizenscript.clientizen.objects.properties.material.internal.IntMaterialProperty;
-import com.denizenscript.clientizen.objects.properties.material.internal.MinecraftMaterialProperty;
+import com.denizenscript.clientizen.objects.properties.material.internal.MaterialBooleanProperty;
+import com.denizenscript.clientizen.objects.properties.material.internal.MaterialEnumProperty;
+import com.denizenscript.clientizen.objects.properties.material.internal.MaterialIntProperty;
+import com.denizenscript.clientizen.objects.properties.material.internal.MaterialMinecraftProperty;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
@@ -27,32 +27,32 @@ public class PropertyRegistry {
     }
 
     public static void registerBooleanProperty(String name, BooleanProperty... properties) {
-        registerPropertyGetter(name, BooleanMaterialProperty::new, properties, BooleanMaterialProperty.class);
+        registerPropertyGetter(name, MaterialBooleanProperty::new, properties, MaterialBooleanProperty.class);
     }
 
     public static void registerIntProperty(String name, IntProperty... properties) {
-        registerPropertyGetter(name, IntMaterialProperty::new, properties, IntMaterialProperty.class);
+        registerPropertyGetter(name, MaterialIntProperty::new, properties, MaterialIntProperty.class);
     }
 
     @SafeVarargs
     public static <T extends Enum<T> & StringIdentifiable> void registerEnumProperty(String name, EnumProperty<T>... properties) {
-        registerPropertyGetter(name, EnumMaterialProperty::new, properties, EnumMaterialProperty.class);
+        registerPropertyGetter(name, MaterialEnumProperty::new, properties, MaterialEnumProperty.class);
     }
 
-    public static void registerBooleanProperty(String name, Class<? extends BooleanMaterialProperty> propertyClass) {
-        registerPropertyGetter(name, BooleanMaterialProperty::new, getHandledProperties(propertyClass), propertyClass);
+    public static void registerBooleanProperty(String name, Class<? extends MaterialBooleanProperty> propertyClass) {
+        registerPropertyGetter(name, MaterialBooleanProperty::new, getHandledProperties(propertyClass), propertyClass);
     }
 
-    public static void registerIntProperty(String name, Class<? extends IntMaterialProperty> propertyClass) {
-        registerPropertyGetter(name, IntMaterialProperty::new, getHandledProperties(propertyClass), propertyClass);
+    public static void registerIntProperty(String name, Class<? extends MaterialIntProperty> propertyClass) {
+        registerPropertyGetter(name, MaterialIntProperty::new, getHandledProperties(propertyClass), propertyClass);
     }
 
-    public static <T extends Enum<T> & StringIdentifiable, P extends EnumMaterialProperty<T>> void registerEnumProperty(String name, Class<P> propertyClass) {
-        registerPropertyGetter(name, EnumMaterialProperty::new, getHandledProperties(propertyClass), propertyClass);
+    public static <T extends Enum<T> & StringIdentifiable, P extends MaterialEnumProperty<T>> void registerEnumProperty(String name, Class<P> propertyClass) {
+        registerPropertyGetter(name, MaterialEnumProperty::new, getHandledProperties(propertyClass), propertyClass);
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Property<?>> T[] getHandledProperties(Class<? extends MinecraftMaterialProperty<T, ?>> propertyClass) {
+    private static <T extends Property<?>> T[] getHandledProperties(Class<? extends MaterialMinecraftProperty<T, ?>> propertyClass) {
         try {
             Field handledField = propertyClass.getDeclaredField("handledProperties");
             return (T[]) handledField.get(null);
@@ -63,15 +63,15 @@ public class PropertyRegistry {
         return null;
     }
 
-    public static <T extends Property<V>, V extends Comparable<V>> void registerPropertyGetter(String name, MinecraftMaterialPropertySupplier<T> supplier, T[] properties, Class<? extends com.denizenscript.denizencore.objects.properties.Property> propertyClass) {
-        MinecraftMaterialProperty.currentlyRegistering = name;
-        PropertyParser.registerPropertyGetter(new MinecraftMaterialPropertyGetter<>(name, supplier, properties), MaterialTag.class, null, null, propertyClass);
-        MinecraftMaterialProperty.currentlyRegistering = null;
+    public static <T extends Property<V>, V extends Comparable<V>> void registerPropertyGetter(String name, MaterialMinecraftPropertySupplier<T> supplier, T[] properties, Class<? extends com.denizenscript.denizencore.objects.properties.Property> propertyClass) {
+        MaterialMinecraftProperty.currentlyRegistering = name;
+        PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter<>(name, supplier, properties), MaterialTag.class, null, null, propertyClass);
+        MaterialMinecraftProperty.currentlyRegistering = null;
     }
 
     @SuppressWarnings("unchecked")
-    public record MinecraftMaterialPropertyGetter<T extends Property<V>, V extends Comparable<V>>
-            (String name, MinecraftMaterialPropertySupplier<T> supplier, T... internalProperties) implements PropertyParser.PropertyGetter {
+    public record MaterialMinecraftPropertyGetter<T extends Property<V>, V extends Comparable<V>>
+            (String name, MaterialMinecraftPropertySupplier<T> supplier, T... internalProperties) implements PropertyParser.PropertyGetter {
 
         @Override
         public com.denizenscript.denizencore.objects.properties.Property get(ObjectTag object) {
@@ -88,8 +88,8 @@ public class PropertyRegistry {
     }
 
     @FunctionalInterface
-    public interface MinecraftMaterialPropertySupplier<T extends Property<?>> {
+    public interface MaterialMinecraftPropertySupplier<T extends Property<?>> {
 
-        MinecraftMaterialProperty<?, ?> create(String name, MaterialTag material, T internalProperty);
+        MaterialMinecraftProperty<?, ?> create(String name, MaterialTag material, T internalProperty);
     }
 }
