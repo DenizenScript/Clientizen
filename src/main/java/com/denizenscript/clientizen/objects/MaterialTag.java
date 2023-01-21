@@ -13,11 +13,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
-import net.minecraft.state.State;
 import net.minecraft.util.Identifier;
 
 public class MaterialTag implements ObjectTag, Adjustable {
 
+    // Needs to match the server-side impl, which uses bukkit's all-in-one Material enum
     public BlockState state;
     public Item item;
 
@@ -70,7 +70,7 @@ public class MaterialTag implements ObjectTag, Adjustable {
     }
 
     public String getName() {
-        return Utilities.stringifyIdentifier(state != null ? Registries.BLOCK.getId(state.getBlock()) : Registries.ITEM.getId(item));
+        return Utilities.idToString(state != null ? Registries.BLOCK.getId(state.getBlock()) : Registries.ITEM.getId(item));
     }
 
     public static void register() {

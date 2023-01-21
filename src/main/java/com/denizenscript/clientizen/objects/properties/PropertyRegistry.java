@@ -18,52 +18,15 @@ import java.lang.reflect.Field;
 public class PropertyRegistry {
 
     public static void register() {
-        registerBooleanProperty("switched", Properties.EYE, Properties.POWERED, Properties.ENABLED);
-        registerBooleanProperty("waterlogged", Properties.WATERLOGGED);
-        registerBooleanProperty("hanging", Properties.HANGING);
-        registerEnumProperty("bed_part", Properties.BED_PART);
-        registerEnumProperty("instrument", Properties.INSTRUMENT);
-        registerIntProperty("level", MaterialLevel.class);
+        registerProperty("switched", MaterialBooleanProperty::new, MaterialBooleanProperty.class, Properties.EYE, Properties.POWERED, Properties.ENABLED);
+        registerProperty("waterlogged", MaterialBooleanProperty::new, MaterialBooleanProperty.class, Properties.WATERLOGGED);
+        registerProperty("hanging", MaterialBooleanProperty::new, MaterialBooleanProperty.class, Properties.HANGING);
+        registerProperty("bed_part", MaterialEnumProperty::new, MaterialEnumProperty.class, Properties.BED_PART);
+        registerProperty("instrument", MaterialEnumProperty::new, MaterialEnumProperty.class, Properties.INSTRUMENT);
+        registerProperty("level", MaterialLevel::new, MaterialLevel.class, MaterialLevel.handledProperties);
     }
-
-    public static void registerBooleanProperty(String name, BooleanProperty... properties) {
-        registerPropertyGetter(name, MaterialBooleanProperty::new, properties, MaterialBooleanProperty.class);
-    }
-
-    public static void registerIntProperty(String name, IntProperty... properties) {
-        registerPropertyGetter(name, MaterialIntProperty::new, properties, MaterialIntProperty.class);
-    }
-
     @SafeVarargs
-    public static <T extends Enum<T> & StringIdentifiable> void registerEnumProperty(String name, EnumProperty<T>... properties) {
-        registerPropertyGetter(name, MaterialEnumProperty::new, properties, MaterialEnumProperty.class);
-    }
-
-    public static void registerBooleanProperty(String name, Class<? extends MaterialBooleanProperty> propertyClass) {
-        registerPropertyGetter(name, MaterialBooleanProperty::new, getHandledProperties(propertyClass), propertyClass);
-    }
-
-    public static void registerIntProperty(String name, Class<? extends MaterialIntProperty> propertyClass) {
-        registerPropertyGetter(name, MaterialIntProperty::new, getHandledProperties(propertyClass), propertyClass);
-    }
-
-    public static <T extends Enum<T> & StringIdentifiable, P extends MaterialEnumProperty<T>> void registerEnumProperty(String name, Class<P> propertyClass) {
-        registerPropertyGetter(name, MaterialEnumProperty::new, getHandledProperties(propertyClass), propertyClass);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Property<?>> T[] getHandledProperties(Class<? extends MaterialMinecraftProperty<T, ?>> propertyClass) {
-        try {
-            Field handledField = propertyClass.getDeclaredField("handledProperties");
-            return (T[]) handledField.get(null);
-        }
-        catch (IllegalAccessException | NoSuchFieldException e) {
-            Debug.echoError("Invalid handled properties array for property class '" + DebugInternals.getClassNameOpti(propertyClass) + "': " + e.getMessage() + "!");
-        }
-        return null;
-    }
-
-    public static <T extends Property<V>, V extends Comparable<V>> void registerPropertyGetter(String name, MaterialMinecraftPropertySupplier<T> supplier, T[] properties, Class<? extends com.denizenscript.denizencore.objects.properties.Property> propertyClass) {
+    public static <T extends Property<V>, V extends Comparable<V>> void registerProperty(String name, MaterialMinecraftPropertySupplier<T> supplier, Class<? extends com.denizenscript.denizencore.objects.properties.Property> propertyClass, T... properties) {
         MaterialMinecraftProperty.currentlyRegistering = name;
         PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter<>(name, supplier, properties), MaterialTag.class, null, null, propertyClass);
         MaterialMinecraftProperty.currentlyRegistering = null;

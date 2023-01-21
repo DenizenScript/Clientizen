@@ -12,7 +12,9 @@ public class MaterialLevel extends MaterialIntProperty {
         super(name, material, internalProperty);
     }
 
-    static IntProperty[] handledProperties = { Properties.CANDLES, Properties.BITES, Properties.LEVEL_3, Properties.LEVEL_8, Properties.LEVEL_1_8, Properties.LEVEL_15 };
+    public static IntProperty[] handledProperties = {
+            Properties.CANDLES, Properties.BITES, Properties.LEVEL_3, Properties.LEVEL_8, Properties.LEVEL_1_8, Properties.LEVEL_15
+    };
 
     public static void register() {
         registerTag(ElementTag.class, "minimum_level", (attribute, object) -> {
