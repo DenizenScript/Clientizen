@@ -8,9 +8,8 @@ import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Position;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.math.*;
 
 import java.util.List;
 
@@ -126,6 +125,10 @@ public class LocationTag implements ObjectTag {
         return MathHelper.floor(z);
     }
 
+    public BlockPos getBlockPos() {
+        return new BlockPos(x, y, z);
+    }
+
     public static void register() {
 
         // <--[tag]
@@ -238,6 +241,21 @@ public class LocationTag implements ObjectTag {
             result.yaw = (float) Math.floor((result.yaw));
             result.pitch = (float) Math.floor(result.pitch);
             return result;
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.material>
+        // @returns MaterialTag
+        // @group world
+        // @description
+        // Returns the material of the block at the location.
+        // -->
+        tagProcessor.registerTag(MaterialTag.class, "material", (attribute, object) ->  {
+            BlockPos pos = object.getBlockPos();
+            if (MinecraftClient.getInstance().world.isChunkLoaded(ChunkSectionPos.getSectionCoord(pos.getX()), ChunkSectionPos.getSectionCoord(pos.getZ()))) {
+                return new MaterialTag(MinecraftClient.getInstance().world.getBlockState(pos));
+            }
+            return null;
         });
     }
 
