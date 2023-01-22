@@ -109,16 +109,16 @@ public class EntityTag implements ObjectTag {
         return identify();
     }
 
+    @Override
+    public boolean isUnique() {
+        return true;
+    }
+
     private String prefix = "Entity";
 
     @Override
     public String getPrefix() {
         return prefix;
-    }
-
-    @Override
-    public boolean isUnique() {
-        return true;
     }
 
     @Override
