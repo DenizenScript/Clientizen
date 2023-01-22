@@ -1,8 +1,5 @@
-package com.denizenscript.clientizen.scripts;
+package com.denizenscript.clientizen.network;
 
-import com.denizenscript.clientizen.network.Channels;
-import com.denizenscript.clientizen.network.DataDeserializer;
-import com.denizenscript.clientizen.network.NetworkManager;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.objects.ObjectFetcher;
 import com.denizenscript.denizencore.objects.core.ScriptTag;
@@ -16,11 +13,11 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 
 import java.util.Map;
 
-public class ClientScriptHandler {
+public class ScriptNetworking {
 
 	public static void init() {
-		NetworkManager.registerInChannel(Channels.SET_SCRIPTS, ClientScriptHandler::loadScriptsFrom);
-		NetworkManager.registerInChannel(Channels.RUN_SCRIPT, ClientScriptHandler::handleScriptRun);
+		NetworkManager.registerInChannel(Channels.SET_SCRIPTS, ScriptNetworking::loadScriptsFrom);
+		NetworkManager.registerInChannel(Channels.RUN_SCRIPT, ScriptNetworking::handleScriptRun);
 	}
 
 	public static void loadScriptsFrom(DataDeserializer data) {

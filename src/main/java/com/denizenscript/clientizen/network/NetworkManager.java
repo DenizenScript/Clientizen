@@ -14,6 +14,7 @@ public class NetworkManager {
 			Debug.log("Sending join confirmation packet...");
 			send(Channels.SEND_CONFIRM, null);
 		}));
+		ScriptNetworking.init();
 	}
 
 	public static void registerInChannel(Identifier channel, ClientizenReceiver receiver) {
