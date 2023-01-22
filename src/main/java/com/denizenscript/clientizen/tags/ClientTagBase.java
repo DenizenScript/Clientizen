@@ -63,13 +63,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
         tagProcessor.registerTag(MapTag.class, "flag_map", (attribute, object) -> {
             return DenizenCore.serverFlagMap.doFlagMapTag(attribute);
         });
-        tagProcessor.registerTag(MaterialTag.class, "facing_material", (attribute, object) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client.crosshairTarget instanceof BlockHitResult blockHitResult) {
-                return new MaterialTag(client.world.getBlockState(blockHitResult.getBlockPos()));
-            }
-            return null;
-        });
+        // TODO this is temporary and is meant for testing only, should be replaced by a proper modifyblock command
         tagProcessor.registerMechanism("modifyblock", false, MaterialTag.class, (object, mechanism, input) -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.crosshairTarget instanceof BlockHitResult blockHitResult) {
