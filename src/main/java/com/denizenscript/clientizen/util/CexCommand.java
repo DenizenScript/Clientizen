@@ -59,6 +59,7 @@ public class CexCommand {
 //            boolean isNewArg = rawArgs.length == 0 || rawArgs[rawArgs.length - 1].isEmpty();
             boolean isNewArg = command.isEmpty() || command.charAt(command.length() - 1) == ' ';
             boolean isCommandArg = args.length == 0 || (args.length == 1 && !isNewArg) || args[args.length - (isNewArg ? 1 : 2)].equals("-");
+            builder = builder.createOffset(lastSpaceIndex + builder.getStart());
             if (isCommandArg) {
                 if (isNewArg || args.length == 0) {
                     for (Map.Entry<String, AbstractCommand> entry : DenizenCore.commandRegistry.instances.entrySet()) {
@@ -74,9 +75,8 @@ public class CexCommand {
                 }
                 return builder.buildFuture();
             }
+            String lastArg = lastSpaceIndex != 0 ? command.substring(lastSpaceIndex) : command;
             if (!isNewArg) {
-                int spaceIndex = command.lastIndexOf(' ');
-                String lastArg = spaceIndex != -1 ? command.substring(spaceIndex + 1) : command;
                 int argStart = 0;
                 for (int i = 0; i < lastArg.length(); i++) {
                     if (lastArg.charAt(i) == '"' || lastArg.charAt(i) == '\'') {
@@ -160,7 +160,7 @@ public class CexCommand {
                                 bracketStart = -1;
                             }
                         }
-                        SuggestionsBuilder tagSuggestions = builder.createOffset(spaceIndex + relevantTagStart + lastDot + 1 + builder.getStart());
+                        SuggestionsBuilder tagSuggestions = builder.createOffset(relevantTagStart + lastDot + builder.getStart());
                         if (components == 0 && !CoreUtilities.contains(fullTag, '[')) {
                             for (Map.Entry<String, TagManager.TagBaseData> entry : TagManager.baseTags.entrySet()) {
                                 if (entry.getKey().startsWith(fullTag)) {
@@ -196,9 +196,7 @@ public class CexCommand {
             if (dcmd == null) {
                 return null;
             }
-            int spaceIndex = command.lastIndexOf(' ') + 1;
-            String lowArg = CoreUtilities.toLowerCase(spaceIndex != 0 ? command.substring(spaceIndex) : command);
-            SuggestionsBuilder commandArgSuggestions = builder.createOffset(spaceIndex + builder.getStart());
+            String lowArg = CoreUtilities.toLowerCase(lastArg);
             AbstractCommand.TabCompletionsBuilder completionsBuilder = new AbstractCommand.TabCompletionsBuilder();
             completionsBuilder.arg = lowArg;
             for (String flat : dcmd.docFlagArgs) {
@@ -208,8 +206,8 @@ public class CexCommand {
                 completionsBuilder.add(prefix + ":");
             }
             dcmd.addCustomTabCompletions(completionsBuilder);
-            completionsBuilder.completions.forEach(commandArgSuggestions::suggest);
-            return commandArgSuggestions.buildFuture();
+            completionsBuilder.completions.forEach(builder::suggest);
+            return builder.buildFuture();
         }
     }
 }
