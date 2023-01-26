@@ -196,8 +196,9 @@ public class CexCommand {
             if (dcmd == null) {
                 return null;
             }
-            int spaceIndex = command.lastIndexOf(' ');
-            String lowArg = CoreUtilities.toLowerCase(spaceIndex != -1 ? command.substring(spaceIndex) : command);
+            int spaceIndex = command.lastIndexOf(' ') + 1;
+            String lowArg = CoreUtilities.toLowerCase(spaceIndex != 0 ? command.substring(spaceIndex) : command);
+            SuggestionsBuilder commandArgSuggestions = builder.createOffset(spaceIndex + builder.getStart());
             AbstractCommand.TabCompletionsBuilder completionsBuilder = new AbstractCommand.TabCompletionsBuilder();
             completionsBuilder.arg = lowArg;
             for (String flat : dcmd.docFlagArgs) {
@@ -207,8 +208,8 @@ public class CexCommand {
                 completionsBuilder.add(prefix + ":");
             }
             dcmd.addCustomTabCompletions(completionsBuilder);
-            completionsBuilder.completions.forEach(builder::suggest);
-            return builder.buildFuture();
+            completionsBuilder.completions.forEach(commandArgSuggestions::suggest);
+            return commandArgSuggestions.buildFuture();
         }
     }
 }
