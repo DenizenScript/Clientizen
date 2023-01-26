@@ -56,9 +56,9 @@ public class CexCommand {
         public CompletableFuture<Suggestions> getSuggestions(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
             String command = builder.getRemaining();
             String[] args = ArgumentHelper.buildArgs(command, true);
-//            boolean isNewArg = rawArgs.length == 0 || rawArgs[rawArgs.length - 1].isEmpty();
             boolean isNewArg = command.isEmpty() || command.charAt(command.length() - 1) == ' ';
             boolean isCommandArg = args.length == 0 || (args.length == 1 && !isNewArg) || args[args.length - (isNewArg ? 1 : 2)].equals("-");
+            int lastSpaceIndex = command.lastIndexOf(' ') + 1;
             builder = builder.createOffset(lastSpaceIndex + builder.getStart());
             if (isCommandArg) {
                 if (isNewArg || args.length == 0) {

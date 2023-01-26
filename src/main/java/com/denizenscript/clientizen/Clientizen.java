@@ -16,24 +16,18 @@ import com.denizenscript.denizencore.DenizenImplementation;
 import com.denizenscript.denizencore.scripts.ScriptHelper;
 import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
-import com.denizenscript.denizencore.utilities.ExCommandHelper;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public class Clientizen implements ClientModInitializer {
 
@@ -86,6 +80,7 @@ public class Clientizen implements ClientModInitializer {
         NetworkManager.init();
         ClientizenDebugScreen.register();
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> CexCommand.register(dispatcher));
+
         // Check for the client scripts folder
         File scriptsFolder = DenizenCore.implementation.getScriptFolder();
         if (!scriptsFolder.exists()) {
