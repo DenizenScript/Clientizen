@@ -14,6 +14,7 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -34,20 +35,17 @@ public class CexCommand {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         final CommandsSuggestionProvider suggestionProvider = new CommandsSuggestionProvider();
-        dispatcher.register(literal("cex")
-                .then(literal("-q")
-                        .then(argument("command", greedyString())
-                                .suggests(suggestionProvider)
-                                .executes(context -> execute(context, true))))
-                .then(argument("command", greedyString())
-                        .suggests(suggestionProvider)
-                        .executes(context -> execute(context, false))));
+        dispatcher.register(literal("cex").then(argument("command", greedyString())
+                .suggests(suggestionProvider)
+                .executes(context -> execute(context, false))));
+        dispatcher.register(literal("cexq").then(argument("command", greedyString())
+                .suggests(suggestionProvider)
+                .executes(context -> execute(context, true))));
     }
 
     public static int execute(CommandContext<FabricClientCommandSource> context, boolean silent) {
-        String command = getString(context, "command");
-        ExCommandHelper.runString("CEXCOMMAND", command, null, silent ? null : queue -> {
-            queue.debugOutput = debug -> context.getSource().sendFeedback(Text.literal(debug));
+        ExCommandHelper.runString("CEXCOMMAND", getString(context, "command"), null, silent ? null : queue -> {
+            queue.debugOutput = debug -> context.getSource().sendFeedback(Text.literal(debug.replace("<FORCE_ALIGN>", "")));
         });
         return Command.SINGLE_SUCCESS;
     }
@@ -56,12 +54,7 @@ public class CexCommand {
 
         @Override
         public CompletableFuture<Suggestions> getSuggestions(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
-//            String command = builder.getInput().substring("/cex ".length());
-//            if (command.startsWith("-q ")) {
-//                command = command.substring("-q ".length());
-//            }
             String command = builder.getRemaining();
-            Debug.log("Command: " + command);
             String[] args = ArgumentHelper.buildArgs(command, true);
 //            boolean isNewArg = rawArgs.length == 0 || rawArgs[rawArgs.length - 1].isEmpty();
             boolean isNewArg = command.isEmpty() || command.charAt(command.length() - 1) == ' ';
@@ -71,7 +64,6 @@ public class CexCommand {
                     for (Map.Entry<String, AbstractCommand> entry : DenizenCore.commandRegistry.instances.entrySet()) {
                         builder.suggest(entry.getKey(), Text.literal(entry.getValue().getUsageHint()));
                     }
-                    Debug.log("All commands");
                     return builder.buildFuture();
                 }
                 String startOfName = CoreUtilities.toLowerCase(args[args.length - 1]);
@@ -80,13 +72,11 @@ public class CexCommand {
                         builder.suggest(entry.getKey(), Text.literal(entry.getValue().getUsageHint()));
                     }
                 }
-                Debug.log("Specific commands from " + startOfName);
                 return builder.buildFuture();
             }
             if (!isNewArg) {
                 int spaceIndex = command.lastIndexOf(' ');
                 String lastArg = spaceIndex != -1 ? command.substring(spaceIndex + 1) : command;
-                Debug.log("Last arg: " + lastArg);
                 int argStart = 0;
                 for (int i = 0; i < lastArg.length(); i++) {
                     if (lastArg.charAt(i) == '"' || lastArg.charAt(i) == '\'') {
@@ -170,8 +160,6 @@ public class CexCommand {
                                 bracketStart = -1;
                             }
                         }
-                        String beforeDot = arg.substring(0, relevantTagStart) + fullTag.substring(0, lastDot);
-                        Debug.log("tag start: " + relevantTagStart + " last dot: " + lastDot + " current start: " + builder.getStart());
                         SuggestionsBuilder tagSuggestions = builder.createOffset(spaceIndex + relevantTagStart + lastDot + 1 + builder.getStart());
                         if (components == 0 && !CoreUtilities.contains(fullTag, '[')) {
                             for (Map.Entry<String, TagManager.TagBaseData> entry : TagManager.baseTags.entrySet()) {
@@ -180,7 +168,6 @@ public class CexCommand {
                                     tagSuggestions.suggest(entry.getKey(), returnType != null ? Text.literal(DebugInternals.getClassNameOpti(returnType)) : null);
                                 }
                             }
-                            Debug.log("Tags from full tag " + fullTag);
                             return tagSuggestions.buildFuture();
                         }
                         String subComponent = fullTag.substring(lastDot);
@@ -195,7 +182,6 @@ public class CexCommand {
                                     }
                                 }
                             }
-                            Debug.log("Tags from " + subComponent);
                             return tagSuggestions.buildFuture();
                         }
                     }
@@ -222,7 +208,6 @@ public class CexCommand {
             }
             dcmd.addCustomTabCompletions(completionsBuilder);
             completionsBuilder.completions.forEach(builder::suggest);
-            Debug.log("Command tab complete from " + dcmd.getName());
             return builder.buildFuture();
         }
     }
