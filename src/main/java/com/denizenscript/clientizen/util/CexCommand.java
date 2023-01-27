@@ -32,7 +32,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 public class CexCommand {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        final CommandsSuggestionProvider suggestionProvider = new CommandsSuggestionProvider();
+        final DenizenCommandsSuggestionProvider suggestionProvider = new DenizenCommandsSuggestionProvider();
         dispatcher.register(literal("cex").then(argument("command", greedyString())
                 .suggests(suggestionProvider)
                 .executes(context -> execute(context, false))));
@@ -48,7 +48,7 @@ public class CexCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    public static class CommandsSuggestionProvider implements SuggestionProvider<FabricClientCommandSource> {
+    public static class DenizenCommandsSuggestionProvider implements SuggestionProvider<FabricClientCommandSource> {
 
         @Override
         public CompletableFuture<Suggestions> getSuggestions(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
