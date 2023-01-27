@@ -4,8 +4,8 @@ import com.denizenscript.denizencore.events.ScriptEvent;
 
 public class ClientizenScriptEventRegistry {
 
-	public static void registerEvents() {
-		ScriptEvent.registerScriptEvent(KeyPressReleaseScriptEvent.class);
-		ScriptEvent.registerScriptEvent(ScreenOpenCloseEvent.class);
-	}
+    public static void registerEvents() {
+        ScriptEvent.registerScriptEvent(KeyPressReleaseScriptEvent.class);
+        ScriptEvent.registerScriptEvent(ScreenOpenCloseEvent.class);
+    }
 }

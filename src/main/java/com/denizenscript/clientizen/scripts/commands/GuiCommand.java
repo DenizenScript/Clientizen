@@ -10,27 +10,27 @@ import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
 
 public class GuiCommand extends AbstractCommand implements Holdable {
 
-	public GuiCommand() {
-		setName("gui");
-		setSyntax("gui [<script>]");
-		setRequiredArguments(1, 1);
-		autoCompile();
-	}
+    public GuiCommand() {
+        setName("gui");
+        setSyntax("gui [<script>]");
+        setRequiredArguments(1, 1);
+        autoCompile();
+    }
 
-	public static void autoExecute(ScriptEntry scriptEntry,
-								   @ArgLinear @ArgName("script") ScriptTag script) {
-		if (script.getContainer() instanceof GuiScriptContainer gui) {
-			/*SpruceScreen screen = new SpruceScreen(Text.literal("Test GUI screen")) {
+    public static void autoExecute(ScriptEntry scriptEntry,
+                                   @ArgLinear @ArgName("script") ScriptTag script) {
+        if (script.getContainer() instanceof GuiScriptContainer gui) {
+            /*SpruceScreen screen = new SpruceScreen(Text.literal("Test GUI screen")) {
 
-				@Override
-				protected void init() {
-					super.init();
-					addDrawableChild(new SpruceButtonWidget(Position.center(width, height), 150, 20, Text.literal(gui.buttonName), btn -> {
-						client.player.sendMessage(Text.literal("hello"), false);
-					}));
-				}
-			};
-			screen.init(MinecraftClient.getInstance(), 500, 500);*/
-		}
-	}
+                @Override
+                protected void init() {
+                    super.init();
+                    addDrawableChild(new SpruceButtonWidget(Position.center(width, height), 150, 20, Text.literal(gui.buttonName), btn -> {
+                        client.player.sendMessage(Text.literal("hello"), false);
+                    }));
+                }
+            };
+            screen.init(MinecraftClient.getInstance(), 500, 500);*/
+        }
+    }
 }

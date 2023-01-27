@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(WScrollPanel.class)
 public interface WScrollPanelAccessor {
 
-	@Accessor(remap = false)
-	WWidget getWidget();
+    @Accessor(remap = false)
+    WWidget getWidget();
 }

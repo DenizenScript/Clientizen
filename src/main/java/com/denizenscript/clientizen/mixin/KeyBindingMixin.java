@@ -13,20 +13,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(KeyBinding.class)
 public class KeyBindingMixin {
 
-	private static final IntSet pressedKeys = new IntArraySet();
+    private static final IntSet pressedKeys = new IntArraySet();
 
-	@Inject(method = "setKeyPressed", at = @At("HEAD"))
-	private static void clientizen$onKeyPressStateChanged(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
-		if (key.getCategory() == InputUtil.Type.KEYSYM || key.getCategory() == InputUtil.Type.MOUSE) {
-			if (!pressed || !pressedKeys.contains(key.getCode())) {
-				KeyPressReleaseScriptEvent.instance.handleKeyPressStateChange(key, pressed);
-			}
-			if (pressed) {
-				pressedKeys.add(key.getCode());
-			}
-			else {
-				pressedKeys.remove(key.getCode());
-			}
-		}
-	}
+    @Inject(method = "setKeyPressed", at = @At("HEAD"))
+    private static void clientizen$onKeyPressStateChanged(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
+        if (key.getCategory() == InputUtil.Type.KEYSYM || key.getCategory() == InputUtil.Type.MOUSE) {
+            if (!pressed || !pressedKeys.contains(key.getCode())) {
+                KeyPressReleaseScriptEvent.instance.handleKeyPressStateChange(key, pressed);
+            }
+            if (pressed) {
+                pressedKeys.add(key.getCode());
+            }
+            else {
+                pressedKeys.remove(key.getCode());
+            }
+        }
+    }
 }
