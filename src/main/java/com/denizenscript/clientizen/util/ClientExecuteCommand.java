@@ -31,19 +31,19 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 public class ClientExecuteCommand implements SuggestionProvider<FabricClientCommandSource> {
 
     public ClientExecuteCommand(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(literal("cex").then(argument("command", greedyString())
-                .suggests(this)
-                .executes(context -> execute(context, false))));
-        dispatcher.register(literal("cexq").then(argument("command", greedyString())
-                .suggests(this)
-                .executes(context -> execute(context, true))));
+        register("cex", false, dispatcher);
+        register("cexq", false, dispatcher);
     }
 
-    public static int execute(CommandContext<FabricClientCommandSource> context, boolean silent) {
-        ExCommandHelper.runString("CEXCOMMAND", getString(context, "command"), null, silent ? null : queue -> {
-            queue.debugOutput = debug -> context.getSource().sendFeedback(Text.literal(debug.replace("<FORCE_ALIGN>", "")));
-        });
-        return 1;
+    public void register(String name, boolean silent, CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        dispatcher.register(literal(name)
+                .then(argument("command", greedyString())
+                        .suggests(this).executes(context -> {
+                            ExCommandHelper.runString("CEXCOMMAND", getString(context, "command"), null, silent ? null : queue -> {
+                                queue.debugOutput = debug -> context.getSource().sendFeedback(Text.literal(debug.replace("<FORCE_ALIGN>", "")));
+                            });
+                            return 1;
+                        })));
     }
 
     @Override
