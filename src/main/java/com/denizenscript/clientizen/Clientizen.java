@@ -9,7 +9,7 @@ import com.denizenscript.clientizen.scripts.commands.ClientizenCommandRegistry;
 import com.denizenscript.clientizen.scripts.containers.ClientizenContainerRegistry;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.clientizen.tags.ClientizenTagRegistry;
-import com.denizenscript.clientizen.util.CexCommand;
+import com.denizenscript.clientizen.util.ClientExecuteCommand;
 import com.denizenscript.clientizen.util.impl.DenizenCoreImpl;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.DenizenImplementation;
@@ -79,7 +79,7 @@ public class Clientizen implements ClientModInitializer {
         // Initialize Clientizen systems
         NetworkManager.init();
         ClientizenDebugScreen.register();
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> CexCommand.register(dispatcher));
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> new ClientExecuteCommand(dispatcher));
 
         // Check for the client scripts folder
         File scriptsFolder = DenizenCore.implementation.getScriptFolder();
