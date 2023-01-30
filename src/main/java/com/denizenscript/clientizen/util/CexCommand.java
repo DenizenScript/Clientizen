@@ -45,7 +45,7 @@ public class CexCommand {
         ExCommandHelper.runString("CEXCOMMAND", getString(context, "command"), null, silent ? null : queue -> {
             queue.debugOutput = debug -> context.getSource().sendFeedback(Text.literal(debug.replace("<FORCE_ALIGN>", "")));
         });
-        return Command.SINGLE_SUCCESS;
+        return 1;
     }
 
     public static class DenizenCommandsSuggestionProvider implements SuggestionProvider<FabricClientCommandSource> {
