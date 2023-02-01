@@ -9,6 +9,7 @@ import com.denizenscript.clientizen.scripts.commands.ClientizenCommandRegistry;
 import com.denizenscript.clientizen.scripts.containers.ClientizenContainerRegistry;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.clientizen.tags.ClientizenTagRegistry;
+import com.denizenscript.clientizen.util.ClientExecuteCommand;
 import com.denizenscript.clientizen.util.impl.DenizenCoreImpl;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.DenizenImplementation;
@@ -17,6 +18,7 @@ import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -77,6 +79,7 @@ public class Clientizen implements ClientModInitializer {
         // Initialize Clientizen systems
         NetworkManager.init();
         ClientizenDebugScreen.register();
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> new ClientExecuteCommand(dispatcher));
 
         // Check for the client scripts folder
         File scriptsFolder = DenizenCore.implementation.getScriptFolder();
