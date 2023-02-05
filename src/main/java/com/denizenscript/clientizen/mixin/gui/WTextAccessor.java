@@ -10,12 +10,12 @@ import java.util.List;
 @Mixin(WText.class)
 public interface WTextAccessor {
 
-	@Accessor(remap = false)
-	List<OrderedText> getWrappedLines();
+    @Accessor(remap = false)
+    List<OrderedText> getWrappedLines();
 
-	@Accessor(remap = false)
-	void setWrappedLines(List<OrderedText> wrappedLines);
+    @Accessor(remap = false)
+    void setWrappedLines(List<OrderedText> wrappedLines);
 
-	@Accessor(remap = false)
-	void setWrappingScheduled(boolean wrappingScheduled);
+    @Accessor(remap = false)
+    void setWrappingScheduled(boolean wrappingScheduled);
 }

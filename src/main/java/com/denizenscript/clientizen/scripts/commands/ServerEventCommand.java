@@ -17,22 +17,22 @@ import java.util.Map;
 
 public class ServerEventCommand extends AbstractCommand {
 
-	public ServerEventCommand() {
-		setName("serverevent");
-		setSyntax("serverevent [id:<id>] (data:<map>)");
-		setRequiredArguments(1, 2);
-		autoCompile();
-	}
+    public ServerEventCommand() {
+        setName("serverevent");
+        setSyntax("serverevent [id:<id>] (data:<map>)");
+        setRequiredArguments(1, 2);
+        autoCompile();
+    }
 
-	public static void autoExecute(ScriptEntry scriptEntry,
-								   @ArgPrefixed @ArgName("id") String id,
-								   @ArgDefaultNull @ArgPrefixed @ArgName("data") MapTag dataInput) {
-		Map<String, String> data = new HashMap<>();
-		if (dataInput != null) {
-			for (Map.Entry<StringHolder, ObjectTag> entry : dataInput.map.entrySet()) {
-				data.put(entry.getKey().str, entry.getValue().savable());
-			}
-		}
-		NetworkManager.send(Channels.FIRE_EVENT, new DataSerializer().writeString(id).writeStringMap(data));
-	}
+    public static void autoExecute(ScriptEntry scriptEntry,
+                                   @ArgPrefixed @ArgName("id") String id,
+                                   @ArgDefaultNull @ArgPrefixed @ArgName("data") MapTag dataInput) {
+        Map<String, String> data = new HashMap<>();
+        if (dataInput != null) {
+            for (Map.Entry<StringHolder, ObjectTag> entry : dataInput.map.entrySet()) {
+                data.put(entry.getKey().str, entry.getValue().savable());
+            }
+        }
+        NetworkManager.send(Channels.FIRE_EVENT, new DataSerializer().writeString(id).writeStringMap(data));
+    }
 }

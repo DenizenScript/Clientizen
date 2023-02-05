@@ -1,6 +1,6 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
-	id 'maven-publish'
+    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'maven-publish'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -11,78 +11,78 @@ version = project.version
 group = project.maven_group
 
 loom {
-	accessWidenerPath = file("src/main/resources/clientizen.accesswidener")
+    accessWidenerPath = file("src/main/resources/clientizen.accesswidener")
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
     // Uncomment to build with local Denizen-Core changes
     // mavenLocal()
-	maven {
-		name = "Denizen"
-		url = "https://maven.citizensnpcs.co/repo"
-	}
-	maven {
-		name = "DevAuth"
-		url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
-	}
-	maven {
-		name = "CottonMC"
-		url = "https://server.bbkr.space/artifactory/libs-release"
-	}
+    maven {
+        name = "Denizen"
+        url = "https://maven.citizensnpcs.co/repo"
+    }
+    maven {
+        name = "DevAuth"
+        url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
+    }
+    maven {
+        name = "CottonMC"
+        url = "https://server.bbkr.space/artifactory/libs-release"
+    }
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation include("io.github.cottonmc:LibGui:${project.libgui_version}")
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation include("io.github.cottonmc:LibGui:${project.libgui_version}")
 
-	implementation include("com.denizenscript:denizencore:${project.denizencore_version}")
-	implementation include("org.yaml:snakeyaml:${project.snakeyaml_version}")
+    implementation include("com.denizenscript:denizencore:${project.denizencore_version}")
+    implementation include("org.yaml:snakeyaml:${project.snakeyaml_version}")
 
-	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauth_version}")
+    modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauth_version}")
 }
 
 
 processResources {
-	inputs.property "version", version
+    inputs.property "version", version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": version
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	it.options.release = 17
+    it.options.encoding = "UTF-8"
+    it.options.release = 17
 }
 
 java {
-	withSourcesJar()
+    withSourcesJar()
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${archivesBaseName}" }
-	}
+    from("LICENSE") {
+        rename { "${it}_${archivesBaseName}" }
+    }
 }
 
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
 }
