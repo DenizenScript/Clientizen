@@ -4,9 +4,8 @@ import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
 import com.denizenscript.clientizen.events.ClientizenScriptEventRegistry;
 import com.denizenscript.clientizen.network.NetworkManager;
 import com.denizenscript.clientizen.objects.ClientizenObjectRegistry;
-import com.denizenscript.clientizen.render.ClientizenAttachedEntityFeatureRenderer;
-import com.denizenscript.clientizen.scripts.ClientScriptHandler;
 import com.denizenscript.clientizen.objects.properties.PropertyRegistry;
+import com.denizenscript.clientizen.render.ClientizenAttachedEntityFeatureRenderer;
 import com.denizenscript.clientizen.scripts.commands.ClientizenCommandRegistry;
 import com.denizenscript.clientizen.scripts.containers.ClientizenContainerRegistry;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
@@ -81,7 +80,6 @@ public class Clientizen implements ClientModInitializer {
 		// Initialize Clientizen systems
 		NetworkManager.init();
 		ClientizenDebugScreen.register();
-		ClientScriptHandler.init();
 		ClientizenAttachedEntityFeatureRenderer.init();
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> new ClientExecuteCommand(dispatcher));
 
