@@ -16,28 +16,28 @@ import java.util.List;
 
 public class ClientizenAttachedEntityFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
 
-	public static void init() {
-		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-			registrationHelper.register(new ClientizenAttachedEntityFeatureRenderer<>(entityRenderer));
-		});
-	}
+    public static void init() {
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+            registrationHelper.register(new ClientizenAttachedEntityFeatureRenderer<>(entityRenderer));
+        });
+    }
 
-	public ClientizenAttachedEntityFeatureRenderer(FeatureRendererContext<T, M> context) {
-		super(context);
-	}
+    public ClientizenAttachedEntityFeatureRenderer(FeatureRendererContext<T, M> context) {
+        super(context);
+    }
 
-	@Override
-	public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		List<EntityTag> attachedEntities = AttachCommand.attachMap.get(entity.getUuid());
-		if (attachedEntities == null) {
-			return;
-		}
-		for (EntityTag attached : attachedEntities) {
-			matrices.push();
-			matrices.scale(1, 1, 1);
-			matrices.multiply(Direction.DOWN.getRotationQuaternion());
-			MinecraftClient.getInstance().getEntityRenderDispatcher().render(attached.getEntity(), 0, 0, 0, attached.getEntity().getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
-			matrices.pop();
-		}
-	}
+    @Override
+    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+        List<EntityTag> attachedEntities = AttachCommand.attachMap.get(entity.getUuid());
+        if (attachedEntities == null) {
+            return;
+        }
+        for (EntityTag attached : attachedEntities) {
+            matrices.push();
+            matrices.scale(1, 1, 1);
+            matrices.multiply(Direction.DOWN.getRotationQuaternion());
+            MinecraftClient.getInstance().getEntityRenderDispatcher().render(attached.getEntity(), 0, 0, 0, attached.getEntity().getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
+            matrices.pop();
+        }
+    }
 }

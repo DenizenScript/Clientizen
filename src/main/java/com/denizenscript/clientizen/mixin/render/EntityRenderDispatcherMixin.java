@@ -16,19 +16,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin {
 
-	@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
-	private <E extends Entity> void clientizen$cancelRenderIfAttached(
-			E entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
-		if (AttachCommand.attachedEntities.containsKey(entity.getUuid())) {
-			cir.setReturnValue(false);
-		}
-	}
+    @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
+    private <E extends Entity> void clientizen$cancelRenderIfAttached(
+            E entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
+        if (AttachCommand.attachedEntities.containsKey(entity.getUuid())) {
+            cir.setReturnValue(false);
+        }
+    }
 
-	@Inject(method = "renderShadow", at = @At("HEAD"), cancellable = true)
-	private static void clientizen$cancelAttachShadow(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Entity entity, float opacity, float tickDelta, WorldView world, float radius, CallbackInfo ci) {
-		AttachCommand.AttachData data = AttachCommand.attachedEntities.get(entity.getUuid());
-		if (data != null && data.noShadow()) {
-			ci.cancel();
-		}
-	}
+    @Inject(method = "renderShadow", at = @At("HEAD"), cancellable = true)
+    private static void clientizen$cancelAttachShadow(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Entity entity, float opacity, float tickDelta, WorldView world, float radius, CallbackInfo ci) {
+        AttachCommand.AttachData data = AttachCommand.attachedEntities.get(entity.getUuid());
+        if (data != null && data.noShadow()) {
+            ci.cancel();
+        }
+    }
 }

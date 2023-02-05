@@ -77,10 +77,10 @@ public class Clientizen implements ClientModInitializer {
         ClientizenTagRegistry.registerTagHandlers();
         PropertyRegistry.register();
 
-		// Initialize Clientizen systems
-		NetworkManager.init();
-		ClientizenDebugScreen.register();
-		ClientizenAttachedEntityFeatureRenderer.init();
+        // Initialize Clientizen systems
+        NetworkManager.init();
+        ClientizenDebugScreen.register();
+        ClientizenAttachedEntityFeatureRenderer.init();
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> new ClientExecuteCommand(dispatcher));
 
         // Check for the client scripts folder

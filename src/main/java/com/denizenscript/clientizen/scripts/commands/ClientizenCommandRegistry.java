@@ -5,11 +5,11 @@ import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 
 public class ClientizenCommandRegistry {
 
-	public static void registerCommands() {
+    public static void registerCommands() {
         registerCommand(AttachCommand.class);
-		registerCommand(GuiCommand.class);
-		registerCommand(NarrateCommand.class);
-		registerCommand(ServerEventCommand.class);
+        registerCommand(GuiCommand.class);
+        registerCommand(NarrateCommand.class);
+        registerCommand(ServerEventCommand.class);
     }
 
     private static void registerCommand(Class<? extends AbstractCommand> command) {
