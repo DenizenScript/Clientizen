@@ -1,4 +1,4 @@
-package com.denizenscript.clientizen.scripts.containers;
+package com.denizenscript.clientizen.scripts.containers.gui;
 
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
