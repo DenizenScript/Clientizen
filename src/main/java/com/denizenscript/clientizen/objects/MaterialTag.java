@@ -39,7 +39,7 @@ public class MaterialTag implements ObjectTag, Adjustable {
             return null;
         }
         if (ObjectFetcher.isObjectWithProperties(string)) {
-            return ObjectFetcher.getObjectFromWithProperties(MaterialTag.class, string, context);
+            return ObjectFetcher.getObjectFromWithProperties(ClientizenObjectRegistry.TYPE_MATERIAL, string, context);
         }
         if (string.startsWith("m@")) {
             string = string.substring("m@".length());
