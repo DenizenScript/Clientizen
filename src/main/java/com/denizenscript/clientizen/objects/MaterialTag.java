@@ -123,7 +123,12 @@ public class MaterialTag implements ObjectTag, Adjustable {
         return false;
     }
 
-    private String prefix = "Entity";
+    @Override
+    public ObjectTag duplicate() {
+        return state != null ? new MaterialTag(state) : new MaterialTag(item);
+    }
+
+    private String prefix = "Material";
 
     @Override
     public String getPrefix() {
