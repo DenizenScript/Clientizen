@@ -66,4 +66,35 @@ public abstract class MaterialMinecraftProperty<T extends net.minecraft.state.pr
             runner.run((T) prop, mechanism, input);
         });
     }
+
+    @SafeVarargs
+    public static <T extends net.minecraft.state.property.Property<V>, V extends Comparable<V>> void registerProperty(String name, MaterialMinecraftPropertySupplier<T> supplier, Class<? extends Property> propertyClass, T... properties) {
+        currentlyRegistering = name;
+        PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter<>(name, supplier, properties), MaterialTag.class, null, null, propertyClass);
+        currentlyRegistering = null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public record MaterialMinecraftPropertyGetter<T extends net.minecraft.state.property.Property<V>, V extends Comparable<V>>
+            (String name, MaterialMinecraftPropertySupplier<T> supplier, T... internalProperties) implements PropertyParser.PropertyGetter {
+
+        @Override
+        public com.denizenscript.denizencore.objects.properties.Property get(ObjectTag object) {
+            if (!(object instanceof MaterialTag material) || material.state == null) {
+                return null;
+            }
+            for (T internalProperty : internalProperties) {
+                if (material.state.contains(internalProperty)) {
+                    return supplier.create(name, material, internalProperty);
+                }
+            }
+            return null;
+        }
+    }
+
+    @FunctionalInterface
+    public interface MaterialMinecraftPropertySupplier<T extends net.minecraft.state.property.Property<?>> {
+
+        MaterialMinecraftProperty<?, ?> create(String name, MaterialTag material, T internalProperty);
+    }
 }
