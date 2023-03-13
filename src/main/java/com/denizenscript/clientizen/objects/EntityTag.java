@@ -10,6 +10,7 @@ import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.UUID;
@@ -63,6 +64,14 @@ public class EntityTag implements ObjectTag, Adjustable {
             }
         }
         return entity;
+    }
+
+    public <T extends Entity> T as(EntityType<T> type) {
+        return type.downcast(getEntity());
+    }
+
+    public boolean is(EntityType<?> type) {
+        return getEntity().getType() == type;
     }
 
     public static void register() {
