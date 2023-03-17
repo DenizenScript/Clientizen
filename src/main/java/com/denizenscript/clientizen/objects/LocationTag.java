@@ -126,7 +126,7 @@ public class LocationTag implements ObjectTag {
     }
 
     public BlockPos getBlockPos() {
-        return new BlockPos(x, y, z);
+        return new BlockPos(getBlockX(), getBlockY(), getBlockZ());
     }
 
     public static void register() {
