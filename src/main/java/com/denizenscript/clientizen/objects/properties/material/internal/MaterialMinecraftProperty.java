@@ -75,9 +75,8 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         currentlyRegistering = null;
     }
 
-    @SuppressWarnings("unchecked")
     public record MaterialMinecraftPropertyGetter<T extends Property<V>, V extends Comparable<V>>
-            (String name, MaterialMinecraftPropertySupplier<T> supplier, T... internalProperties) implements PropertyParser.PropertyGetter<MaterialTag> {
+            (String name, MaterialMinecraftPropertySupplier<T> supplier, T[] internalProperties) implements PropertyParser.PropertyGetter<MaterialTag> {
 
         @Override
         public ObjectProperty<MaterialTag> get(MaterialTag material) {
