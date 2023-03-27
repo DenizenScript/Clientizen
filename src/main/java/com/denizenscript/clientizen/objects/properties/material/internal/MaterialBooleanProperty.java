@@ -14,11 +14,11 @@ public class MaterialBooleanProperty extends MaterialMinecraftProperty<BooleanPr
 
     public static void register() {
         registerTag(ElementTag.class, currentlyRegistering, (Attribute attribute, MaterialBooleanProperty object) -> {
-            return new ElementTag(object.material.state.get(object.internalProperty));
+            return new ElementTag(object.object.state.get(object.internalProperty));
         });
         registerMechanism(ElementTag.class, currentlyRegistering, (MaterialBooleanProperty object, Mechanism mechanism, ElementTag input) -> {
             if (mechanism.requireBoolean()) {
-                object.material.state = object.material.state.with(object.internalProperty, input.asBoolean());
+                object.object.state = object.object.state.with(object.internalProperty, input.asBoolean());
             }
         });
     }
