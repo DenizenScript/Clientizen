@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.objects.properties.material.internal;
 
 import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.properties.Property;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
@@ -21,8 +22,8 @@ public abstract class MaterialMinecraftProperty<T extends net.minecraft.state.pr
     }
 
     @Override
-    public String getPropertyString() {
-        return String.valueOf(material.state.get(internalProperty));
+    public ElementTag getPropertyValue() {
+        return new ElementTag(material.state.get(internalProperty).toString());
     }
 
     @Override
@@ -32,7 +33,7 @@ public abstract class MaterialMinecraftProperty<T extends net.minecraft.state.pr
 
     @SuppressWarnings("unchecked")
     public static <T extends MaterialMinecraftProperty<?, ?>, R extends ObjectTag> void registerTag(Class<R> returnType, String name, PropertyParser.PropertyTagWithReturn<T, R> runnable) {
-        final PropertyParser.PropertyGetter getter = PropertyParser.currentlyRegisteringProperty;
+        final PropertyParser.PropertyGetter<MaterialTag> getter = (PropertyParser.PropertyGetter<MaterialTag>) PropertyParser.currentlyRegisteringProperty;
         final String propertyName = currentlyRegistering;
         MaterialTag.tagProcessor.registerTag(returnType, name, (attribute, object) -> {
             Property prop = getter.get(object);
@@ -46,7 +47,7 @@ public abstract class MaterialMinecraftProperty<T extends net.minecraft.state.pr
 
     @SuppressWarnings("unchecked")
     public static <T extends MaterialMinecraftProperty<?, ?>, P extends ObjectTag> void registerMechanism(Class<P> paramType, String name, PropertyParser.PropertyMechanismWithParam<T, P> runner) {
-        final PropertyParser.PropertyGetter getter = PropertyParser.currentlyRegisteringProperty;
+        final PropertyParser.PropertyGetter<MaterialTag> getter = (PropertyParser.PropertyGetter<MaterialTag>) PropertyParser.currentlyRegisteringProperty;
         final String propertyName = currentlyRegistering;
         MaterialTag.tagProcessor.registerMechanism(name, true, (object, mechanism) -> {
             Property prop = getter.get(object);
@@ -76,11 +77,11 @@ public abstract class MaterialMinecraftProperty<T extends net.minecraft.state.pr
 
     @SuppressWarnings("unchecked")
     public record MaterialMinecraftPropertyGetter<T extends net.minecraft.state.property.Property<V>, V extends Comparable<V>>
-            (String name, MaterialMinecraftPropertySupplier<T> supplier, T... internalProperties) implements PropertyParser.PropertyGetter {
+            (String name, MaterialMinecraftPropertySupplier<T> supplier, T... internalProperties) implements PropertyParser.PropertyGetter<MaterialTag> {
 
         @Override
-        public com.denizenscript.denizencore.objects.properties.Property get(ObjectTag object) {
-            if (!(object instanceof MaterialTag material) || material.state == null) {
+        public com.denizenscript.denizencore.objects.properties.Property get(MaterialTag material) {
+            if (material.state == null) {
                 return null;
             }
             for (T internalProperty : internalProperties) {
