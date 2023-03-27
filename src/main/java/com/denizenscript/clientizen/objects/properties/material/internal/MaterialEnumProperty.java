@@ -14,12 +14,12 @@ public class MaterialEnumProperty<T extends Enum<T> & StringIdentifiable> extend
     }
 
     public static <T extends Enum<T> & StringIdentifiable> void register() {
-        registerTag(ElementTag.class, currentlyRegistering, (Attribute attribute, MaterialEnumProperty<T> object) -> {
-            return new ElementTag(object.object.state.get(object.internalProperty));
+        registerTag(ElementTag.class, currentlyRegistering, (Attribute attribute, MaterialEnumProperty<T> prop) -> {
+            return new ElementTag(prop.object.state.get(prop.internalProperty));
         });
-        registerMechanism(ElementTag.class, currentlyRegistering, (MaterialEnumProperty<T> object, Mechanism mechanism, ElementTag input) -> {
-            if (mechanism.requireEnum(object.internalProperty.getType())) {
-                object.object.state = object.object.state.with(object.internalProperty, input.asEnum(object.internalProperty.getType()));
+        registerMechanism(ElementTag.class, currentlyRegistering, (MaterialEnumProperty<T> prop, Mechanism mechanism, ElementTag input) -> {
+            if (mechanism.requireEnum(prop.internalProperty.getType())) {
+                prop.object.state = prop.object.state.with(prop.internalProperty, input.asEnum(prop.internalProperty.getType()));
             }
         });
     }
