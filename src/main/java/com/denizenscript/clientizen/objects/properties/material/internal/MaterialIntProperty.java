@@ -13,15 +13,15 @@ public class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, 
     }
 
     public static void register() {
-        registerTag(ElementTag.class, currentlyRegistering, (Attribute attribute, MaterialIntProperty object) -> {
-            return new ElementTag(object.material.state.get(object.internalProperty));
+        registerTag(ElementTag.class, currentlyRegistering, (Attribute attribute, MaterialIntProperty prop) -> {
+            return new ElementTag(prop.object.state.get(prop.internalProperty));
         });
-        registerMechanism(ElementTag.class, currentlyRegistering, (MaterialIntProperty object, Mechanism mechanism, ElementTag input) -> {
+        registerMechanism(ElementTag.class, currentlyRegistering, (MaterialIntProperty prop, Mechanism mechanism, ElementTag input) -> {
             if (!mechanism.requireInteger()) {
                 return;
             }
             int newValue = input.asInt();
-            IntPropertyAccessor accessor = (IntPropertyAccessor) object.internalProperty;
+            IntPropertyAccessor accessor = (IntPropertyAccessor) prop.internalProperty;
             if (newValue < accessor.getMin()) {
                 mechanism.echoError("Invalid input number, must be at least " + accessor.getMin() + ".");
                 return;
@@ -30,7 +30,7 @@ public class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, 
                 mechanism.echoError("Invalid input number, cannot be more than " + accessor.getMax() + ".");
                 return;
             }
-            object.material.state = object.material.state.with(object.internalProperty, newValue);
+            prop.object.state = prop.object.state.with(prop.internalProperty, newValue);
         });
     }
 }

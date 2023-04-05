@@ -11,7 +11,6 @@ import net.minecraft.state.property.Properties;
 import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialMinecraftProperty.registerProperty;
 
 public class PropertyRegistry {
-
     public static void register() {
         registerProperty("switched", MaterialBooleanProperty::new, MaterialBooleanProperty.class, Properties.EYE, Properties.POWERED, Properties.ENABLED);
         registerProperty("waterlogged", MaterialBooleanProperty::new, MaterialBooleanProperty.class, Properties.WATERLOGGED);

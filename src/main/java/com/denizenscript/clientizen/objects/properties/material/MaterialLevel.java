@@ -12,16 +12,16 @@ public class MaterialLevel extends MaterialIntProperty {
         super(name, material, internalProperty);
     }
 
-    public static IntProperty[] handledProperties = {
+    public static final IntProperty[] handledProperties = {
             Properties.CANDLES, Properties.BITES, Properties.LEVEL_3, Properties.LEVEL_8, Properties.LEVEL_1_8, Properties.LEVEL_15
     };
 
     public static void register() {
-        registerTag(ElementTag.class, "minimum_level", (attribute, object) -> {
-            return new ElementTag(((IntPropertyAccessor) object.internalProperty).getMin());
+        registerTag(ElementTag.class, "minimum_level", (attribute, prop) -> {
+            return new ElementTag(((IntPropertyAccessor) prop.internalProperty).getMin());
         });
-        registerTag(ElementTag.class, "maximum_level", (attribute, object) -> {
-            return new ElementTag(((IntPropertyAccessor) object.internalProperty).getMax());
+        registerTag(ElementTag.class, "maximum_level", (attribute, prop) -> {
+            return new ElementTag(((IntPropertyAccessor) prop.internalProperty).getMax());
         });
         MaterialIntProperty.register();
     }
