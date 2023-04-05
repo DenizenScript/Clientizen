@@ -1,21 +1,38 @@
 package com.denizenscript.clientizen.objects.properties.entity;
 
 import com.denizenscript.clientizen.objects.EntityTag;
-import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import com.denizenscript.denizencore.objects.properties.Property;
-import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import net.minecraft.entity.EntityType;
 
-public record EntitySheared(EntityTag entity) implements Property {
+public class EntitySheared extends EntityProperty<ElementTag> {
 
-    public static EntitySheared getFrom(ObjectTag object) {
-        return object instanceof EntityTag entity && entity.is(EntityType.SHEEP) ? new EntitySheared(entity) : null;
+    // <--[property]
+    // @object EntityTag
+    // @name sheared
+    // @input ElementTag(Boolean)
+    // @description
+    // Controls whether a sheep is sheared.
+    // -->
+    public static boolean describes(EntityTag entity) {
+        return entity.is(EntityType.SHEEP);
     }
 
     @Override
-    public String getPropertyString() {
-        return entity.as(EntityType.SHEEP).isSheared() ? "true" : null;
+    public boolean isDefaultValue(ElementTag data) {
+        return data.asBoolean();
+    }
+
+    @Override
+    public ElementTag getPropertyValue() {
+        return new ElementTag(as(EntityType.SHEEP).isSheared());
+    }
+
+    @Override
+    public void setPropertyValue(ElementTag value, Mechanism mechanism) {
+        if (mechanism.requireBoolean()) {
+            as(EntityType.SHEEP).setSheared(value.asBoolean());
+        }
     }
 
     @Override
@@ -24,32 +41,6 @@ public record EntitySheared(EntityTag entity) implements Property {
     }
 
     public static void register() {
-
-        // <--[tag]
-        // @attribute <EntityTag.sheared>
-        // @returns ElementTag(Boolean)
-        // @mechanism EntityTag.sheared
-        // @group properties
-        // @description
-        // Returns whether a sheep is sheared.
-        // -->
-        PropertyParser.registerTag(EntitySheared.class, ElementTag.class, "sheared", (attribute, object) -> {
-            return new ElementTag(object.entity.as(EntityType.SHEEP).isSheared());
-        });
-
-        // <--[mechanism]
-        // @object EntityTag
-        // @name sheared
-        // @input ElementTag(Boolean)
-        // @description
-        // Sets whether a sheep is sheared.
-        // @tags
-        // <EntityTag.sheared>
-        // -->
-        PropertyParser.registerMechanism(EntitySheared.class, ElementTag.class, "sheared", (object, mechanism, input) -> {
-            if (mechanism.requireBoolean()) {
-                object.entity.as(EntityType.SHEEP).setSheared(input.asBoolean());
-            }
-        });
+        autoRegister("sheared", EntitySheared.class, ElementTag.class, false);
     }
 }
