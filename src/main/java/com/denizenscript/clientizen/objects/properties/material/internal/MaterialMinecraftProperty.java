@@ -8,12 +8,12 @@ import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 import net.minecraft.state.property.Property;
 
-public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends Comparable<V>> extends ObjectProperty<MaterialTag> {
+public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends Comparable<V>> extends ObjectProperty<MaterialTag, ElementTag> {
 
     public static String currentlyRegistering;
 
-    public T internalProperty;
-    public String name;
+    public final T internalProperty;
+    public final String name;
 
     public MaterialMinecraftProperty(String name, MaterialTag material, T internalProperty) {
         this.name = name;
@@ -22,13 +22,13 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     }
 
     @Override
-    public ElementTag getPropertyValue() {
-        return new ElementTag(object.state.get(internalProperty).toString());
-    }
-
-    @Override
     public String getPropertyId() {
         return name;
+    }
+
+    public static void register() {
+        registerTag(ElementTag.class, currentlyRegistering, (attribute, prop) -> prop.getPropertyValue());
+        registerMechanism(ElementTag.class, currentlyRegistering, (prop, mechanism, input) -> prop.setPropertyValue(input, mechanism));
     }
 
     @SuppressWarnings("unchecked")
@@ -36,7 +36,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         final MaterialMinecraftPropertyGetter<?, ?> getter = (MaterialMinecraftPropertyGetter<?, ?>) PropertyParser.currentlyRegisteringProperty;
         final String propertyName = currentlyRegistering;
         MaterialTag.tagProcessor.registerTag(returnType, name, (attribute, object) -> {
-            ObjectProperty<MaterialTag> prop = getter.get(object);
+            ObjectProperty<MaterialTag, ElementTag> prop = getter.get(object);
             if (prop == null) {
                 attribute.echoError("Property 'MaterialTag." + propertyName + "' does not describe the input object.");
                 return null;
@@ -50,7 +50,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         final MaterialMinecraftPropertyGetter<?, ?> getter = (MaterialMinecraftPropertyGetter<?, ?>) PropertyParser.currentlyRegisteringProperty;
         final String propertyName = currentlyRegistering;
         MaterialTag.tagProcessor.registerMechanism(name, true, (object, mechanism) -> {
-            ObjectProperty<MaterialTag> prop = getter.get(object);
+            ObjectProperty<MaterialTag, ElementTag> prop = getter.get(object);
             if (prop == null) {
                 mechanism.echoError("Property 'MaterialTag." + propertyName + "' does not describe the input object.");
                 return;
@@ -79,7 +79,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
             (String name, MaterialMinecraftPropertySupplier<T> supplier, T[] internalProperties) implements PropertyParser.PropertyGetter<MaterialTag> {
 
         @Override
-        public ObjectProperty<MaterialTag> get(MaterialTag material) {
+        public ObjectProperty<MaterialTag, ElementTag> get(MaterialTag material) {
             if (material.state == null) {
                 return null;
             }
@@ -94,7 +94,6 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
 
     @FunctionalInterface
     public interface MaterialMinecraftPropertySupplier<T extends Property<?>> {
-
         MaterialMinecraftProperty<?, ?> create(String name, MaterialTag material, T internalProperty);
     }
 }

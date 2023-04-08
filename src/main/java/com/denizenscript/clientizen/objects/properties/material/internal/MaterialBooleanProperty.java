@@ -3,7 +3,6 @@ package com.denizenscript.clientizen.objects.properties.material.internal;
 import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import com.denizenscript.denizencore.tags.Attribute;
 import net.minecraft.state.property.BooleanProperty;
 
 public class MaterialBooleanProperty extends MaterialMinecraftProperty<BooleanProperty, Boolean> {
@@ -12,14 +11,19 @@ public class MaterialBooleanProperty extends MaterialMinecraftProperty<BooleanPr
         super(name, material, internalProperty);
     }
 
+    @Override
+    public ElementTag getPropertyValue() {
+        return new ElementTag(object.state.get(internalProperty));
+    }
+
+    @Override
+    public void setPropertyValue(ElementTag value, Mechanism mechanism) {
+        if (mechanism.requireBoolean()) {
+            object.state = object.state.with(internalProperty, value.asBoolean());
+        }
+    }
+
     public static void register() {
-        registerTag(ElementTag.class, currentlyRegistering, (Attribute attribute, MaterialBooleanProperty prop) -> {
-            return new ElementTag(prop.object.state.get(prop.internalProperty));
-        });
-        registerMechanism(ElementTag.class, currentlyRegistering, (MaterialBooleanProperty prop, Mechanism mechanism, ElementTag input) -> {
-            if (mechanism.requireBoolean()) {
-                prop.object.state = prop.object.state.with(prop.internalProperty, input.asBoolean());
-            }
-        });
+        MaterialMinecraftProperty.register();
     }
 }
