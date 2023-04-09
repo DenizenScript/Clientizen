@@ -22,6 +22,6 @@ public class MaterialHalf extends MaterialEnumProperty {
     }
 
     public static void register() {
-        autoRegister("half", MaterialHalf.class, ElementTag.class, false);
+        autoRegister("half", MaterialHalf.class);
     }
 }
