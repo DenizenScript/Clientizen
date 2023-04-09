@@ -6,10 +6,7 @@ import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.minecraft.state.property.IntProperty;
 
-public class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
-    public MaterialIntProperty(String name, MaterialTag material, IntProperty internalProperty) {
-        super(name, material, internalProperty);
-    }
+public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
 
     @Override
     public ElementTag getPropertyValue() {
@@ -34,7 +31,7 @@ public class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, 
         object.state = object.state.with(internalProperty, newValue);
     }
 
-    public static void register() {
-        MaterialMinecraftProperty.register();
-    }
+//    public static void register() {
+//        MaterialMinecraftProperty.register();
+//    }
 }

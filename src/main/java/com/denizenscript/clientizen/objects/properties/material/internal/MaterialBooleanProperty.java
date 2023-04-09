@@ -1,15 +1,10 @@
 package com.denizenscript.clientizen.objects.properties.material.internal;
 
-import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.minecraft.state.property.BooleanProperty;
 
-public class MaterialBooleanProperty extends MaterialMinecraftProperty<BooleanProperty, Boolean> {
-
-    public MaterialBooleanProperty(String name, MaterialTag material, BooleanProperty internalProperty) {
-        super(name, material, internalProperty);
-    }
+public abstract class MaterialBooleanProperty extends MaterialMinecraftProperty<BooleanProperty, Boolean> {
 
     @Override
     public ElementTag getPropertyValue() {
@@ -23,7 +18,7 @@ public class MaterialBooleanProperty extends MaterialMinecraftProperty<BooleanPr
         }
     }
 
-    public static void register() {
-        MaterialMinecraftProperty.register();
-    }
+//    public static void register() {
+//        MaterialMinecraftProperty.register();
+//    }
 }

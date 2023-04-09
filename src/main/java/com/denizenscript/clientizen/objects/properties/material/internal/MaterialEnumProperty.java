@@ -1,16 +1,11 @@
 package com.denizenscript.clientizen.objects.properties.material.internal;
 
-import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 
-public class MaterialEnumProperty<T extends Enum<T> & StringIdentifiable> extends MaterialMinecraftProperty<EnumProperty<T>, T> {
-
-    public MaterialEnumProperty(String name, MaterialTag material, EnumProperty<T> internalProperty) {
-        super(name, material, internalProperty);
-    }
+public abstract class MaterialEnumProperty<T extends Enum<T> & StringIdentifiable> extends MaterialMinecraftProperty<EnumProperty<T>, T> {
 
     @Override
     public ElementTag getPropertyValue() {
@@ -24,7 +19,5 @@ public class MaterialEnumProperty<T extends Enum<T> & StringIdentifiable> extend
         }
     }
 
-    public static void register() {
-        MaterialMinecraftProperty.register();
-    }
+    public abstract boolean isDefaultValue(ElementTag value);
 }
