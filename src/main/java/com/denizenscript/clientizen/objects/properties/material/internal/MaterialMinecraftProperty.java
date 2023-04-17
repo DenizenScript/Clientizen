@@ -24,28 +24,23 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter<>(propertyClass, properties), MaterialTag.class, null, null, propertyClass);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void registerEnumProperty(Class<? extends MaterialEnumProperty> propertyClass, EnumProperty<?>... properties) {
-        PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter(propertyClass, properties), MaterialTag.class, null, null, propertyClass);
+    public static void autoRegister(String name, Class<? extends MaterialMinecraftProperty<?, ?>> propertyClass) {
+        autoRegister(name, propertyClass, ElementTag.class, false);
     }
 
     public record MaterialMinecraftPropertyGetter<T extends Property<V>, V extends Comparable<V>>
             (MethodHandle constructor, T[] internalProperties) implements PropertyParser.PropertyGetter<MaterialTag> {
 
         private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
-        private static final MethodType PROPERTY_CONSTRUCTOR = MethodType.methodType(void.class);
+        private static final MethodType NO_ARGS_CONSTRUCTOR = MethodType.methodType(void.class);
 
         private static MethodHandle getConstructor(Class<? extends MaterialMinecraftProperty<?, ?>> propertyClass) {
             try {
-                return LOOKUP.findConstructor(propertyClass, PROPERTY_CONSTRUCTOR);
+                return LOOKUP.findConstructor(propertyClass, NO_ARGS_CONSTRUCTOR);
             }
-            catch (NoSuchMethodException noSuchMethodException) {
-                Debug.echoError("Invalid material minecraft property class '" + DebugInternals.getClassNameOpti(propertyClass) + "' is missing a no-args constructor!");
-                throw new IllegalArgumentException(noSuchMethodException);
-            }
-            catch (IllegalAccessException illegalAccessException) {
+            catch (Exception e) {
                 Debug.echoError("Unable to get constructor from material minecraft property class '" + DebugInternals.getClassNameOpti(propertyClass) + "'!");
-                throw new IllegalArgumentException(illegalAccessException);
+                throw new IllegalArgumentException(e);
             }
         }
 

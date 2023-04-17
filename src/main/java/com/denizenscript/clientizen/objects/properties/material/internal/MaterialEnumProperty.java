@@ -4,9 +4,12 @@ import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.properties.PropertyParser;
+import net.minecraft.state.property.EnumProperty;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
+
 
     @Override
     public ElementTag getPropertyValue() {
@@ -15,10 +18,12 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
 
     @Override
     public boolean isDefaultValue(ObjectTag value) {
-        return isDefaultValue((ElementTag) value);
+        return isDefaultValue(((ElementTag) value).asEnum(internalProperty.getType()));
     }
 
-    public abstract boolean isDefaultValue(ElementTag value);
+    public boolean isDefaultValue(Enum<?> value) {
+        return false;
+    }
 
     @Override
     public void setPropertyValue(ObjectTag value, Mechanism mechanism) {
@@ -27,7 +32,12 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
         }
     }
 
-    public static void autoRegister(String name, Class<? extends MaterialEnumProperty> propertyClass) {
-        autoRegister(name, propertyClass, MaterialTag.class, false);
+    public static void autoRegisterEnumProperty(String name, Class<? extends MaterialEnumProperty> propertyClass) {
+        autoRegister(name, propertyClass, ElementTag.class, false);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static void registerEnumProperty(Class<? extends MaterialEnumProperty> propertyClass, EnumProperty<?>... properties) {
+        PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter(propertyClass, properties), MaterialTag.class, null, null, propertyClass);
     }
 }

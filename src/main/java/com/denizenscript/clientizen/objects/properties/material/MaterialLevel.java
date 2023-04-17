@@ -25,6 +25,6 @@ public class MaterialLevel extends MaterialIntProperty {
         PropertyParser.registerTag(MaterialLevel.class, ElementTag.class, "maximum_level", (attribute, prop) -> {
             return new ElementTag(((IntPropertyAccessor) prop.internalProperty).getMax());
         });
-//        MaterialIntProperty.register();
+        autoRegister("level", MaterialLevel.class);
     }
 }

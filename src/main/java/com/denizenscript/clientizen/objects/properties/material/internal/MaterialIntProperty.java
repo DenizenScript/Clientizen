@@ -14,6 +14,15 @@ public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntP
     }
 
     @Override
+    public boolean isDefaultValue(ElementTag value) {
+        return isDefaultValue(value.asInt());
+    }
+
+    public boolean isDefaultValue(int value) {
+        return false;
+    }
+
+    @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
         if (!mechanism.requireInteger()) {
             return;
@@ -30,8 +39,4 @@ public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntP
         }
         object.state = object.state.with(internalProperty, newValue);
     }
-
-//    public static void register() {
-//        MaterialMinecraftProperty.register();
-//    }
 }

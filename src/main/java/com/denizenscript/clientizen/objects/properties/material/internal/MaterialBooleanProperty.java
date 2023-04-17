@@ -12,13 +12,18 @@ public abstract class MaterialBooleanProperty extends MaterialMinecraftProperty<
     }
 
     @Override
+    public boolean isDefaultValue(ElementTag value) {
+        return isDefaultValue(value.asBoolean());
+    }
+
+    public boolean isDefaultValue(boolean value) {
+        return false;
+    }
+
+    @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
         if (mechanism.requireBoolean()) {
             object.state = object.state.with(internalProperty, value.asBoolean());
         }
     }
-
-//    public static void register() {
-//        MaterialMinecraftProperty.register();
-//    }
 }

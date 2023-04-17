@@ -1,12 +1,9 @@
 package com.denizenscript.clientizen.objects.properties;
 
-import com.denizenscript.clientizen.objects.properties.material.MaterialHalf;
-import com.denizenscript.clientizen.objects.properties.material.MaterialHanging;
-import com.denizenscript.clientizen.objects.properties.material.MaterialSwitched;
-import com.denizenscript.clientizen.objects.properties.material.MaterialWaterlogged;
+import com.denizenscript.clientizen.objects.properties.material.*;
 
+import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialEnumProperty.registerEnumProperty;
 import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialMinecraftProperty.registerProperty;
-import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialMinecraftProperty.registerEnumProperty;
 
 public class PropertyRegistry {
 
@@ -15,7 +12,7 @@ public class PropertyRegistry {
         registerProperty(MaterialWaterlogged.class, MaterialWaterlogged.handledProperties);
         registerProperty(MaterialHanging.class, MaterialHanging.handledProperties);
         registerEnumProperty(MaterialHalf.class, MaterialHalf.handledProperties);
-//        registerProperty("instrument", MaterialEnumProperty::new, MaterialEnumProperty.class, Properties.INSTRUMENT);
-//        registerProperty("level", MaterialLevel::new, MaterialLevel.class, MaterialLevel.handledProperties);
+        registerEnumProperty(MaterialInstrument.class, MaterialInstrument.handledProperties);
+        registerProperty(MaterialLevel.class, MaterialLevel.handledProperties);
     }
 }
