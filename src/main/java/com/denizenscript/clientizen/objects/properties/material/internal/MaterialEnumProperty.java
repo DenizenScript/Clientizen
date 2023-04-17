@@ -33,7 +33,7 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
     }
 
     public static void autoRegisterEnumProperty(String name, Class<? extends MaterialEnumProperty> propertyClass) {
-        autoRegister(name, propertyClass, ElementTag.class, false);
+        autoRegister(name, (Class<? extends MaterialMinecraftProperty<?, ?>>) propertyClass);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

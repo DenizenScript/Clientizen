@@ -8,11 +8,6 @@ public class MaterialSwitched extends MaterialBooleanProperty {
 
     public static final BooleanProperty[] handledProperties = {Properties.EYE, Properties.POWERED, Properties.ENABLED};
 
-    @Override
-    public String getPropertyId() {
-        return "switched";
-    }
-
     public static void register() {
         autoRegister("switched", MaterialSwitched.class);
     }

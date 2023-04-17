@@ -6,7 +6,6 @@ import com.denizenscript.denizencore.objects.properties.ObjectProperty;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
 
 import java.lang.invoke.MethodHandle;
@@ -16,8 +15,14 @@ import java.lang.invoke.MethodType;
 public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends Comparable<V>> extends ObjectProperty<MaterialTag, ElementTag> {
 
     public T internalProperty;
+    private String propertyID;
 
     protected MaterialMinecraftProperty() {}
+
+    @Override
+    public String getPropertyId() {
+        return propertyID;
+    }
 
     @SafeVarargs
     public static <T extends Property<V>, V extends Comparable<V>> void registerProperty(Class<? extends MaterialMinecraftProperty<T, V>> propertyClass, T... properties) {
@@ -25,29 +30,29 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     }
 
     public static void autoRegister(String name, Class<? extends MaterialMinecraftProperty<?, ?>> propertyClass) {
+        ((MaterialMinecraftPropertyGetter<?, ?>) PropertyParser.currentlyRegisteringProperty).propertyID = name;
         autoRegister(name, propertyClass, ElementTag.class, false);
     }
 
-    public record MaterialMinecraftPropertyGetter<T extends Property<V>, V extends Comparable<V>>
-            (MethodHandle constructor, T[] internalProperties) implements PropertyParser.PropertyGetter<MaterialTag> {
+    public static class MaterialMinecraftPropertyGetter<T extends Property<V>, V extends Comparable<V>> implements PropertyParser.PropertyGetter<MaterialTag> {
 
         private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
         private static final MethodType NO_ARGS_CONSTRUCTOR = MethodType.methodType(void.class);
 
-        private static MethodHandle getConstructor(Class<? extends MaterialMinecraftProperty<?, ?>> propertyClass) {
+        private final MethodHandle constructor;
+        private final T[] internalProperties;
+        private String propertyID;
+
+        public MaterialMinecraftPropertyGetter(Class<? extends MaterialMinecraftProperty<T, V>> propertyClass, T[] internalProperties) {
             try {
-                return LOOKUP.findConstructor(propertyClass, NO_ARGS_CONSTRUCTOR);
+                this.constructor = LOOKUP.findConstructor(propertyClass, NO_ARGS_CONSTRUCTOR);
             }
             catch (Exception e) {
                 Debug.echoError("Unable to get constructor from material minecraft property class '" + DebugInternals.getClassNameOpti(propertyClass) + "'!");
                 throw new IllegalArgumentException(e);
             }
+            this.internalProperties = internalProperties;
         }
-
-        public MaterialMinecraftPropertyGetter(Class<? extends MaterialMinecraftProperty<T, V>> propertyClass, T[] internalProperties) {
-            this(getConstructor(propertyClass), internalProperties);
-        }
-
 
         @Override
         public ObjectProperty<MaterialTag, ElementTag> get(MaterialTag material) {
@@ -61,6 +66,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
                         MaterialMinecraftProperty<T, ?> property = (MaterialMinecraftProperty<T, ?>) constructor.invoke();
                         property.object = material;
                         property.internalProperty = internalProperty;
+                        property.propertyID = propertyID;
                         return property;
                     }
                     catch (Throwable e) {

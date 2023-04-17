@@ -13,11 +13,6 @@ public class MaterialLevel extends MaterialIntProperty {
             Properties.CANDLES, Properties.BITES, Properties.LEVEL_3, Properties.LEVEL_8, Properties.LEVEL_1_8, Properties.LEVEL_15
     };
 
-    @Override
-    public String getPropertyId() {
-        return "level";
-    }
-
     public static void register() {
         PropertyParser.registerTag(MaterialLevel.class, ElementTag.class, "minimum_level", (attribute, prop) -> {
             return new ElementTag(((IntPropertyAccessor) prop.internalProperty).getMin());

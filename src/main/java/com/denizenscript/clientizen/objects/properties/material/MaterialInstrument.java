@@ -8,11 +8,6 @@ public class MaterialInstrument extends MaterialEnumProperty {
 
     public static EnumProperty<?>[] handledProperties = {Properties.INSTRUMENT};
 
-    @Override
-    public String getPropertyId() {
-        return "instrument";
-    }
-
     public static void register() {
         autoRegisterEnumProperty("instrument", MaterialInstrument.class);
     }

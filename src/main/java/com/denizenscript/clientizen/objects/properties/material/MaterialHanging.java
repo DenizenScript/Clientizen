@@ -8,11 +8,6 @@ public class MaterialHanging extends MaterialBooleanProperty {
 
     public static final BooleanProperty[] handledProperties = {Properties.HANGING};
 
-    @Override
-    public String getPropertyId() {
-        return "hanging";
-    }
-
     public static void register() {
         autoRegister("hanging", MaterialHanging.class);
     }

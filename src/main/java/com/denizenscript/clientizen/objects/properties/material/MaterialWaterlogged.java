@@ -8,11 +8,6 @@ public class MaterialWaterlogged extends MaterialBooleanProperty {
 
     public static final BooleanProperty[] handledProperties = {Properties.WATERLOGGED};
 
-    @Override
-    public String getPropertyId() {
-        return "waterlogged";
-    }
-
     public static void register() {
         autoRegister("waterlogged", MaterialWaterlogged.class);
     }
