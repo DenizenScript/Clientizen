@@ -19,7 +19,7 @@ public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntP
     }
 
     public boolean isDefaultValue(int value) {
-        return false;
+        return value == object.state.getBlock().getDefaultState().get(internalProperty);
     }
 
     @Override

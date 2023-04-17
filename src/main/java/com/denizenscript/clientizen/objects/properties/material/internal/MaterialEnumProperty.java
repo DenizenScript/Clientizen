@@ -22,7 +22,7 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
     }
 
     public boolean isDefaultValue(Enum<?> value) {
-        return false;
+        return value == ((MaterialTag) object).state.getBlock().getDefaultState().get(internalProperty);
     }
 
     @Override

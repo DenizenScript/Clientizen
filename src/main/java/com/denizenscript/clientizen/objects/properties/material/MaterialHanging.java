@@ -9,11 +9,6 @@ public class MaterialHanging extends MaterialBooleanProperty {
     public static final BooleanProperty[] handledProperties = {Properties.HANGING};
 
     @Override
-    public boolean isDefaultValue(boolean value) {
-        return !value;
-    }
-
-    @Override
     public String getPropertyId() {
         return "hanging";
     }

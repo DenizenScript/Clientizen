@@ -17,7 +17,7 @@ public abstract class MaterialBooleanProperty extends MaterialMinecraftProperty<
     }
 
     public boolean isDefaultValue(boolean value) {
-        return false;
+        return value == object.state.getBlock().getDefaultState().get(internalProperty);
     }
 
     @Override

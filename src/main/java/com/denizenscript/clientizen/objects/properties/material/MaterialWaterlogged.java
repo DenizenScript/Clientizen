@@ -9,11 +9,6 @@ public class MaterialWaterlogged extends MaterialBooleanProperty {
     public static final BooleanProperty[] handledProperties = {Properties.WATERLOGGED};
 
     @Override
-    public boolean isDefaultValue(boolean value) {
-        return !value;
-    }
-
-    @Override
     public String getPropertyId() {
         return "waterlogged";
     }

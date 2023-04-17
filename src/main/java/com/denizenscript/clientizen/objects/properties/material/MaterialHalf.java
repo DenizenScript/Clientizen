@@ -11,11 +11,6 @@ public class MaterialHalf extends MaterialEnumProperty {
     public static final EnumProperty<?>[] handledProperties = {Properties.BED_PART, Properties.CHEST_TYPE};
 
     @Override
-    public boolean isDefaultValue(Enum<?> value) {
-        return internalProperty == Properties.BED_PART ? value == BedPart.FOOT : value == ChestType.SINGLE;
-    }
-
-    @Override
     public String getPropertyId() {
         return "half";
     }
