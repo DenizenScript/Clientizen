@@ -28,7 +28,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     @SuppressWarnings("deprecation")
     public String getPropertyString() {
         V value = object.state.get(internalProperty);
-        return isDefaultValue(value) ? null : String.valueOf(value);
+        return isDefaultValue(value) ? null : value.toString();
     }
 
     public boolean isDefaultValue(V value) {
