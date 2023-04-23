@@ -7,7 +7,7 @@ import net.minecraft.state.property.EnumProperty;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
 
-    public static void registerEnumProperty(Class<? extends MaterialEnumProperty> propertyClass, EnumProperty<?>... properties) {
+    public static void registerProperty(Class<? extends MaterialEnumProperty> propertyClass, EnumProperty<?>... properties) {
         PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter(propertyClass, properties), MaterialTag.class, null, null, propertyClass);
     }
 }

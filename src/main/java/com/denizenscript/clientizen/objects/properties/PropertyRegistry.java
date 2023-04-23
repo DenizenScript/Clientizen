@@ -2,8 +2,7 @@ package com.denizenscript.clientizen.objects.properties;
 
 import com.denizenscript.clientizen.objects.properties.material.*;
 
-import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialEnumProperty.registerEnumProperty;
-import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialMinecraftProperty.registerProperty;
+import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialEnumProperty.registerProperty;
 
 public class PropertyRegistry {
 
@@ -11,8 +10,8 @@ public class PropertyRegistry {
         registerProperty(MaterialSwitched.class, MaterialSwitched.handledProperties);
         registerProperty(MaterialWaterlogged.class, MaterialWaterlogged.handledProperties);
         registerProperty(MaterialHanging.class, MaterialHanging.handledProperties);
-        registerEnumProperty(MaterialHalf.class, MaterialHalf.handledProperties);
-        registerEnumProperty(MaterialInstrument.class, MaterialInstrument.handledProperties);
+        registerProperty(MaterialHalf.class, MaterialHalf.handledProperties);
+        registerProperty(MaterialInstrument.class, MaterialInstrument.handledProperties);
         registerProperty(MaterialLevel.class, MaterialLevel.handledProperties);
     }
 }
