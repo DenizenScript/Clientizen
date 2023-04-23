@@ -1,20 +1,11 @@
 package com.denizenscript.clientizen.objects.properties.material.internal;
 
 import com.denizenscript.clientizen.mixin.IntPropertyAccessor;
-import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.minecraft.state.property.IntProperty;
 
-public class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
-    public MaterialIntProperty(String name, MaterialTag material, IntProperty internalProperty) {
-        super(name, material, internalProperty);
-    }
-
-    @Override
-    public ElementTag getPropertyValue() {
-        return new ElementTag(object.state.get(internalProperty));
-    }
+public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
 
     @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
@@ -32,9 +23,5 @@ public class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, 
             return;
         }
         object.state = object.state.with(internalProperty, newValue);
-    }
-
-    public static void register() {
-        MaterialMinecraftProperty.register();
     }
 }
