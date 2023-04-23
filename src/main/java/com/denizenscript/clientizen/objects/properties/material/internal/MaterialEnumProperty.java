@@ -11,19 +11,8 @@ import net.minecraft.state.property.EnumProperty;
 public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
 
     @Override
-    @SuppressWarnings("deprecation")
-    public String getPropertyString() {
-        Enum<?> value = (Enum<?>) ((MaterialTag) object).state.get(internalProperty);
-        return isDefaultValue(value) ? null : value.name();
-    }
-
-    @Override
     public ElementTag getPropertyValue() {
         return new ElementTag((Enum<?>) ((MaterialTag) object).state.get(internalProperty));
-    }
-
-    public boolean isDefaultValue(Enum<?> value) {
-        return value == ((MaterialTag) object).state.getBlock().getDefaultState().get(internalProperty);
     }
 
     @Override

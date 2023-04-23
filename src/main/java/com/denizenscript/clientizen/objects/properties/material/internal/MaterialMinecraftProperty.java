@@ -24,6 +24,17 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         return propertyID;
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
+    public String getPropertyString() {
+        V value = object.state.get(internalProperty);
+        return isDefaultValue(value) ? null : String.valueOf(value);
+    }
+
+    public boolean isDefaultValue(V value) {
+        return value == object.state.getBlock().getDefaultState().get(internalProperty);
+    }
+
     @SafeVarargs
     public static <T extends Property<V>, V extends Comparable<V>> void registerProperty(Class<? extends MaterialMinecraftProperty<T, V>> propertyClass, T... properties) {
         PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter<>(propertyClass, properties), MaterialTag.class, null, null, propertyClass);
