@@ -7,13 +7,15 @@ import net.minecraft.state.property.BooleanProperty;
 public abstract class MaterialBooleanProperty extends MaterialMinecraftProperty<BooleanProperty, Boolean> {
 
     @Override
-    public ElementTag getPropertyValue() {
-        return new ElementTag(object.state.get(internalProperty));
+    @SuppressWarnings("deprecation")
+    public String getPropertyString() {
+        boolean value = object.state.get(internalProperty);
+        return isDefaultValue(value) ? null : String.valueOf(value);
     }
 
     @Override
-    public boolean isDefaultValue(ElementTag value) {
-        return isDefaultValue(value.asBoolean());
+    public ElementTag getPropertyValue() {
+        return new ElementTag(object.state.get(internalProperty));
     }
 
     public boolean isDefaultValue(boolean value) {

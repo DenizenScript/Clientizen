@@ -1,7 +1,6 @@
 package com.denizenscript.clientizen.objects.properties.material.internal;
 
 import com.denizenscript.clientizen.mixin.IntPropertyAccessor;
-import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.minecraft.state.property.IntProperty;
@@ -9,13 +8,15 @@ import net.minecraft.state.property.IntProperty;
 public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
 
     @Override
-    public ElementTag getPropertyValue() {
-        return new ElementTag(object.state.get(internalProperty));
+    @SuppressWarnings("deprecation")
+    public String getPropertyString() {
+        int value = object.state.get(internalProperty);
+        return isDefaultValue(value) ? null : String.valueOf(value);
     }
 
     @Override
-    public boolean isDefaultValue(ElementTag value) {
-        return isDefaultValue(value.asInt());
+    public ElementTag getPropertyValue() {
+        return new ElementTag(object.state.get(internalProperty));
     }
 
     public boolean isDefaultValue(int value) {
