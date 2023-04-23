@@ -8,11 +8,6 @@ import net.minecraft.state.property.IntProperty;
 public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
 
     @Override
-    public ElementTag getPropertyValue() {
-        return new ElementTag(object.state.get(internalProperty));
-    }
-
-    @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
         if (!mechanism.requireInteger()) {
             return;

@@ -1,6 +1,7 @@
 package com.denizenscript.clientizen.objects.properties.material.internal;
 
 import com.denizenscript.clientizen.objects.MaterialTag;
+import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.properties.ObjectProperty;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
@@ -11,6 +12,7 @@ import net.minecraft.state.property.Property;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.stream.Collectors;
 
 public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends Comparable<V>> extends ObjectProperty<MaterialTag, ElementTag> {
 
@@ -28,11 +30,24 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     @SuppressWarnings("deprecation")
     public String getPropertyString() {
         V value = object.state.get(internalProperty);
-        return isDefaultValue(value) ? null : value.toString();
+        return isDefaultValue(value) ? null : internalProperty.name(value);
     }
 
     public boolean isDefaultValue(V value) {
         return value == object.state.getBlock().getDefaultState().get(internalProperty);
+    }
+
+    @Override
+    public ElementTag getPropertyValue() {
+        return new ElementTag(internalProperty.name(object.state.get(internalProperty)));
+    }
+
+    @Override
+    public void setPropertyValue(ElementTag value, Mechanism mechanism) {
+        internalProperty.parse(value.asLowerString()).ifPresentOrElse(
+                newValue -> object.state = object.state.with(internalProperty, newValue),
+                () -> mechanism.echoError("Invalid " + DebugInternals.getClassNameOpti(internalProperty.getType()) + " specified, must be one of: "
+                        + internalProperty.getValues().stream().map(internalProperty::name).collect(Collectors.joining(", ")) + '.'));
     }
 
     @SafeVarargs
