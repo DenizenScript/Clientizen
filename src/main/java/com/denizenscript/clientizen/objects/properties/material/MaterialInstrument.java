@@ -9,6 +9,6 @@ public class MaterialInstrument extends MaterialEnumProperty {
     public static EnumProperty<?>[] handledProperties = {Properties.INSTRUMENT};
 
     public static void register() {
-        autoRegisterEnumProperty("instrument", MaterialInstrument.class);
+        autoRegister("instrument", MaterialInstrument.class);
     }
 }

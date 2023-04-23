@@ -55,7 +55,8 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter<>(propertyClass, properties), MaterialTag.class, null, null, propertyClass);
     }
 
-    public static void autoRegister(String name, Class<? extends MaterialMinecraftProperty<?, ?>> propertyClass) {
+    @SuppressWarnings({"rawtypes", "unchecked"}) // Erase types to allow enum properties
+    public static void autoRegister(String name, Class<? extends MaterialMinecraftProperty> propertyClass) {
         ((MaterialMinecraftPropertyGetter<?, ?>) PropertyParser.currentlyRegisteringProperty).propertyID = name;
         autoRegister(name, propertyClass, ElementTag.class, false);
     }

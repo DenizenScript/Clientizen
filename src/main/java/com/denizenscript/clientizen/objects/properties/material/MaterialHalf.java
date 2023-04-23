@@ -9,6 +9,6 @@ public class MaterialHalf extends MaterialEnumProperty {
     public static final EnumProperty<?>[] handledProperties = {Properties.BED_PART, Properties.CHEST_TYPE};
 
     public static void register() {
-        autoRegisterEnumProperty("half", MaterialHalf.class);
+        autoRegister("half", MaterialHalf.class);
     }
 }
