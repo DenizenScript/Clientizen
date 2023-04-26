@@ -194,10 +194,10 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
         MOUSE_BUTTON_8(GLFW.GLFW_MOUSE_BUTTON_8);
 
         public final int code;
-        public String alternateName;
+        public final String alternateName;
 
         Key(int code) {
-            this.code = code;
+            this(code, null);
         }
 
         Key(int code, String alternateName) {
