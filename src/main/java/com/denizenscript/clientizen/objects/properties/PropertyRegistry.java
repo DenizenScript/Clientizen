@@ -2,22 +2,20 @@ package com.denizenscript.clientizen.objects.properties;
 
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.clientizen.objects.properties.entity.EntitySheared;
-import com.denizenscript.clientizen.objects.properties.material.MaterialLevel;
-import com.denizenscript.clientizen.objects.properties.material.internal.MaterialBooleanProperty;
-import com.denizenscript.clientizen.objects.properties.material.internal.MaterialEnumProperty;
+import com.denizenscript.clientizen.objects.properties.material.*;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
-import net.minecraft.state.property.Properties;
 
-import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialMinecraftProperty.registerProperty;
+import static com.denizenscript.clientizen.objects.properties.material.internal.MaterialEnumProperty.registerProperty;
 
 public class PropertyRegistry {
+
     public static void register() {
-        registerProperty("switched", MaterialBooleanProperty::new, MaterialBooleanProperty.class, Properties.EYE, Properties.POWERED, Properties.ENABLED);
-        registerProperty("waterlogged", MaterialBooleanProperty::new, MaterialBooleanProperty.class, Properties.WATERLOGGED);
-        registerProperty("hanging", MaterialBooleanProperty::new, MaterialBooleanProperty.class, Properties.HANGING);
-        registerProperty("bed_part", MaterialEnumProperty::new, MaterialEnumProperty.class, Properties.BED_PART);
-        registerProperty("instrument", MaterialEnumProperty::new, MaterialEnumProperty.class, Properties.INSTRUMENT);
-        registerProperty("level", MaterialLevel::new, MaterialLevel.class, MaterialLevel.handledProperties);
+        registerProperty(MaterialSwitched.class, MaterialSwitched.handledProperties);
+        registerProperty(MaterialWaterlogged.class, MaterialWaterlogged.handledProperties);
+        registerProperty(MaterialHanging.class, MaterialHanging.handledProperties);
+        registerProperty(MaterialHalf.class, MaterialHalf.handledProperties);
+        registerProperty(MaterialInstrument.class, MaterialInstrument.handledProperties);
+        registerProperty(MaterialLevel.class, MaterialLevel.handledProperties);
         PropertyParser.registerProperty(EntitySheared.class, EntityTag.class);
     }
 }

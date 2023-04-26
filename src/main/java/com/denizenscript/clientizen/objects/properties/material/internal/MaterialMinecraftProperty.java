@@ -1,100 +1,109 @@
 package com.denizenscript.clientizen.objects.properties.material.internal;
 
 import com.denizenscript.clientizen.objects.MaterialTag;
-import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.properties.ObjectProperty;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
+import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 import net.minecraft.state.property.Property;
 
-public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends Comparable<V>> extends ObjectProperty<MaterialTag> {
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.util.stream.Collectors;
 
-    public static String currentlyRegistering;
+public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends Comparable<V>> extends ObjectProperty<MaterialTag, ElementTag> {
 
     public T internalProperty;
-    public String name;
+    private String propertyID;
 
-    public MaterialMinecraftProperty(String name, MaterialTag material, T internalProperty) {
-        this.name = name;
-        this.object = material;
-        this.internalProperty = internalProperty;
+    protected MaterialMinecraftProperty() {}
+
+    @Override
+    public String getPropertyId() {
+        return propertyID;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public String getPropertyString() {
+        V value = object.state.get(internalProperty);
+        return isDefaultValue(value) ? null : internalProperty.name(value);
+    }
+
+    public boolean isDefaultValue(V value) {
+        return value == object.state.getBlock().getDefaultState().get(internalProperty);
     }
 
     @Override
     public ElementTag getPropertyValue() {
-        return new ElementTag(object.state.get(internalProperty).toString());
+        return new ElementTag(internalProperty.name(object.state.get(internalProperty)));
     }
 
     @Override
-    public String getPropertyId() {
-        return name;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends MaterialMinecraftProperty<?, ?>, R extends ObjectTag> void registerTag(Class<R> returnType, String name, PropertyParser.PropertyTagWithReturn<T, R> runnable) {
-        final MaterialMinecraftPropertyGetter<?, ?> getter = (MaterialMinecraftPropertyGetter<?, ?>) PropertyParser.currentlyRegisteringProperty;
-        final String propertyName = currentlyRegistering;
-        MaterialTag.tagProcessor.registerTag(returnType, name, (attribute, object) -> {
-            ObjectProperty<MaterialTag> prop = getter.get(object);
-            if (prop == null) {
-                attribute.echoError("Property 'MaterialTag." + propertyName + "' does not describe the input object.");
-                return null;
-            }
-            return runnable.run(attribute, (T) prop);
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends MaterialMinecraftProperty<?, ?>, P extends ObjectTag> void registerMechanism(Class<P> paramType, String name, PropertyParser.PropertyMechanismWithParam<T, P> runner) {
-        final MaterialMinecraftPropertyGetter<?, ?> getter = (MaterialMinecraftPropertyGetter<?, ?>) PropertyParser.currentlyRegisteringProperty;
-        final String propertyName = currentlyRegistering;
-        MaterialTag.tagProcessor.registerMechanism(name, true, (object, mechanism) -> {
-            ObjectProperty<MaterialTag> prop = getter.get(object);
-            if (prop == null) {
-                mechanism.echoError("Property 'MaterialTag." + propertyName + "' does not describe the input object.");
-                return;
-            }
-            if (mechanism.value == null) {
-                mechanism.echoError("Error: mechanism '" + name + "' must have input of type '" + DebugInternals.getClassNameOpti(paramType) + "', but none was given.");
-                return;
-            }
-            P input = mechanism.value.asType(paramType, mechanism.context);
-            if (input == null) {
-                mechanism.echoError("Error: mechanism '" + name + "' must have input of type '" + DebugInternals.getClassNameOpti(paramType) + "', but value '" + mechanism.value + "' cannot be converted to the required type.");
-                return;
-            }
-            runner.run((T) prop, mechanism, input);
-        });
+    public void setPropertyValue(ElementTag value, Mechanism mechanism) {
+        internalProperty.parse(value.asLowerString()).ifPresentOrElse(
+                newValue -> object.state = object.state.with(internalProperty, newValue),
+                () -> mechanism.echoError("Invalid " + DebugInternals.getClassNameOpti(internalProperty.getType()) + " specified, must be one of: "
+                        + internalProperty.getValues().stream().map(internalProperty::name).collect(Collectors.joining(", ")) + '.'));
     }
 
     @SafeVarargs
-    public static <T extends Property<V>, V extends Comparable<V>> void registerProperty(String name, MaterialMinecraftPropertySupplier<T> supplier, Class<? extends com.denizenscript.denizencore.objects.properties.Property> propertyClass, T... properties) {
-        currentlyRegistering = name;
-        PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter<>(name, supplier, properties), MaterialTag.class, null, null, propertyClass);
-        currentlyRegistering = null;
+    public static <T extends Property<V>, V extends Comparable<V>> void registerProperty(Class<? extends MaterialMinecraftProperty<T, V>> propertyClass, T... properties) {
+        PropertyParser.registerPropertyGetter(new MaterialMinecraftPropertyGetter<>(propertyClass, properties), MaterialTag.class, null, null, propertyClass);
     }
 
-    public record MaterialMinecraftPropertyGetter<T extends Property<V>, V extends Comparable<V>>
-            (String name, MaterialMinecraftPropertySupplier<T> supplier, T[] internalProperties) implements PropertyParser.PropertyGetter<MaterialTag> {
+    @SuppressWarnings({"rawtypes", "unchecked"}) // Erase types to allow enum properties
+    public static void autoRegister(String name, Class<? extends MaterialMinecraftProperty> propertyClass) {
+        ((MaterialMinecraftPropertyGetter<?, ?>) PropertyParser.currentlyRegisteringProperty).propertyID = name;
+        autoRegister(name, propertyClass, ElementTag.class, false);
+    }
+
+    public static class MaterialMinecraftPropertyGetter<T extends Property<V>, V extends Comparable<V>> implements PropertyParser.PropertyGetter<MaterialTag> {
+
+        private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+        private static final MethodType NO_ARGS_CONSTRUCTOR = MethodType.methodType(void.class);
+
+        private final MethodHandle constructor;
+        private final T[] internalProperties;
+        private String propertyID;
+
+        public MaterialMinecraftPropertyGetter(Class<? extends MaterialMinecraftProperty<T, V>> propertyClass, T[] internalProperties) {
+            try {
+                this.constructor = LOOKUP.findConstructor(propertyClass, NO_ARGS_CONSTRUCTOR);
+            }
+            catch (Exception e) {
+                Debug.echoError("Unable to get constructor from material minecraft property class '" + DebugInternals.getClassNameOpti(propertyClass) + "'!");
+                throw new IllegalArgumentException(e);
+            }
+            this.internalProperties = internalProperties;
+        }
 
         @Override
-        public ObjectProperty<MaterialTag> get(MaterialTag material) {
+        public ObjectProperty<MaterialTag, ElementTag> get(MaterialTag material) {
             if (material.state == null) {
                 return null;
             }
             for (T internalProperty : internalProperties) {
                 if (material.state.contains(internalProperty)) {
-                    return supplier.create(name, material, internalProperty);
+                    try {
+                        //noinspection unchecked
+                        MaterialMinecraftProperty<T, ?> property = (MaterialMinecraftProperty<T, ?>) constructor.invoke();
+                        property.object = material;
+                        property.internalProperty = internalProperty;
+                        property.propertyID = propertyID;
+                        return property;
+                    }
+                    catch (Throwable e) {
+                        Debug.echoError("Exception while constructing property '" + DebugInternals.getClassNameOpti(constructor.type().returnType()) + "':");
+                        Debug.echoError(e);
+                        return null;
+                    }
                 }
             }
             return null;
         }
-    }
-
-    @FunctionalInterface
-    public interface MaterialMinecraftPropertySupplier<T extends Property<?>> {
-
-        MaterialMinecraftProperty<?, ?> create(String name, MaterialTag material, T internalProperty);
     }
 }
