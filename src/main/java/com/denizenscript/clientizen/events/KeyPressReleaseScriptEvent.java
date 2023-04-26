@@ -16,7 +16,6 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
     public boolean pressed;
     public InputDevice device;
 
-
     public KeyPressReleaseScriptEvent() {
         registerCouldMatcher("<'input_device'> key pressed|released|toggled");
         registerSwitches("name");
@@ -46,6 +45,7 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
         return switch (name) {
             case "key" -> new ElementTag(key.getName(), true);
             case "device" -> new ElementTag(device);
+            case "key_code" -> new ElementTag(key.code);
             default -> super.getContext(name);
         };
     }
