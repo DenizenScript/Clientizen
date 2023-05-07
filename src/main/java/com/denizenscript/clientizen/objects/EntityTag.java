@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.objects;
 
+import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.objects.*;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
@@ -7,7 +8,6 @@ import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
-import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -25,28 +25,88 @@ public class EntityTag implements ObjectTag, Adjustable {
         this.uuid = entity.getUuid();
     }
 
+    public EntityTag(EntityType<?> entityType) {
+        entity = entityType.create(MinecraftClient.getInstance().world);
+    }
+
     @Fetchable("e")
     public static EntityTag valueOf(String string, TagContext context) {
         if (string == null) {
             return null;
         }
+//        if (string.startsWith("e@fake:")) {
+//            String uuidString = string.substring("e@fake:".length());
+//            UUID uuid = Utilities.uuidFromString(uuidString);
+//            if (uuid == null) {
+//                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is invalid.");
+//                return null;
+//            }
+//            Entity entity = getEntityForID(uuid);
+//            if (entity == null) {
+//                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is valid but isn't matched to any entity.");
+//                return null;
+//            }
+//            return new EntityTag(entity);
+//        }
         if (ObjectFetcher.isObjectWithProperties(string)) {
             return ObjectFetcher.getObjectFromWithProperties(ClientizenObjectRegistry.TYPE_ENTITY, string, context);
         }
-        if (string.startsWith("e@")) {
+        boolean strictUUID = false;
+        // e@fake:<UUID> - treat as a normal entity since fake entities are just entities to the client
+        // TODO: store the fact that the entity is a fake one?
+        if (string.startsWith("e@fake:")) {
+            string = string.substring("e@fake:".length());
+            strictUUID = true;
+        }
+        else if (string.startsWith("e@")) {
             string = string.substring("e@".length());
         }
-        try {
-            Entity found = MinecraftClient.getInstance().world.getEntityLookup().get(UUID.fromString(string));
-            if (found != null) {
-                return new EntityTag(found);
+        // e@<UUID>/<Entity Type/Script>
+        int slashIndex = string.indexOf('/');
+        if (slashIndex != -1) {
+            String uuidString = string.substring(0, slashIndex);
+            string = string.substring(slashIndex + 1);
+            UUID uuid = Utilities.uuidFromString(uuidString);
+            if (uuid == null) {
+                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is invalid.");
+                return null;
+            }
+            Entity entity = getEntityForID(uuid);
+            if (entity != null) {
+                EntityType<?> entityType = EntityType.get(string).orElse(null);
+                // If the value isn't a valid entity type then just let it through, as we can't verify entity scripts
+                if (entityType != null && entity.getType() != entityType) {
+                    Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is valid, but doesn't match the provided entity type.");
+                    return null;
+                }
+                return new EntityTag(entity);
             }
         }
-        catch (Exception ignored) {}
-        if (context == null || context.showErrors()) {
-            Debug.echoError("valueOf EntityTag returning null: " + string);
+        // e@(fake:)<UUID>
+        UUID uuid = Utilities.uuidFromString(string);
+        if (uuid != null) {
+            Entity entity = getEntityForID(uuid);
+            if (entity == null) {
+                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + string + "' is valid but isn't matched to any entity.");
+                return null;
+            }
+            return new EntityTag(entity);
         }
-        return null;
+        else if (strictUUID) {
+            Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + string + "' is invalid.");
+            return null;
+        }
+        // e@<Entity Type>
+        EntityTag entityByType = EntityType.get(string).map(EntityTag::new).orElse(null);
+        if (entityByType == null) {
+            Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: invalid entity type '" + string + "'.");
+            return null;
+        }
+        return entityByType;
+    }
+
+    public static Entity getEntityForID(UUID uuid) {
+        return MinecraftClient.getInstance().world.getEntityLookup().get(uuid);
     }
 
     public static boolean matches(String string) {
@@ -64,6 +124,10 @@ public class EntityTag implements ObjectTag, Adjustable {
             }
         }
         return entity;
+    }
+
+    public boolean isSpawned() {
+        return uuid != null && getEntity() != null && entity.isAlive();
     }
 
     public <T extends Entity> T as(EntityType<T> type) {
@@ -100,30 +164,29 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     @Override
     public void applyProperty(Mechanism mechanism) {
-        Debug.echoError("Cannot apply properties to an EntityTag"); // TODO: support not spawned by-type EntityTags
+        adjust(mechanism);
     }
 
     @Override
     public String identify() {
-        return "e@" + uuid + PropertyParser.getPropertiesString(this);
+        if (uuid != null) {
+            return "e@" + uuid + (isSpawned() ? '/' + getEntity().getType().getUntranslatedName() : "");
+        }
+        return "e@" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesString(this);
     }
 
     @Override
     public String identifySimple() {
-        return "e@" + uuid;
+        return "e@" + (uuid != null ? uuid : getEntity().getType().getUntranslatedName());
     }
 
     @Override
     public String debuggable() {
-        String debuggable = "<LG>e@<Y>" + uuid;
-        if (getEntity() != null) {
-            debuggable += " <GR>(" + entity.getType().getUntranslatedName();
-            if (entity.hasCustomName()) {
-                debuggable += "<LG>/<GR>" + entity.getCustomName().getString();
-            }
-            debuggable += ")";
+        if (!isSpawned()) {
+            return "<LG>e@<Y>" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesDebuggable(this);
         }
-        return debuggable;
+        return "<LG>e@<Y>" + uuid + " <GR>(" + entity.getType().getUntranslatedName() +
+                (entity.hasCustomName() ? "" : "<LG>/<GR>" + entity.getCustomName().getString()) + ")";
     }
 
     @Override
@@ -133,7 +196,7 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     @Override
     public boolean isUnique() {
-        return true;
+        return uuid != null || isSpawned();
     }
 
     private String prefix = "Entity";
