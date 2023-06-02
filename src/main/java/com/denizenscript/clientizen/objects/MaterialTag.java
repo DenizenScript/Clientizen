@@ -18,22 +18,19 @@ import net.minecraft.util.Identifier;
 public class MaterialTag implements ObjectTag, Adjustable {
 
     // Needs to match the server-side impl, which uses bukkit's all-in-one Material enum
-    public final BlockState state;
-    public final Item item;
+    public BlockState state;
+    public Item item;
 
     public MaterialTag(BlockState state) {
         this.state = state;
-        this.item = null;
     }
 
     public MaterialTag(Block block) {
         this.state = block.getDefaultState();
-        this.item = null;
     }
 
     public MaterialTag(Item item) {
         this.item = item;
-        this.state = null;
     }
 
     @Fetchable("m")
