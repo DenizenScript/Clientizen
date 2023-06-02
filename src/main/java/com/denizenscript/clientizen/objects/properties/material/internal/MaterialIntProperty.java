@@ -7,13 +7,17 @@ import net.minecraft.state.property.IntProperty;
 
 public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
 
+    public IntPropertyAccessor getAccessor() {
+        return (IntPropertyAccessor) internalProperty;
+    }
+
     @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
         if (!mechanism.requireInteger()) {
             return;
         }
         int newValue = value.asInt();
-        IntPropertyAccessor accessor = (IntPropertyAccessor) internalProperty;
+        IntPropertyAccessor accessor = getAccessor();
         if (newValue < accessor.getMin()) {
             mechanism.echoError("Invalid input number, must be at least " + accessor.getMin() + ".");
             return;
