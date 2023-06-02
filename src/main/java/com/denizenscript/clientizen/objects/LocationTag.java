@@ -19,19 +19,28 @@ import java.util.List;
 public class LocationTag implements ObjectTag, VectorObject {
 
     double x, y, z;
-    float yaw, pitch;
-    String world;
+    final float yaw, pitch;
+    final String world;
 
-    public LocationTag(double x, double y, double z, float yaw, float pitch) {
+    public LocationTag(double x, double y, double z, float yaw, float pitch, String world) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.yaw = normalizeYaw(yaw);
         this.pitch = pitch;
+        this.world = world;
+    }
+
+    public LocationTag(double x, double y, double z, float yaw, float pitch) {
+        this(x, y, z, yaw, pitch, null);
+    }
+
+    public LocationTag(double x, double y, double z, String world) {
+        this(x, y, z, 0, 0, world);
     }
 
     public LocationTag(double x, double y, double z) {
-        this(x, y, z, 0, 0);
+        this(x, y, z, null);
     }
 
     public LocationTag(Position position) {
@@ -53,11 +62,6 @@ public class LocationTag implements ObjectTag, VectorObject {
         yaw = toCopy.yaw;
         pitch = toCopy.pitch;
         world = toCopy.world;
-    }
-
-    public LocationTag setWorld(String world) {
-        this.world = world;
-        return this;
     }
 
     @Fetchable("l")
@@ -100,7 +104,7 @@ public class LocationTag implements ObjectTag, VectorObject {
                     world = world.substring("w@".length());
                 }
             }
-            return new LocationTag(x, y, z, yaw, pitch).setWorld(world);
+            return new LocationTag(x, y, z, yaw, pitch, world);
         }
         catch (Exception e) {
             if (context == null || context.showErrors()) {
@@ -176,7 +180,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         // Consider using <@link tag LocationTag.round_down> instead.
         // -->
         tagProcessor.registerStaticTag(LocationTag.class, "block", (attribute, object) -> {
-            return new LocationTag(object.getBlockX(), object.getBlockY(), object.getBlockZ()).setWorld(object.world);
+            return new LocationTag(object.getBlockX(), object.getBlockY(), object.getBlockZ(), object.world);
         });
 
         // <--[tag]
@@ -190,13 +194,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         // This is equivalent to the block coordinates of the location.
         // -->
         tagProcessor.registerTag(LocationTag.class, "round_down", (attribute, object) -> {
-            LocationTag result = object.duplicate();
-            result.x = Math.floor(result.x);
-            result.y = Math.floor(result.y);
-            result.z = Math.floor(result.z);
-            result.yaw = Math.floor(result.yaw);
-            result.pitch = Math.floor(result.pitch);
-            return result;
+            return new LocationTag(Math.floor(object.x), Math.floor(object.y), Math.floor(object.z), Math.floor(object.yaw), Math.floor(object.pitch), object.world);
         });
 
         // <--[tag]
