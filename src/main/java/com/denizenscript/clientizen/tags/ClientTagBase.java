@@ -29,11 +29,11 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
     @Override
     public void register() {
         tagProcessor.registerTag(ListTag.class, "loaded_entities", (attribute, object) -> {
-            ListTag list = new ListTag();
+            ListTag entities = new ListTag();
             for (Entity entity : MinecraftClient.getInstance().world.getEntities()) {
-                list.addObject(new EntityTag(entity));
+                entities.addObject(new EntityTag(entity));
             }
-            return list;
+            return entities;
         });
         tagProcessor.registerTag(EntityTag.class, "target", (attribute, object) -> {
             Entity target = MinecraftClient.getInstance().targetedEntity;

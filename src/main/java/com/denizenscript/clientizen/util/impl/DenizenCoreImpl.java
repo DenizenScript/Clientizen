@@ -1,13 +1,14 @@
 package com.denizenscript.clientizen.util.impl;
 
 import com.denizenscript.clientizen.Clientizen;
-import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
 import com.denizenscript.clientizen.debuggui.DebugConsole;
+import com.denizenscript.clientizen.objects.LocationTag;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.DenizenImplementation;
 import com.denizenscript.denizencore.flags.FlaggableObject;
 import com.denizenscript.denizencore.objects.Argument;
 import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.VectorObject;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.ScriptEntryData;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
@@ -120,11 +121,11 @@ public class DenizenCoreImpl implements DenizenImplementation {
         return false;
     }
 
-    private static final Formatting[] colors = Arrays.stream(Formatting.values()).filter(Formatting::isColor).toArray(Formatting[]::new);
+    private static final Formatting[] COLORS = Arrays.stream(Formatting.values()).filter(Formatting::isColor).toArray(Formatting[]::new);
 
     @Override
     public String getRandomColor() {
-        return colors[CoreUtilities.getRandom().nextInt(colors.length)].toString();
+        return COLORS[CoreUtilities.getRandom().nextInt(COLORS.length)].toString();
     }
 
     @Override
@@ -190,4 +191,14 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
     @Override
     public void reloadSaves() {}
+
+    @Override
+    public VectorObject getVector(double x, double y, double z) {
+        return new LocationTag(x, y, z);
+    }
+
+    @Override
+    public VectorObject vectorize(ObjectTag objectTag, TagContext tagContext) {
+        return objectTag.asType(LocationTag.class, tagContext);
+    }
 }

@@ -3,6 +3,7 @@ package com.denizenscript.clientizen.objects;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.core.VectorObject;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
@@ -10,25 +11,36 @@ import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.*;
+import net.minecraft.world.World;
+import org.joml.Math;
 
 import java.util.List;
 
-public class LocationTag implements ObjectTag {
+public class LocationTag implements ObjectTag, VectorObject {
 
     double x, y, z;
-    float yaw, pitch;
-    String world;
+    final float yaw, pitch;
+    final String world;
 
-    public LocationTag(double x, double y, double z, float yaw, float pitch) {
+    public LocationTag(double x, double y, double z, float yaw, float pitch, String world) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.yaw = normalizeYaw(yaw);
         this.pitch = pitch;
+        this.world = world;
+    }
+
+    public LocationTag(double x, double y, double z, float yaw, float pitch) {
+        this(x, y, z, yaw, pitch, null);
+    }
+
+    public LocationTag(double x, double y, double z, String world) {
+        this(x, y, z, 0, 0, world);
     }
 
     public LocationTag(double x, double y, double z) {
-        this(x, y, z, 0, 0);
+        this(x, y, z, null);
     }
 
     public LocationTag(Position position) {
@@ -50,11 +62,6 @@ public class LocationTag implements ObjectTag {
         yaw = toCopy.yaw;
         pitch = toCopy.pitch;
         world = toCopy.world;
-    }
-
-    public LocationTag setWorld(String world) {
-        this.world = world;
-        return this;
     }
 
     @Fetchable("l")
@@ -97,7 +104,7 @@ public class LocationTag implements ObjectTag {
                     world = world.substring("w@".length());
                 }
             }
-            return new LocationTag(x, y, z, yaw, pitch).setWorld(world);
+            return new LocationTag(x, y, z, yaw, pitch, world);
         }
         catch (Exception e) {
             if (context == null || context.showErrors()) {
@@ -114,55 +121,8 @@ public class LocationTag implements ObjectTag {
         return valueOf(string, CoreUtilities.noDebugContext) != null;
     }
 
-    public int getBlockX() {
-        return MathHelper.floor(x);
-    }
-    public int getBlockY() {
-        return MathHelper.floor(y);
-    }
-
-    public int getBlockZ() {
-        return MathHelper.floor(z);
-    }
-
-    public BlockPos getBlockPos() {
-        return BlockPos.ofFloored(x, y, z);
-    }
-
     public static void register() {
-
-        // <--[tag]
-        // @attribute <LocationTag.x>
-        // @returns ElementTag(Decimal)
-        // @group identity
-        // @description
-        // Returns the X coordinate of the location.
-        // -->
-        tagProcessor.registerStaticTag(ElementTag.class, "x", (attribute, object) -> {
-            return new ElementTag(object.x);
-        });
-
-        // <--[tag]
-        // @attribute <LocationTag.y>
-        // @returns ElementTag(Decimal)
-        // @group identity
-        // @description
-        // Returns the Y coordinate of the location.
-        // -->
-        tagProcessor.registerStaticTag(ElementTag.class, "y", (attribute, object) -> {
-            return new ElementTag(object.y);
-        });
-
-        // <--[tag]
-        // @attribute <LocationTag.z>
-        // @returns ElementTag(Decimal)
-        // @group identity
-        // @description
-        // Returns the Z coordinate of the location.
-        // -->
-        tagProcessor.registerStaticTag(ElementTag.class, "z", (attribute, object) -> {
-            return new ElementTag(object.z);
-        });
+        VectorObject.register(LocationTag.class, tagProcessor);
 
         // <--[tag]
         // @attribute <LocationTag.yaw>
@@ -176,7 +136,7 @@ public class LocationTag implements ObjectTag {
         });
 
         // <--[tag]
-        // @attribute <LocationTag.yaw.raw>
+        // @attribute <LocationTag.raw_yaw>
         // @returns ElementTag(Decimal)
         // @group identity
         // @description
@@ -202,10 +162,10 @@ public class LocationTag implements ObjectTag {
         // @returns ElementTag
         // @group identity
         // @description
-        // Returns the name of the world that the location is in.
+        // Returns the name of the world that the location is in, if any.
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "world", (attribute, object) -> {
-            return new ElementTag(object.world);
+            return object.world != null ? new ElementTag(object.world) : null;
         });
 
         // <--[tag]
@@ -220,7 +180,7 @@ public class LocationTag implements ObjectTag {
         // Consider using <@link tag LocationTag.round_down> instead.
         // -->
         tagProcessor.registerStaticTag(LocationTag.class, "block", (attribute, object) -> {
-            return new LocationTag(object.getBlockX(), object.getBlockY(), object.getBlockZ()).setWorld(object.world);
+            return new LocationTag(object.getBlockX(), object.getBlockY(), object.getBlockZ(), object.world);
         });
 
         // <--[tag]
@@ -234,13 +194,7 @@ public class LocationTag implements ObjectTag {
         // This is equivalent to the block coordinates of the location.
         // -->
         tagProcessor.registerTag(LocationTag.class, "round_down", (attribute, object) -> {
-            LocationTag result = object.duplicate();
-            result.x = Math.floor(result.x);
-            result.y = Math.floor(result.y);
-            result.z = Math.floor(result.z);
-            result.yaw = (float) Math.floor((result.yaw));
-            result.pitch = (float) Math.floor(result.pitch);
-            return result;
+            return new LocationTag(Math.floor(object.x), Math.floor(object.y), Math.floor(object.z), Math.floor(object.yaw), Math.floor(object.pitch), object.world);
         });
 
         // <--[tag]
@@ -251,11 +205,7 @@ public class LocationTag implements ObjectTag {
         // Returns the material of the block at the location.
         // -->
         tagProcessor.registerTag(MaterialTag.class, "material", (attribute, object) ->  {
-            BlockPos pos = object.getBlockPos();
-            if (MinecraftClient.getInstance().world.isChunkLoaded(ChunkSectionPos.getSectionCoord(pos.getX()), ChunkSectionPos.getSectionCoord(pos.getZ()))) {
-                return new MaterialTag(MinecraftClient.getInstance().world.getBlockState(pos));
-            }
-            return null;
+            return object.isChunkLoaded() ? new MaterialTag(MinecraftClient.getInstance().world.getBlockState(object.getBlockPos())) : null;
         });
     }
 
@@ -316,6 +266,56 @@ public class LocationTag implements ObjectTag {
             yaw += 360.0;
         }
         return yaw;
+    }
+
+    public boolean isChunkLoaded() {
+        World world = MinecraftClient.getInstance().world;
+        return world != null && world.isChunkLoaded(ChunkSectionPos.getSectionCoord(getX()), ChunkSectionPos.getSectionCoord(getZ()));
+    }
+
+    @Override
+    public double getX() {
+        return x;
+    }
+
+    @Override
+    public double getY() {
+        return y;
+    }
+
+    @Override
+    public double getZ() {
+        return z;
+    }
+
+    @Override
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    @Override
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    @Override
+    public void setZ(double z) {
+        this.z = z;
+    }
+
+    public int getBlockX() {
+        return MathHelper.floor(getX());
+    }
+    public int getBlockY() {
+        return MathHelper.floor(getY());
+    }
+
+    public int getBlockZ() {
+        return MathHelper.floor(getZ());
+    }
+
+    public BlockPos getBlockPos() {
+        return BlockPos.ofFloored(getX(), getY(), getZ());
     }
 
     private String prefix = "Location";
