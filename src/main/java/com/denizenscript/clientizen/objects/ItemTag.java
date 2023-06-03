@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 public class ItemTag implements ObjectTag, Adjustable {
 
     final ItemStack itemStack;
+    public String script; // Compact with server-side item scripts
 
     public ItemTag(ItemStack itemStack) {
         this.itemStack = itemStack;

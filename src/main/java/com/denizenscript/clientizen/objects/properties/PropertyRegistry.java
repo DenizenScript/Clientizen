@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.objects.properties;
 
 import com.denizenscript.clientizen.objects.ItemTag;
 import com.denizenscript.clientizen.objects.properties.item.ItemDurability;
+import com.denizenscript.clientizen.objects.properties.item.ItemServerScript;
 import com.denizenscript.clientizen.objects.properties.material.*;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 
@@ -17,5 +18,6 @@ public class PropertyRegistry {
         registerProperty(MaterialInstrument.class, MaterialInstrument.handledProperties);
         registerProperty(MaterialLevel.class, MaterialLevel.handledProperties);
         PropertyParser.registerProperty(ItemDurability.class, ItemTag.class);
+        PropertyParser.registerProperty(ItemServerScript.class, ItemTag.class);
     }
 }
