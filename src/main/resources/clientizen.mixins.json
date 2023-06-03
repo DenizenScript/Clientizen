@@ -7,7 +7,6 @@
   "client": [
     "KeyBindingMixin",
     "MinecraftClientMixin",
-    "FlagCommandMixin",
     "IntPropertyAccessor",
     "gui.WScrollPanelAccessor",
     "gui.WTextAccessor"
