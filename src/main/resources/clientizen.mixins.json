@@ -9,7 +9,9 @@
     "MinecraftClientMixin",
     "IntPropertyAccessor",
     "gui.WScrollPanelAccessor",
-    "gui.WTextAccessor"
+    "gui.WTextAccessor",
+    "render.EntityRenderDispatcherMixin",
+    "render.LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
