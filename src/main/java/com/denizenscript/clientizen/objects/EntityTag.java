@@ -144,6 +144,8 @@ public class EntityTag implements ObjectTag, Adjustable {
     }
 
     public static void register() {
+        PropertyParser.registerPropertyTagHandlers(EntityTag.class, tagProcessor);
+
         tagProcessor.registerTag(ElementTag.class, "entity_type", (attribute, object) -> {
             return new ElementTag(object.getEntity().getType().getUntranslatedName(), true);
         });
@@ -169,7 +171,7 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     @Override
     public void applyProperty(Mechanism mechanism) {
-        if (!isUnique()) {
+        if (isUnique()) {
             mechanism.echoError("Cannot apply properties to already-spawned entities.");
             return;
         }

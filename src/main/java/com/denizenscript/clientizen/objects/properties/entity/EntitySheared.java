@@ -20,7 +20,7 @@ public class EntitySheared extends EntityProperty<ElementTag> {
 
     @Override
     public boolean isDefaultValue(ElementTag data) {
-        return data.asBoolean();
+        return !data.asBoolean();
     }
 
     @Override
