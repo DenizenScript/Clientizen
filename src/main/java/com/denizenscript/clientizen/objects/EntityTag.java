@@ -121,6 +121,10 @@ public class EntityTag implements ObjectTag, Adjustable {
         }
         return entity;
     }
+    
+    public String getTypeName() {
+        return getEntity().getType().getUntranslatedName();
+    }
 
     public boolean isSpawned() {
         return uuid != null && getEntity() != null && entity.isAlive();
@@ -134,7 +138,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         PropertyParser.registerPropertyTagHandlers(EntityTag.class, tagProcessor);
 
         tagProcessor.registerTag(ElementTag.class, "entity_type", (attribute, object) -> {
-            return new ElementTag(object.getEntity().getType().getUntranslatedName(), true);
+            return new ElementTag(object.getTypeName(), true);
         });
         tagProcessor.registerTag(ElementTag.class, "health", (attribute, object) -> {
             if (object.getEntity() instanceof LivingEntity livingEntity) {
@@ -169,15 +173,15 @@ public class EntityTag implements ObjectTag, Adjustable {
     public String identify() {
         if (uuid != null) {
             return isFake ? "e@fake:" + uuid
-                    : "e@" + uuid + '/' + getEntity().getType().getUntranslatedName();
+                    : "e@" + uuid + '/' + getTypeName();
         }
-        return "e@" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesString(this);
+        return "e@" + getTypeName() + PropertyParser.getPropertiesString(this);
     }
 
     @Override
     public String identifySimple() {
         return isFake ? "e@fake:" + uuid
-                : "e@" + (uuid != null ? uuid : entity.getType().getUntranslatedName());
+                : "e@" + (uuid != null ? uuid : getTypeName());
     }
 
     @Override
@@ -187,14 +191,14 @@ public class EntityTag implements ObjectTag, Adjustable {
             if (isFake) {
                 debuggable += "FAKE:";
             }
-            debuggable += "<Y>" + uuid + "<GR>(" + getEntity().getType().getUntranslatedName();
+            debuggable += "<Y>" + uuid + "<GR>(" + getTypeName();
             Text displayName = entity.getCustomName();
             if (displayName != null) {
                 debuggable += "<LG>/<GR>" + displayName.getString();
             }
             return debuggable + ')';
         }
-        return "<LG>e@<Y>" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesDebuggable(this);
+        return "<LG>e@<Y>" + getTypeName() + PropertyParser.getPropertiesDebuggable(this);
     }
 
     @Override
