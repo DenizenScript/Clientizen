@@ -30,10 +30,8 @@ public class ItemTag implements ObjectTag, Adjustable {
     // @description
     // An ItemTag represents a holdable item generically.
     //
-    // ItemTags are temporary objects, to actually modify an item in an inventory you must add the item into that inventory.
-    //
-    // ItemTags do NOT remember where they came from. If you read an item from an inventory, changing it
-    // does not change the original item in the original inventory. You must set it back in.
+    // ItemTags do NOT remember where they came from. If you read an item from somewhere, changing it
+    // does not change the original item. You must set it back in.
     //
     // Find a list of valid materials at <@link url https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html>
     // Note that some materials on that list are exclusively for use with blocks, and cannot be held as items.
