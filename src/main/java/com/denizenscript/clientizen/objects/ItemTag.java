@@ -39,10 +39,12 @@ public class ItemTag implements ObjectTag, Adjustable {
     // -->
 
     final ItemStack itemStack;
+    final Identifier identifier;
     public String script; // Compact with server-side item scripts
 
     public ItemTag(ItemStack itemStack) {
         this.itemStack = itemStack;
+        this.identifier = Registries.ITEM.getId(itemStack.getItem());
     }
 
     public ItemTag(ItemConvertible convertible) {
@@ -105,7 +107,7 @@ public class ItemTag implements ObjectTag, Adjustable {
     }
 
     public String getName() {
-        return Utilities.idToString(Registries.ITEM.getId(itemStack.getItem()));
+        return Utilities.idToString(identifier);
     }
 
     @Override
