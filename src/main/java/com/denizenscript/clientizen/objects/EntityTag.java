@@ -66,7 +66,7 @@ public class EntityTag implements ObjectTag, Adjustable {
                 Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is invalid.");
                 return null;
             }
-            Entity entity = getEntityForID(uuid);
+            Entity entity = getEntityByUUID(uuid);
             if (entity != null) {
                 EntityType<?> entityType = EntityType.get(string).orElse(null);
                 // If the value isn't a valid entity type then just let it through, as we can't verify entity scripts
@@ -80,7 +80,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // e@(fake:)<UUID>
         UUID uuid = Utilities.uuidFromString(string);
         if (uuid != null) {
-            Entity entity = getEntityForID(uuid);
+            Entity entity = getEntityByUUID(uuid);
             if (entity == null) {
                 Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + string + "' is valid but isn't matched to any entity.");
                 return null;
@@ -101,7 +101,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         return entityByType;
     }
 
-    public static Entity getEntityForID(UUID uuid) {
+    public static Entity getEntityByUUID(UUID uuid) {
         return MinecraftClient.getInstance().world.getEntityLookup().get(uuid);
     }
 
@@ -114,7 +114,7 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     public Entity getEntity() {
         if (entity == null || entity.isRemoved()) {
-            Entity found = getEntityForID(uuid);
+            Entity found = getEntityByUUID(uuid);
             if (found != null) {
                 entity = found;
             }
