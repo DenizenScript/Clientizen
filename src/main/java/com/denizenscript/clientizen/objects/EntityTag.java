@@ -12,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.Text;
 
 import java.util.UUID;
 
@@ -196,8 +197,16 @@ public class EntityTag implements ObjectTag, Adjustable {
     @Override
     public String debuggable() {
         if (uuid != null) {
-            return isFake ? "<LG>e@fake:<Y>" + uuid
-                    : "<LG>e@<Y>" + uuid + " <GR>(" + getEntity().getType().getUntranslatedName() + (entity.hasCustomName() ? "<LG>/<GR>" + entity.getCustomName().getString() : "") + ")";
+            String debuggable = "<LG>e@";
+            if (isFake) {
+                debuggable += "FAKE:";
+            }
+            debuggable += "<Y>" + uuid + "<GR>(" + getEntity().getType().getUntranslatedName();
+            Text displayName = entity.getCustomName();
+            if (displayName != null) {
+                debuggable += "<LG>/<GR>" + displayName.getString();
+            }
+            return debuggable + ')';
         }
         return "<LG>e@<Y>" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesDebuggable(this);
     }
