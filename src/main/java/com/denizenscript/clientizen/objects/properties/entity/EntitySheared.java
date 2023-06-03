@@ -12,7 +12,7 @@ public class EntitySheared extends EntityProperty<ElementTag> {
     // @name sheared
     // @input ElementTag(Boolean)
     // @description
-    // Controls whether a sheep is sheared.
+    // Whether a sheep is sheared.
     // -->
     public static boolean describes(EntityTag entity) {
         return entity.is(EntityType.SHEEP);
