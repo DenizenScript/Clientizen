@@ -14,6 +14,32 @@ import net.minecraft.util.Identifier;
 
 public class ItemTag implements ObjectTag, Adjustable {
 
+    // <--[ObjectType]
+    // @name ItemTag
+    // @prefix i
+    // @base ElementTag
+    // @implements PropertyHolderObject
+    // @ExampleTagBase client.self_entity.item_in_hand
+    // @ExampleValues <client.self_entity.item_in_hand>,stick,iron_sword
+    // @ExampleForReturns
+    // - narrate "The item is %VALUE%"
+    // @format
+    // The identity format for items is the basic material type name. Other data is specified in properties.
+    // For example, 'i@stick'.
+    //
+    // @description
+    // An ItemTag represents a holdable item generically.
+    //
+    // ItemTags are temporary objects, to actually modify an item in an inventory you must add the item into that inventory.
+    //
+    // ItemTags do NOT remember where they came from. If you read an item from an inventory, changing it
+    // does not change the original item in the original inventory. You must set it back in.
+    //
+    // Find a list of valid materials at <@link url https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html>
+    // Note that some materials on that list are exclusively for use with blocks, and cannot be held as items.
+    //
+    // -->
+
     final ItemStack itemStack;
     public String script; // Compact with server-side item scripts
 
