@@ -76,23 +76,23 @@ public class ItemTag implements ObjectTag, Adjustable {
         return itemStack;
     }
 
-    public String getKey() {
+    public String getName() {
         return Utilities.idToString(Registries.ITEM.getId(itemStack.getItem()));
     }
 
     @Override
     public String identify() {
-        return "i@" + getKey() + PropertyParser.getPropertiesString(this);
+        return "i@" + getName() + PropertyParser.getPropertiesString(this);
     }
 
     @Override
     public String identifySimple() {
-        return "i@" + getKey();
+        return "i@" + getName();
     }
 
     @Override
     public String debuggable() {
-        return "<LG>i@<Y>" + getKey() + PropertyParser.getPropertiesDebuggable(this);
+        return "<LG>i@<Y>" + getName() + PropertyParser.getPropertiesDebuggable(this);
     }
 
     @Override
