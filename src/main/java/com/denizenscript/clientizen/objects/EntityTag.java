@@ -59,23 +59,23 @@ public class EntityTag implements ObjectTag, Adjustable {
         int slashIndex = string.indexOf('/');
         if (slashIndex != -1) {
             String uuidString = string.substring(0, slashIndex);
-            // If the UUID isn't a valid entity anymore, the type (after "/") will be used
-            string = string.substring(slashIndex + 1);
             UUID uuid = Utilities.uuidFromString(uuidString);
             if (uuid == null) {
                 Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is invalid.");
                 return null;
             }
             Entity entity = getEntityByUUID(uuid);
-            if (entity != null) {
-                EntityType<?> entityType = EntityType.get(string).orElse(null);
-                // If the value isn't a valid entity type then just let it through, as we can't verify entity scripts
-                if (entityType != null && entity.getType() != entityType) {
-                    Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is valid, but doesn't match the provided entity type.");
-                    return null;
-                }
-                return new EntityTag(entity);
+            if (entity == null) {
+                // If the UUID isn't a valid entity anymore, the type (after "/") will be used
+                return valueOfByType(string.substring(slashIndex + 1), context);
             }
+            EntityType<?> entityType = EntityType.get(string).orElse(null);
+            // If the value isn't a valid entity type then just let it through, as we can't verify entity scripts
+            if (entityType != null && entity.getType() != entityType) {
+                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is valid, but doesn't match the provided entity type.");
+                return null;
+            }
+            return new EntityTag(entity);
         }
         // e@(fake:)<UUID>
         UUID uuid = Utilities.uuidFromString(string);
@@ -93,9 +93,13 @@ public class EntityTag implements ObjectTag, Adjustable {
             return null;
         }
         // e@<Entity Type>
-        EntityTag entityByType = EntityType.get(string).map(EntityTag::new).orElse(null);
+        return valueOfByType(string, context);
+    }
+
+    private static EntityTag valueOfByType(String typeString, TagContext context) {
+        EntityTag entityByType = EntityType.get(typeString).map(EntityTag::new).orElse(null);
         if (entityByType == null) {
-            Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: invalid entity type '" + string + "'.");
+            Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: invalid entity type '" + typeString + "'.");
             return null;
         }
         return entityByType;
