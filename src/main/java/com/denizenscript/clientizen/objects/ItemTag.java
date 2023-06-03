@@ -49,6 +49,10 @@ public class ItemTag implements ObjectTag, Adjustable {
         this(convertible.asItem().getDefaultStack());
     }
 
+    public ItemTag(MaterialTag material) {
+        this(material.item != null ? material.item : material.state.getBlock());
+    }
+
     @Fetchable("i")
     public static ItemTag valueOf(String string, TagContext context) {
         if (string.startsWith("i@")) {
@@ -64,7 +68,7 @@ public class ItemTag implements ObjectTag, Adjustable {
             }
             return null;
         }
-        return new ItemTag(material.state != null ? material.state.getBlock() : material.item);
+        return new ItemTag(material);
     }
 
     public static boolean matches(String string) {
