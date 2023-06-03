@@ -19,15 +19,22 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     public final UUID uuid;
     public Entity entity;
+    public final boolean isFake;
 
-    public EntityTag(Entity entity) {
+    public EntityTag(Entity entity, boolean isFake) {
         this.entity = entity;
         this.uuid = entity.getUuid();
+        this.isFake = isFake;
+    }
+
+    public EntityTag(Entity entity) {
+        this(entity, false);
     }
 
     public EntityTag(EntityType<?> entityType) {
-        entity = entityType.create(MinecraftClient.getInstance().world);
-        uuid = null;
+        this.entity = entityType.create(MinecraftClient.getInstance().world);
+        this.uuid = null;
+        this.isFake = false;
     }
 
     @Fetchable("e")
@@ -52,12 +59,11 @@ public class EntityTag implements ObjectTag, Adjustable {
         if (ObjectFetcher.isObjectWithProperties(string)) {
             return ObjectFetcher.getObjectFromWithProperties(ClientizenObjectRegistry.TYPE_ENTITY, string, context);
         }
-        boolean strictUUID = false;
         // e@fake:<UUID> - treat as a normal entity since fake entities are just entities to the client
-        // TODO: store the fact that the entity is a fake one?
+        boolean isFake = false;
         if (string.startsWith("e@fake:")) {
             string = string.substring("e@fake:".length());
-            strictUUID = true;
+            isFake = true;
         }
         else if (string.startsWith("e@")) {
             string = string.substring("e@".length());
@@ -92,9 +98,10 @@ public class EntityTag implements ObjectTag, Adjustable {
                 Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + string + "' is valid but isn't matched to any entity.");
                 return null;
             }
-            return new EntityTag(entity);
+            return new EntityTag(entity, isFake);
         }
-        else if (strictUUID) {
+        // Fake entities are always "e@fake:<UUID>", so error if there's no valid UUID
+        else if (isFake) {
             Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + string + "' is invalid.");
             return null;
         }
@@ -172,21 +179,23 @@ public class EntityTag implements ObjectTag, Adjustable {
     @Override
     public String identify() {
         if (uuid != null) {
-            return "e@" + uuid + '/' + getEntity().getType().getUntranslatedName();
+            return isFake ? "e@fake:" + uuid
+                    : "e@" + uuid + '/' + getEntity().getType().getUntranslatedName();
         }
         return "e@" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesString(this);
     }
 
     @Override
     public String identifySimple() {
-        return "e@" + (uuid != null ? uuid : entity.getType().getUntranslatedName());
+        return isFake ? "e@fake:" + uuid
+                : "e@" + (uuid != null ? uuid : entity.getType().getUntranslatedName());
     }
 
     @Override
     public String debuggable() {
         if (uuid != null) {
-            return "<LG>e@<Y>" + uuid + " <GR>(" + getEntity().getType().getUntranslatedName() +
-                    (entity.hasCustomName() ? "<LG>/<GR>" + entity.getCustomName().getString() : "") + ")";
+            return isFake ? "<LG>e@fake:<Y>" + uuid
+                    : "<LG>e@<Y>" + uuid + " <GR>(" + getEntity().getType().getUntranslatedName() + (entity.hasCustomName() ? "<LG>/<GR>" + entity.getCustomName().getString() : "") + ")";
         }
         return "<LG>e@<Y>" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesDebuggable(this);
     }
