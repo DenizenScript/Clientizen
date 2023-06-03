@@ -43,20 +43,6 @@ public class EntityTag implements ObjectTag, Adjustable {
         if (string == null) {
             return null;
         }
-//        if (string.startsWith("e@fake:")) {
-//            String uuidString = string.substring("e@fake:".length());
-//            UUID uuid = Utilities.uuidFromString(uuidString);
-//            if (uuid == null) {
-//                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is invalid.");
-//                return null;
-//            }
-//            Entity entity = getEntityForID(uuid);
-//            if (entity == null) {
-//                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is valid but isn't matched to any entity.");
-//                return null;
-//            }
-//            return new EntityTag(entity);
-//        }
         if (ObjectFetcher.isObjectWithProperties(string)) {
             return ObjectFetcher.getObjectFromWithProperties(ClientizenObjectRegistry.TYPE_ENTITY, string, context);
         }
