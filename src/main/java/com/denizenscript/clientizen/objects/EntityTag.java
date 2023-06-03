@@ -204,7 +204,7 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     @Override
     public boolean isUnique() {
-        return uuid != null || isSpawned();
+        return uuid != null;
     }
 
     private String prefix = "Entity";
