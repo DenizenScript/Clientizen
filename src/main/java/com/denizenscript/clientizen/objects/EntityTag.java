@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class EntityTag implements ObjectTag, Adjustable {
 
-    public UUID uuid;
+    public final UUID uuid;
     public Entity entity;
 
     public EntityTag(Entity entity) {
@@ -27,6 +27,7 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     public EntityTag(EntityType<?> entityType) {
         entity = entityType.create(MinecraftClient.getInstance().world);
+        uuid = null;
     }
 
     @Fetchable("e")
@@ -65,6 +66,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         int slashIndex = string.indexOf('/');
         if (slashIndex != -1) {
             String uuidString = string.substring(0, slashIndex);
+            // If the UUID isn't a valid entity anymore, the type (after "/") will be used
             string = string.substring(slashIndex + 1);
             UUID uuid = Utilities.uuidFromString(uuidString);
             if (uuid == null) {
@@ -118,7 +120,7 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     public Entity getEntity() {
         if (entity == null || entity.isRemoved()) {
-            Entity found = MinecraftClient.getInstance().world.getEntityLookup().get(uuid);
+            Entity found = getEntityForID(uuid);
             if (found != null) {
                 entity = found;
             }
@@ -128,10 +130,6 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     public boolean isSpawned() {
         return uuid != null && getEntity() != null && entity.isAlive();
-    }
-
-    public <T extends Entity> T as(EntityType<T> type) {
-        return type.downcast(getEntity());
     }
 
     public boolean is(EntityType<?> type) {
@@ -164,29 +162,33 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     @Override
     public void applyProperty(Mechanism mechanism) {
+        if (!isUnique()) {
+            mechanism.echoError("Cannot apply properties to already-spawned entities.");
+            return;
+        }
         adjust(mechanism);
     }
 
     @Override
     public String identify() {
         if (uuid != null) {
-            return "e@" + uuid + (isSpawned() ? '/' + getEntity().getType().getUntranslatedName() : "");
+            return "e@" + uuid + '/' + getEntity().getType().getUntranslatedName();
         }
         return "e@" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesString(this);
     }
 
     @Override
     public String identifySimple() {
-        return "e@" + (uuid != null ? uuid : getEntity().getType().getUntranslatedName());
+        return "e@" + (uuid != null ? uuid : entity.getType().getUntranslatedName());
     }
 
     @Override
     public String debuggable() {
-        if (!isSpawned()) {
-            return "<LG>e@<Y>" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesDebuggable(this);
+        if (uuid != null) {
+            return "<LG>e@<Y>" + uuid + " <GR>(" + getEntity().getType().getUntranslatedName() +
+                    (entity.hasCustomName() ? "<LG>/<GR>" + entity.getCustomName().getString() : "") + ")";
         }
-        return "<LG>e@<Y>" + uuid + " <GR>(" + entity.getType().getUntranslatedName() +
-                (entity.hasCustomName() ? "" : "<LG>/<GR>" + entity.getCustomName().getString()) + ")";
+        return "<LG>e@<Y>" + entity.getType().getUntranslatedName() + PropertyParser.getPropertiesDebuggable(this);
     }
 
     @Override
