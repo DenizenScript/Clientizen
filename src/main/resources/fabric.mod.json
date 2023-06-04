@@ -3,14 +3,15 @@
   "id": "clientizen",
   "version": "${version}",
   "name": "Clientizen",
-  "description": "Run DenizenScript on the client with platform-specific features",
+  "description": "Run Denizen scripts on the client with platform-specific features",
   "authors": [
+    "The Denizen Script team",
     "Aya",
     "acikek"
   ],
   "contact": {
     "homepage": "https://denizenscript.com/",
-    "sources": "https://github.com/acikek/Clientizen"
+    "sources": "https://github.com/DenizenScript/Clientizen"
   },
   "license": "MIT",
   "icon": "assets/clientizen/icon.png",

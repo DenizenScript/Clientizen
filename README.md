@@ -15,6 +15,13 @@ Built against JDK 17 using gradle and [Fabric-Loom](https://github.com/FabricMC/
 
 Run `./gradlew clean build` (for Windows it's `.\gradlew.bat`) to build the project. The built jar will be in `build/libs`.
 
+### Relevant Links
+
+- Dev Builds: https://ci.citizensnpcs.co/job/Clientizen/
+- Discord: https://discord.gg/Q6pZGSR
+- Denizen GitHub: https://github.com/DenizenScript/Denizen
+- Denizen links directory: https://denizenscript.com/
+
 ### Licensing pre-note:
 
 This is an open source project, provided entirely freely, for everyone to use and contribute to.
