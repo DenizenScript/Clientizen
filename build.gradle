@@ -10,10 +10,6 @@ archivesBaseName = project.archives_base_name
 version = project.version
 group = project.maven_group
 
-loom {
-    accessWidenerPath = file("src/main/resources/clientizen.accesswidener")
-}
-
 repositories {
     mavenCentral()
     // Uncomment to build with local Denizen-Core changes

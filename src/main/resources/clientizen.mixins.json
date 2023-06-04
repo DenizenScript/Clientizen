@@ -8,6 +8,7 @@
     "KeyBindingMixin",
     "MinecraftClientMixin",
     "IntPropertyAccessor",
+    "ClientWorldAccessor",
     "gui.WScrollPanelAccessor",
     "gui.WTextAccessor"
   ],

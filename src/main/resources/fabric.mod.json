@@ -23,7 +23,6 @@
   "mixins": [
     "clientizen.mixins.json"
   ],
-  "accessWidener": "clientizen.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.9",
     "fabric-api": "*",
