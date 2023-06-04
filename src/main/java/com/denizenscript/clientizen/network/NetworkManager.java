@@ -2,7 +2,6 @@ package com.denizenscript.clientizen.network;
 
 import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.util.Identifier;
@@ -11,11 +10,12 @@ public class NetworkManager {
 
     public static void init() {
         Debug.log("Initializing NetworkManager...");
-        ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
-            debugNetwork("Sending join confirmation packet...");
-            send(Channels.SEND_CONFIRM, null);
-        }));
         ScriptNetworking.init();
+    }
+
+    public static void onConnect() {
+        debugNetwork("Sending join confirmation packet...");
+        send(Channels.SEND_CONFIRM, null);
     }
 
     public static void registerInChannel(Identifier channel, ClientizenReceiver receiver) {
