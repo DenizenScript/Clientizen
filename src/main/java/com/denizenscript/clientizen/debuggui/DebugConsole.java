@@ -2,7 +2,6 @@ package com.denizenscript.clientizen.debuggui;
 
 import com.denizenscript.clientizen.mixin.gui.WScrollPanelAccessor;
 import com.denizenscript.clientizen.mixin.gui.WTextAccessor;
-import com.denizenscript.denizencore.utilities.ReflectionHelper;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WScrollBar;
@@ -16,11 +15,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DebugConsole extends WScrollPanel {
 

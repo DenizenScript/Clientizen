@@ -9,11 +9,9 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.List;
 import java.util.function.BooleanSupplier;
 
 public class DebugOptionsMenu extends WPlainPanel {

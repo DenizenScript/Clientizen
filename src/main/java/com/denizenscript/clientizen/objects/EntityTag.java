@@ -126,7 +126,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         }
         return entity;
     }
-    
+
     public String getTypeName() {
         return getEntity().getType().getUntranslatedName();
     }
