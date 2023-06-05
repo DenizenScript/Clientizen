@@ -43,6 +43,15 @@ dependencies {
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${project.devauth_version}")
 }
 
+loom {
+    runs {
+        named("client") {
+            property("devauth.enabled", "true")
+            property("devauth.account", "alt") // DevAuth's name for the Microsoft account in the default config
+        }
+    }
+}
+
 
 processResources {
     inputs.property "version", version
