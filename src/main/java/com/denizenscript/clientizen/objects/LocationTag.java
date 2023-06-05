@@ -18,30 +18,30 @@ import java.util.List;
 
 public class LocationTag implements ObjectTag, VectorObject {
 
-	// <--[ObjectType]
-	// @name LocationTag
-	// @prefix l
-	// @base ElementTag
-	// @implements VectorObject
-	// @ExampleTagBase client.cursor_on
-	// @ExampleValues <client.cursor_on>
-	// @ExampleForReturns
-	// - narrate "The location is %VALUE%!"
-	// @format
-	// The identity format for locations is <x>,<y>,<z>,<pitch>,<yaw>,<world>
-	// Note that you can leave off the world, and/or pitch and yaw, and/or the z value.
-	// You cannot leave off both the z and the pitch+yaw at the same time.
-	// For example, 'l@1,2.15,3,45,90,space' or 'l@7.5,99,3.2'
-	//
-	// @description
-	// A LocationTag represents a point in the world.
-	//
-	// The client has no concept of worlds other than the one it's currently in, so while including worlds is valid and supported for compact with server-side LocationTags,
-	// there is no input checking and worlds are only referenced as simple names.
-	//
-	// Note that 'l' prefix is a lowercase 'L', the first letter in 'location'.
-	//
-	// -->
+    // <--[ObjectType]
+    // @name LocationTag
+    // @prefix l
+    // @base ElementTag
+    // @implements VectorObject
+    // @ExampleTagBase client.cursor_on
+    // @ExampleValues <client.cursor_on>
+    // @ExampleForReturns
+    // - narrate "The location is %VALUE%!"
+    // @format
+    // The identity format for locations is <x>,<y>,<z>,<pitch>,<yaw>,<world>
+    // Note that you can leave off the world, and/or pitch and yaw, and/or the z value.
+    // You cannot leave off both the z and the pitch+yaw at the same time.
+    // For example, 'l@1,2.15,3,45,90,space' or 'l@7.5,99,3.2'
+    //
+    // @description
+    // A LocationTag represents a point in the world.
+    //
+    // The client has no concept of worlds other than the one it's currently in, so while including worlds is valid and supported for compact with server-side LocationTags,
+    // there is no input checking and worlds are only referenced as simple names.
+    //
+    // Note that 'l' prefix is a lowercase 'L', the first letter in 'location'.
+    //
+    // -->
 
     double x, y, z;
     final float yaw, pitch;

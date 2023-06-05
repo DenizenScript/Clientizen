@@ -9,23 +9,23 @@ import net.minecraft.text.Text;
 
 public class NarrateCommand extends AbstractCommand {
 
-	// <--[command]
-	// @Name Narrate
-	// @Syntax narrate [<text>]
-	// @Required 1
-	// @Maximum 1
-	// Prints some text into the client's chat area.
-	//
-	// @Description
-	// Prints some text into the client's chat area.
-	//
-	// @Tags
-	// None
-	//
-	// @Usage
-	// # Use to narrate text.
-	// - narrate "Hello World!"
-	// -->
+    // <--[command]
+    // @Name Narrate
+    // @Syntax narrate [<text>]
+    // @Required 1
+    // @Maximum 1
+    // Prints some text into the client's chat area.
+    //
+    // @Description
+    // Prints some text into the client's chat area.
+    //
+    // @Tags
+    // None
+    //
+    // @Usage
+    // # Use to narrate text.
+    // - narrate "Hello World!"
+    // -->
 
     public NarrateCommand() {
         setName("narrate");

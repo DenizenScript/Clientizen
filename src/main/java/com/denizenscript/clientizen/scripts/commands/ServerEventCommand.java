@@ -17,41 +17,41 @@ import java.util.Map;
 
 public class ServerEventCommand extends AbstractCommand {
 
-	// <--[command]
-	// @Name CustomEvent
-	// @Syntax serverevent [id:<id>] (data:<map>)
-	// @Required 1
-	// @Maximum 2
-	// @Short Sends the server an event.
-	// @Group core
-	//
-	// @Description
-	// Sends the server the client is currently connected to an event, potentially including extra data.
-	//
-	// Input is an ID (an identifier to be used by the server to recognize the event, choose a constant name to use), and an optional MapTag of context data.
-	//
-	// Note that the server must be running Depenizen with the Clientizen Bridge enabled to receive events.
-	//
-	// @Tags
-	// None
-	//
-	// @Usage
-	// Use to send the server an event with the id "something_happened"
-	// - serverevent id:something_happened
-	//
-	// @Usage
-	// Use to send the server an event with the id "user" and supply a context map of basic data.
-	// - serverevent id:user data:[name=Aya;message=Hello]
-	//
-	// @Usage
-	// Use to send the server an event with the id "something_happened" and supply a context map of more interesting data.
-	// - definemap context:
-	//     Denizen: scripting
-	//     food: waffle
-	//     loaded_entities: <client.loaded_entities.size>
-	// - customevent id:something_happened context:<[context]>
-	//
-	// -->
+    // <--[command]
+    // @Name CustomEvent
+    // @Syntax serverevent [id:<id>] (data:<map>)
+    // @Required 1
+    // @Maximum 2
+    // @Short Sends the server an event.
+    // @Group core
+    //
+    // @Description
+    // Sends the server the client is currently connected to an event, potentially including extra data.
+    //
+    // Input is an ID (an identifier to be used by the server to recognize the event, choose a constant name to use), and an optional MapTag of context data.
+    //
+    // Note that the server must be running Depenizen with the Clientizen Bridge enabled to receive events.
+    //
+    // @Tags
+    // None
+    //
+    // @Usage
+    // Use to send the server an event with the id "something_happened"
+    // - serverevent id:something_happened
+    //
+    // @Usage
+    // Use to send the server an event with the id "user" and supply a context map of basic data.
+    // - serverevent id:user data:[name=Aya;message=Hello]
+    //
+    // @Usage
+    // Use to send the server an event with the id "something_happened" and supply a context map of more interesting data.
+    // - definemap context:
+    //     Denizen: scripting
+    //     food: waffle
+    //     loaded_entities: <client.loaded_entities.size>
+    // - customevent id:something_happened context:<[context]>
+    //
+    // -->
 
     public ServerEventCommand() {
         setName("serverevent");
