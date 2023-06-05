@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.debuggui;
 
 import com.denizenscript.clientizen.mixin.gui.WScrollPanelAccessor;
 import com.denizenscript.clientizen.mixin.gui.WTextAccessor;
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WScrollBar;
@@ -11,7 +12,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
@@ -24,7 +25,7 @@ public class DebugConsole extends WScrollPanel {
     public static StringBuilder debugText = new StringBuilder();
 
     static {
-        ClientLoginConnectionEvents.DISCONNECT.register((handler, client) -> {
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             debugText = new StringBuilder();
         });
     }
@@ -66,6 +67,12 @@ public class DebugConsole extends WScrollPanel {
 
     public void onClose() {
         textArea = null;
+    }
+
+    @Override
+    public void validate(GuiDescription description) {
+        super.validate(description);
+        verticalScrollBar.setValue(verticalScrollBar.getMaxScrollValue());
     }
 
     public static class CustomScrollBar extends WScrollBar {
