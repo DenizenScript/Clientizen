@@ -17,6 +17,29 @@ import net.minecraft.util.Identifier;
 
 public class MaterialTag implements ObjectTag, Adjustable {
 
+	// <--[ObjectType]
+	// @name MaterialTag
+	// @prefix m
+	// @base ElementTag
+	// @implements PropertyHolderObject
+	// @ExampleTagBase material[stone]
+	// @ExampleValues stone,dirt,stick,iron_sword
+	// @ExampleForReturns
+	// - narrate "The material is %VALUE%!"
+	// @format
+	// The identity format for materials is the material type name.
+	// For example, 'm@stick'.
+	//
+	// @description
+	// A MaterialTag represents a material (a type of block or item).
+	//
+	// Block materials may sometimes also contain property data,
+	// for specific values on the block material such as the growth stage of a plant or the orientation of a stair block.
+	//
+	// Material types: <@link url https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html>.
+	//
+	// -->
+
     // Needs to match the server-side impl, which uses bukkit's all-in-one Material enum
     public BlockState state;
     public Item item;

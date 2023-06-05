@@ -10,6 +10,31 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyPressReleaseScriptEvent extends ScriptEvent {
 
+    // TODO: document all available keys somehow
+    // <--[event]
+    // @Events
+    // <'input_device'> key pressed|released|toggled
+    //
+    // @Switch name:<key> to only process the event if the pressed key's name matches the specified matcher.
+    //
+    // @Triggers when a keyboard/mouse key is pressed.
+    //
+    // @Context
+    // <context.key> returns an ElementTag of the pressed key's name.
+    // <context.device> returns an ElementTag of the device used, will be either KEYBOARD or MOUSE.
+    // <context.key_code> returns an ElementTag(Number) of the pressed key's raw key code.
+    //
+    // @Example
+    // # Will send the server an event when the 'K' key is pressed
+    // on keyboard key pressed name:k:
+    // - serverevent id:activate_ability
+    //
+    // @Example
+    // # Will listen to all presses on the keypad
+    // on keyboard key pressed name:KEYPAD_*:
+    // - narrate "You pressed the <context.key> key on your keypad!"
+    // -->
+
     public static KeyPressReleaseScriptEvent instance;
 
     public Key key;

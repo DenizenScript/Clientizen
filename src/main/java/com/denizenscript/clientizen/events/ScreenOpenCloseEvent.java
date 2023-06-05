@@ -15,6 +15,23 @@ import java.util.Map;
 
 public class ScreenOpenCloseEvent extends ScriptEvent {
 
+    // <--[event]
+    // @Events
+    // <'screen_type'> screen opened|closed
+    //
+    // @Triggers when a screen is opened/closed.
+    //
+    // @Context
+    // <context.screen_type> returns an ElementTag of the screen type that opened.
+    // <context.switched> returns an ElementTag(Boolean) of whether the screen was switched to from another screen.
+    //
+    // -->
+
+    // TODO: This event needs a partial redo, mainly:
+    // - CreativeInventoryScreen no longer extends InventoryScreen
+    // - Add all relevant screen types
+    // - Potentially add support for handling screens that aren't directly defined via class name
+
     public static ScreenOpenCloseEvent instance;
 
     public static Map<String, Class<?>> TYPE_MAP = new HashMap<>();
@@ -32,7 +49,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     public boolean switched;
 
     public ScreenOpenCloseEvent() {
-        registerCouldMatcher("<'type'> screen opened|closed");
+        registerCouldMatcher("<'screen_type'> screen opened|closed");
         instance = this;
     }
 
@@ -50,11 +67,11 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
 
     @Override
     public ObjectTag getContext(String name) {
-        switch (name) {
-            case "screen_type": return new ElementTag(type);
-            case "switched": return new ElementTag(switched);
-        }
-        return super.getContext(name);
+        return switch (name) {
+            case "screen_type" -> new ElementTag(type);
+            case "switched" -> new ElementTag(switched);
+            default -> super.getContext(name);
+        };
     }
 
 

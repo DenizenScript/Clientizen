@@ -6,6 +6,14 @@ import net.minecraft.state.property.Properties;
 
 public class MaterialWaterlogged extends MaterialBooleanProperty {
 
+    // <--[property]
+    // @object MaterialTag
+    // @name waterlogged
+    // @input ElementTag(Boolean)
+    // @description
+    // Whether a block is waterlogged.
+    // -->
+
     public static final BooleanProperty[] handledProperties = {Properties.WATERLOGGED};
 
     public static void register() {

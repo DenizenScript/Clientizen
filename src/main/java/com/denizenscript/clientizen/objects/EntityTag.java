@@ -19,6 +19,26 @@ import java.util.UUID;
 
 public class EntityTag implements ObjectTag, Adjustable {
 
+	// <--[ObjectType]
+	// @name EntityTag
+	// @prefix e
+	// @base ElementTag
+	// @implements PropertyHolderObject
+	// @ExampleTagBase client.self_entity
+	// @ExampleValues <client.self_entity>
+	// @ExampleForReturns
+	// - narrate "The entity is %VALUE%!"
+	// @format
+	// The identity format for entities is a spawned entity's UUID, or an entity type.
+	// For example, 'e@1d7b97ac-e5dc-45f6-8bb2-3eb8a5ef190e' or 'e@zombie'.
+	//
+	// @description
+	// An EntityTag represents a spawned entity, or a generic entity type.
+	//
+	// Note that a spawned entity can be a living entity (a player, animal, monster, etc.) or a non-living entity (a painting, item frame, etc).
+	//
+	// -->
+
     public final UUID uuid;
     public Entity entity;
     public final boolean isFake;
