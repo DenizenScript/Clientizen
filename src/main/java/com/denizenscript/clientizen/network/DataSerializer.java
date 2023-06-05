@@ -2,56 +2,47 @@ package com.denizenscript.clientizen.network;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class DataSerializer {
 
-    public final PacketByteBuf byteBuf;
+    public final PacketByteBuf output;
 
     public DataSerializer() {
-        byteBuf = PacketByteBufs.create();
+        output = PacketByteBufs.create();
     }
 
     public DataSerializer writeInt(int i) {
-        byteBuf.writeInt(i);
+        output.writeInt(i);
         return this;
     }
 
     public DataSerializer writeBoolean(boolean bool) {
-        byteBuf.writeBoolean(bool);
+        output.writeBoolean(bool);
         return this;
     }
 
-    public DataSerializer writeBytes(@NotNull byte[] bytes) {
-        byteBuf.writeBytes(bytes);
+    public DataSerializer writeBytes(byte[] bytes) {
+        output.writeBytes(bytes);
         return this;
     }
 
-    public DataSerializer writeByteArray(@NotNull byte[] bytes) {
+    public DataSerializer writeByteArray(byte[] bytes) {
         return writeInt(bytes.length).writeBytes(bytes);
     }
 
-    public DataSerializer writeString(@NotNull String s) {
+    public DataSerializer writeString(String s) {
         return writeByteArray(s.getBytes(StandardCharsets.UTF_8));
     }
 
-    public DataSerializer writeStringList(@NotNull Collection<String> strings) {
+    public DataSerializer writeStringList(Collection<String> strings) {
         writeInt(strings.size());
         for (String s : strings) {
             writeString(s);
-        }
-        return this;
-    }
-
-    public DataSerializer writeStringListMap(@NotNull Map<String, Collection<String>> map) {
-        writeInt(map.size());
-        for (Map.Entry<String, Collection<String>> entry : map.entrySet()) {
-            writeString(entry.getKey());
-            writeStringList(entry.getValue());
         }
         return this;
     }
@@ -61,6 +52,17 @@ public class DataSerializer {
         for (Map.Entry<String, String> entry : stringMap.entrySet()) {
             writeString(entry.getKey());
             writeString(entry.getValue());
+        }
+        return this;
+    }
+
+    public <T> DataSerializer writeNullable(T object, BiConsumer<DataSerializer, T> writeMethod) {
+        if (object != null) {
+            writeBoolean(true);
+            writeMethod.accept(this, object);
+        }
+        else {
+            writeBoolean(false);
         }
         return this;
     }

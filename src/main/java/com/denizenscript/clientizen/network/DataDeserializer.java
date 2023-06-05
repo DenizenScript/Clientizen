@@ -11,37 +11,28 @@ import java.util.function.Supplier;
 
 public class DataDeserializer {
 
-    private final ByteBuf buf;
+    private final ByteBuf input;
 
-    public DataDeserializer(ByteBuf buf) {
-        this.buf = buf;
+    public DataDeserializer(ByteBuf input) {
+        this.input = input;
     }
 
     public boolean readBoolean() {
-        return buf.readBoolean();
+        return input.readBoolean();
     }
 
     public int readInt() {
-        return buf.readInt();
+        return input.readInt();
     }
 
     public byte[] readByteArray() {
         byte[] bytes = new byte[readInt()];
-        buf.readBytes(bytes);
+        input.readBytes(bytes);
         return bytes;
     }
 
     public String readString() {
         return new String(readByteArray(), StandardCharsets.UTF_8);
-    }
-
-    public List<Integer> readIntList() {
-        int size = readInt();
-        List<Integer> intList = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            intList.add(readInt());
-        }
-        return intList;
     }
 
     public List<String> readStringList() {
@@ -62,17 +53,6 @@ public class DataDeserializer {
             stringMap.put(key, value);
         }
         return stringMap;
-    }
-
-    public Map<String, List<String>> readStringListMap() {
-        int size = readInt();
-        Map<String, List<String>> stringListMap = new HashMap<>(size);
-        for (int i = 0; i < size; i++) {
-            String key = readString();
-            List<String> value = readStringList();
-            stringListMap.put(key, value);
-        }
-        return stringListMap;
     }
 
     public <T> T readNullable(Supplier<T> readMethod) {

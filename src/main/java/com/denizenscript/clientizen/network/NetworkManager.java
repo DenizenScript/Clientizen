@@ -34,7 +34,7 @@ public class NetworkManager {
 //            return;
 //        }
         debugNetwork("Sending message on channel " + channel);
-        ClientPlayNetworking.send(channel, serializer != null ? serializer.byteBuf : PacketByteBufs.empty());
+        ClientPlayNetworking.send(channel, serializer != null ? serializer.output : PacketByteBufs.empty());
     }
 
     public static void debugNetwork(String debug) {
