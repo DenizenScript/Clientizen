@@ -244,4 +244,31 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
             }
         }
     }
+
+	// <--[language]
+	// @name Keyboard Keys
+	// @group Client Information
+	// @description
+	// The Minecraft client recognizes a specific set of keyboard and mouse keys, as listed below:
+	// Keyboard keys:
+	//  Letters: A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+	//  Numbers: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	//  F(unction) keys: F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15, F16, F17, F18, F19, F20, F21, F22, F23, F24, F25
+	//  Keypad: KEYPAD_0, KEYPAD_1, KEYPAD_2, KEYPAD_3, KEYPAD_4, KEYPAD_5, KEYPAD_6, KEYPAD_7, KEYPAD_8, KEYPAD_9, KEYPAD_DECIMAL,
+	//          KEYPAD_DIVIDE, KEYPAD_MULTIPLY, KEYPAD_SUBTRACT, KEYPAD_ADD, KEYPAD_ENTER, KEYPAD_EQUAL
+	//  Special characters: APOSTROPHE, COMMA, MINUS, PERIOD, SLASH, SEMICOLON, EQUAL, GRAVE_ACCENT, LEFT_BRACKET, RIGHT_BRACKET, BACKSLASH, SPACE
+	//  Shift keys: LEFT_SHIFT, RIGHT_SHIFT
+	//  World (globe/FN) keys: WORLD_1, WORLD_2
+	//  Arrows: ARROW_RIGHT, ARROW_LEFT, ARROW_DOWN, ARROW_UP
+	//  Control keys: LEFT_CONTROL, RIGHT_CONTROL
+	//  Alt keys: LEFT_ALT, RIGHT_ALT
+	//  Lock keys: CAPS_LOCK, NUM_LOCK, SCROLL_LOCK
+	//  Page keys: PAGE_UP, PAGE_DOWN
+	//  Super (Windows/system/command) keys: LEFT_SUPER, RIGHT_SUPER
+	//  Other keys: ESCAPE, ENTER, TAB, BACKSPACE, INSERT, DELETE, HOME, END, PRINT_SCREEN, PAUSE, MENU
+	//
+	// Mouse buttons: MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE, MOUSE_BUTTON_4, MOUSE_BUTTON_5, MOUSE_BUTTON_6, MOUSE_BUTTON_7, MOUSE_BUTTON_8
+    //
+	// If a key is unrecognized, it will be 'UNKNOWN'.
+	// -->
 }
