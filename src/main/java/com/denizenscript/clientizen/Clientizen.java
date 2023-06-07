@@ -95,6 +95,7 @@ public class Clientizen implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(client -> DenizenCore.tick(50));
 
         // Shutdown Denizen-Core when the client is stopping
+        // TODO: DenizenCore#shutdown saves files (e.g. flags) to disk, should not be done here
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> DenizenCore.shutdown());
 
         // Remove scripts received from the server once the client disconnects from it

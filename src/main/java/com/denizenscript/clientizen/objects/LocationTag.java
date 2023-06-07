@@ -18,6 +18,30 @@ import java.util.List;
 
 public class LocationTag implements ObjectTag, VectorObject {
 
+    // <--[ObjectType]
+    // @name LocationTag
+    // @prefix l
+    // @base ElementTag
+    // @implements VectorObject
+    // @ExampleTagBase client.cursor_on
+    // @ExampleValues <client.cursor_on>
+    // @ExampleForReturns
+    // - narrate "The location is %VALUE%!"
+    // @format
+    // The identity format for locations is <x>,<y>,<z>,<pitch>,<yaw>,<world>
+    // Note that you can omit the world value. You can also omit either the pitch and yaw pair or the z value.
+    // For example, 'l@1,2.15,3,45,90,space' or 'l@7.5,99,3.2'
+    //
+    // @description
+    // A LocationTag represents a point in the world.
+    //
+    // The Minecraft client has no concept of worlds other than the one it's currently in, so while including worlds is valid and supported for compatibility with server-side LocationTags,
+    // there is no validation that the world actually exists, and worlds are only referenced as simple names.
+    //
+    // Note that the 'l' prefix is a lowercase 'L', the first letter in 'location'.
+    //
+    // -->
+
     double x, y, z;
     final float yaw, pitch;
     final String world;
