@@ -13,7 +13,7 @@ public class MaterialLevel extends MaterialIntProperty {
     // @name level
     // @input ElementTag(Number)
     // @description
-    // The current level for a levelled material:
+    // The current level for a "levelled" material:
     // For light blocks, this is the brightness of the light.
     // For water/lava this is the height of the liquid block.
     // For cauldrons, this is the amount of liquid contained.
@@ -28,7 +28,7 @@ public class MaterialLevel extends MaterialIntProperty {
     // @returns ElementTag(Number)
     // @group properties
     // @description
-    // Returns the minimum level for a levelled material (see <@link property MaterialTag.level>).
+    // Returns the minimum level for a "levelled" material (see <@link property MaterialTag.level>).
     // This will return 0 for all valid materials aside from snow.
     // -->
 
@@ -37,7 +37,7 @@ public class MaterialLevel extends MaterialIntProperty {
     // @returns ElementTag(Number)
     // @group properties
     // @description
-    // Returns the maximum level for a levelled material (see <@link property MaterialTag.level>).
+    // Returns the maximum level for a "levelled" material (see <@link property MaterialTag.level>).
     // -->
 
     // TODO: material properties - verify all relevant properties are included

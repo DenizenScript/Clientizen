@@ -31,9 +31,9 @@ public class MaterialTag implements ObjectTag, Adjustable {
     // For example, 'm@stick'.
     //
     // @description
-    // A MaterialTag represents a material (a type of block or item).
+    // A MaterialTag represents a type of block or item.
     //
-    // Block materials may sometimes also contain property data,
+    // Block materials may sometimes also contain property data
     // for specific values on the block material such as the growth stage of a plant or the orientation of a stair block.
     //
     // Material types: <@link url https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html>.
