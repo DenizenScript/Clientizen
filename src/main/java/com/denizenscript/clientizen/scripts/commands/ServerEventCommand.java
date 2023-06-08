@@ -1,8 +1,7 @@
 package com.denizenscript.clientizen.scripts.commands;
 
-import com.denizenscript.clientizen.network.Channels;
-import com.denizenscript.clientizen.network.DataSerializer;
 import com.denizenscript.clientizen.network.NetworkManager;
+import com.denizenscript.clientizen.network.packets.FireEventPacketOut;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.MapTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
@@ -69,6 +68,6 @@ public class ServerEventCommand extends AbstractCommand {
                 data.put(entry.getKey().str, entry.getValue().savable());
             }
         }
-        NetworkManager.send(Channels.FIRE_EVENT, new DataSerializer().writeString(id).writeStringMap(data));
+        NetworkManager.send(new FireEventPacketOut(id, data));
     }
 }
