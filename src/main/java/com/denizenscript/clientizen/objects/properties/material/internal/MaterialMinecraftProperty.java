@@ -39,7 +39,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
             return null;
         }
         V processedValue = processPropertyValue(value);
-        return processedValue == null ? null : internalProperty.name(value);
+        return processedValue == null ? null : internalProperty.name(processedValue);
     }
 
     public boolean isDefaultValue(V value) {
