@@ -3,7 +3,6 @@ package com.denizenscript.clientizen.objects.properties.material.internal;
 import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
-import com.denizenscript.denizencore.utilities.CoreUtilities;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 
@@ -27,7 +26,7 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
     }
 
     @Override
-    public Comparable processValue(Comparable value) {
+    public Comparable processPropertyValue(Comparable value) {
         Conversion<?, ?> conversion = conversions.get(internalProperty);
         if (conversion == null) {
             return value;
@@ -39,16 +38,16 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
     }
 
     @Override
-    public Comparable parseInput(ElementTag input) {
+    public Comparable parsePropertyValue(ElementTag input) {
         Conversion<?, ?> conversion = conversions.get(internalProperty);
         if (conversion == null) {
-            return super.parseInput(input);
+            return super.parsePropertyValue(input);
         }
         if (conversion.externalTypeClass != null) {
             Enum<?> external = input.asEnum(conversion.externalTypeClass);
             return external == null ? null : conversion.internalTypeConstants[external.ordinal()];
         }
-        return input.asLowerString().equals(conversion.toRemove.asString()) ? null : super.parseInput(input);
+        return input.asLowerString().equals(conversion.toRemove.asString()) ? null : super.parsePropertyValue(input);
     }
 
 

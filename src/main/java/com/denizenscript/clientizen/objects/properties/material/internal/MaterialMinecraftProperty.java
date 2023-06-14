@@ -27,7 +27,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         return propertyID;
     }
 
-    public V processValue(V value) {
+    public V processPropertyValue(V value) {
         return value;
     }
 
@@ -38,7 +38,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         if (isDefaultValue(value)) {
             return null;
         }
-        V processedValue = processValue(value);
+        V processedValue = processPropertyValue(value);
         return processedValue == null ? null : internalProperty.name(value);
     }
 
@@ -48,20 +48,20 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
 
     @Override
     public ElementTag getPropertyValue() {
-        V processedValue = processValue(object.state.get(internalProperty));
+        V processedValue = processPropertyValue(object.state.get(internalProperty));
         return processedValue == null ? null : new ElementTag(internalProperty.name(processedValue));
     }
 
-    public V parseInput(ElementTag input) {
+    public V parsePropertyValue(ElementTag input) {
         return internalProperty.parse(input.asLowerString()).orElse(null);
     }
 
     @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
-        V parsedValue = parseInput(value);
+        V parsedValue = parsePropertyValue(value);
         if (parsedValue == null) {
             mechanism.echoError("Invalid " + DebugInternals.getClassNameOpti(internalProperty.getType()) + " specified, must be one of: "
-                    + internalProperty.getValues().stream().map(this::processValue).filter(Objects::nonNull).map(internalProperty::name).collect(Collectors.joining(", ")) + '.');
+                    + internalProperty.getValues().stream().map(this::processPropertyValue).filter(Objects::nonNull).map(internalProperty::name).collect(Collectors.joining(", ")) + '.');
             return;
         }
         object.state = object.state.with(internalProperty, parsedValue);
