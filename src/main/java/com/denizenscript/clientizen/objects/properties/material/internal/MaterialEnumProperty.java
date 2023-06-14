@@ -45,7 +45,11 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
         }
         if (conversion.externalType != null) {
             Enum<?> external = input.asEnum(conversion.externalType);
-            return external == null ? null : conversion.internalTypeConstants[external.ordinal()];
+            if (external == null) {
+                return null;
+            }
+            Enum<?> internal = conversion.internalTypeConstants[external.ordinal()];
+            return internalProperty.getValues().contains(internal) ? internal : null;
         }
         return input.asLowerString().equals(conversion.toRemove.asString()) ? null : super.parsePropertyValue(input);
     }
