@@ -52,13 +52,13 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         return processedValue == null ? null : new ElementTag(internalProperty.name(processedValue));
     }
 
-    public V parsePropertyValue(ElementTag input) {
+    public V parsePropertyValue(ElementTag input, Mechanism mechanism) {
         return internalProperty.parse(input.asLowerString()).orElse(null);
     }
 
     @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
-        V parsedValue = parsePropertyValue(value);
+        V parsedValue = parsePropertyValue(value, mechanism);
         if (parsedValue == null) {
             mechanism.echoError("Invalid " + DebugInternals.getClassNameOpti(internalProperty.getType()) + " specified, must be one of: "
                     + internalProperty.getValues().stream().map(this::processPropertyValue).filter(Objects::nonNull).map(internalProperty::name).collect(Collectors.joining(", ")) + '.');

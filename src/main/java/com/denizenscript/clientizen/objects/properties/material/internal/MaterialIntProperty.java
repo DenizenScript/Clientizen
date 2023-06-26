@@ -12,20 +12,25 @@ public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntP
     }
 
     @Override
+    public Integer parsePropertyValue(ElementTag input, Mechanism mechanism) {
+        return mechanism.requireInteger() ? input.asInt() : null;
+    }
+
+    @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
-        if (!mechanism.requireInteger()) {
+        Integer parsedValue = parsePropertyValue(value, mechanism);
+        if (parsedValue == null) {
             return;
         }
-        int newValue = value.asInt();
         IntPropertyAccessor accessor = getAccessor();
-        if (newValue < accessor.getMin()) {
+        if (parsedValue < accessor.getMin()) {
             mechanism.echoError("Invalid input number, must be at least " + accessor.getMin() + ".");
             return;
         }
-        if (newValue > accessor.getMax()) {
+        if (parsedValue > accessor.getMax()) {
             mechanism.echoError("Invalid input number, cannot be more than " + accessor.getMax() + ".");
             return;
         }
-        object.state = object.state.with(internalProperty, newValue);
+        object.state = object.state.with(internalProperty, parsedValue);
     }
 }
