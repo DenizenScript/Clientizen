@@ -24,7 +24,7 @@ public class MaterialHalf extends MaterialEnumProperty {
 
     static {
         convertEnum(Properties.DOUBLE_BLOCK_HALF, BukkitDoubleBlockHalf.class);
-        removeSingleInstance(Properties.CHEST_TYPE, ChestType.SINGLE);
+        removeSingleValue(Properties.CHEST_TYPE, ChestType.SINGLE);
     }
 
     public static void register() {

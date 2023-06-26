@@ -22,7 +22,7 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
         conversions.put(internalProperty, new Conversion<>(externalType, externalType.getEnumConstants(), internalProperty.getType().getEnumConstants(), null));
     }
 
-    public static <IT extends Enum<IT> & StringIdentifiable> void removeSingleInstance(EnumProperty<IT> internalProperty, IT toRemove) {
+    public static <IT extends Enum<IT> & StringIdentifiable> void removeSingleValue(EnumProperty<IT> internalProperty, IT toRemove) {
         conversions.put(internalProperty, new Conversion<>(null, null, null, toRemove));
     }
 
