@@ -15,32 +15,49 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
 
     public static final Map<EnumProperty<?>, Conversion<?, ?>> conversions = new HashMap<>();
 
-    record Conversion<IT extends Enum<IT> & StringIdentifiable, ET extends Enum<ET> & StringIdentifiable>(
-            Class<ET> externalType, ET[] externalTypeConstants, IT[] internalTypeConstants, // Entire enum conversion
-            Set<String> toRemove) {} // Value removal
+    public static class Conversion<IT extends Enum<IT> & StringIdentifiable, ET extends Enum<ET> & StringIdentifiable> {
+        // Entire enum conversion
+        Class<ET> externalType;
+        ET[] externalTypeConstants;
+        IT[] internalTypeConstants;
+        // Value removal
+        Set<String> toRemove;
+
+        public boolean shouldRemove(String value) {
+            return toRemove != null && toRemove.contains(value);
+        }
+    }
 
     public static <IT extends Enum<IT> & StringIdentifiable, ET extends Enum<ET> & StringIdentifiable> void convertEnum(EnumProperty<IT> internalProperty, Class<ET> externalType) {
-        conversions.put(internalProperty, new Conversion<>(externalType, externalType.getEnumConstants(), internalProperty.getType().getEnumConstants(), null));
+        Conversion conversion = conversions.computeIfAbsent(internalProperty, k -> new Conversion<IT, ET>());
+        conversion.externalType = externalType;
+        conversion.externalTypeConstants = externalType.getEnumConstants();
+        conversion.internalTypeConstants = internalProperty.getType().getEnumConstants();
     }
 
     public static <IT extends Enum<IT> & StringIdentifiable> void removeValues(EnumProperty<IT> internalProperty, IT... toRemove) {
-        conversions.put(internalProperty, new Conversion<>(null, null, null, Arrays.stream(toRemove).map(StringIdentifiable::asString).collect(Collectors.toCollection(HashSet::new))));
+        conversions.computeIfAbsent(internalProperty, k -> new Conversion()).toRemove = Arrays.stream(toRemove).map(StringIdentifiable::asString).collect(Collectors.toCollection(HashSet::new));
     }
 
     @Override
     public Comparable processPropertyValue(Comparable value) {
+        //noinspection SuspiciousMethodCalls
         Conversion<?, ?> conversion = conversions.get(internalProperty);
         if (conversion == null) {
             return value;
         }
+        if (conversion.shouldRemove(((StringIdentifiable) value).asString())) {
+            return null;
+        }
         if (conversion.externalType != null) {
             return conversion.externalTypeConstants[((Enum<?>) value).ordinal()];
         }
-        return conversion.toRemove.contains(((StringIdentifiable) value).asString()) ? null : value;
+        return value;
     }
 
     @Override
     public Comparable parsePropertyValue(ElementTag input, Mechanism mechanism) {
+        //noinspection SuspiciousMethodCalls
         Conversion<?, ?> conversion = conversions.get(internalProperty);
         if (conversion == null) {
             return super.parsePropertyValue(input, mechanism);
@@ -50,10 +67,13 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
             if (external == null) {
                 return null;
             }
-            Enum<?> internal = conversion.internalTypeConstants[external.ordinal()];
-            return internalProperty.getValues().contains(internal) ? internal : null;
+            StringIdentifiable internal = conversion.internalTypeConstants[external.ordinal()];
+            return internalProperty.getValues().contains(internal) && !conversion.shouldRemove(internal.asString()) ? (Comparable) internal : null;
         }
-        return conversion.toRemove.contains(input.asLowerString()) ? null : super.parsePropertyValue(input, mechanism);
+        if (conversion.shouldRemove(input.asLowerString())) {
+            return null;
+        }
+        return super.parsePropertyValue(input, mechanism);
     }
 
 
