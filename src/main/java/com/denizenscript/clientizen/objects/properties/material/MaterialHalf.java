@@ -20,11 +20,11 @@ public class MaterialHalf extends MaterialEnumProperty {
 
     public static final EnumProperty<?>[] handledProperties = {Properties.BED_PART, Properties.CHEST_TYPE, Properties.DOUBLE_BLOCK_HALF};
 
-    enum BukkitDoubleBlockHalf implements EnumStringIdentifiable { TOP, BOTTOM }
+    enum BukkitDoubleBlockHalf implements EnumStringIdentifiable {TOP, BOTTOM}
 
     static {
         convertEnum(Properties.DOUBLE_BLOCK_HALF, BukkitDoubleBlockHalf.class);
-        removeSingleValue(Properties.CHEST_TYPE, ChestType.SINGLE);
+        removeValues(Properties.CHEST_TYPE, ChestType.SINGLE);
     }
 
     public static void register() {
