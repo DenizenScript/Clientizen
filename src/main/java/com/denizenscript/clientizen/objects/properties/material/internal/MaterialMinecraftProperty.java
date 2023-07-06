@@ -49,7 +49,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     @Override
     public ElementTag getPropertyValue() {
         V processedValue = processPropertyValue(object.state.get(internalProperty));
-        return processedValue == null ? null : new ElementTag(internalProperty.name(processedValue));
+        return processedValue == null ? null : new ElementTag(internalProperty.name(processedValue), true);
     }
 
     public V parsePropertyValue(ElementTag input, Mechanism mechanism) {

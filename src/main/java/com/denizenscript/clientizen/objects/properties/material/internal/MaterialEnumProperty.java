@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
 
-    public static final Map<EnumProperty<?>, Conversion<?, ?>> conversions = new HashMap<>();
+    public static final Map<EnumProperty<?>, Conversion<?, ?>> CONVERSIONS = new HashMap<>();
 
     public static class Conversion<IT extends Enum<IT> & StringIdentifiable, ET extends Enum<ET> & StringIdentifiable> {
         // Entire enum conversion
@@ -29,20 +29,20 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
     }
 
     public static <IT extends Enum<IT> & StringIdentifiable, ET extends Enum<ET> & StringIdentifiable> void convertEnum(EnumProperty<IT> internalProperty, Class<ET> externalType) {
-        Conversion conversion = conversions.computeIfAbsent(internalProperty, k -> new Conversion<IT, ET>());
+        Conversion conversion = CONVERSIONS.computeIfAbsent(internalProperty, k -> new Conversion<IT, ET>());
         conversion.externalType = externalType;
         conversion.externalTypeConstants = externalType.getEnumConstants();
         conversion.internalTypeConstants = internalProperty.getType().getEnumConstants();
     }
 
     public static <IT extends Enum<IT> & StringIdentifiable> void removeValues(EnumProperty<IT> internalProperty, IT... toRemove) {
-        conversions.computeIfAbsent(internalProperty, k -> new Conversion()).toRemove = Arrays.stream(toRemove).map(StringIdentifiable::asString).collect(Collectors.toCollection(HashSet::new));
+        CONVERSIONS.computeIfAbsent(internalProperty, k -> new Conversion()).toRemove = Arrays.stream(toRemove).map(StringIdentifiable::asString).collect(Collectors.toCollection(HashSet::new));
     }
 
     @Override
     public Comparable processPropertyValue(Comparable value) {
         //noinspection SuspiciousMethodCalls
-        Conversion<?, ?> conversion = conversions.get(internalProperty);
+        Conversion<?, ?> conversion = CONVERSIONS.get(internalProperty);
         if (conversion == null) {
             return value;
         }
@@ -58,7 +58,7 @@ public abstract class MaterialEnumProperty extends MaterialMinecraftProperty {
     @Override
     public Comparable parsePropertyValue(ElementTag input, Mechanism mechanism) {
         //noinspection SuspiciousMethodCalls
-        Conversion<?, ?> conversion = conversions.get(internalProperty);
+        Conversion<?, ?> conversion = CONVERSIONS.get(internalProperty);
         if (conversion == null) {
             return super.parsePropertyValue(input, mechanism);
         }
