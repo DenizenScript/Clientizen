@@ -21,6 +21,7 @@ public class MaterialLevel extends MaterialIntProperty {
     // For beehives/bee nests, this is the amount of honey contained.
     // For snow, this is the number of partial layers, or the height, of a snow block.
     // For farmland, this is the moisture level.
+    // For composters, this is the amount of compost.
     // -->
 
     // <--[tag]
@@ -29,7 +30,6 @@ public class MaterialLevel extends MaterialIntProperty {
     // @group properties
     // @description
     // Returns the minimum level for a "levelled" material (see <@link property MaterialTag.level>).
-    // This will return 0 for all valid materials aside from snow.
     // -->
 
     // <--[tag]
@@ -39,10 +39,8 @@ public class MaterialLevel extends MaterialIntProperty {
     // @description
     // Returns the maximum level for a "levelled" material (see <@link property MaterialTag.level>).
     // -->
-
-    // TODO: material properties - verify all relevant properties are included
     public static final IntProperty[] handledProperties = {
-            Properties.CANDLES, Properties.BITES, Properties.LEVEL_3, Properties.LEVEL_8, Properties.LEVEL_1_8, Properties.LEVEL_15
+            Properties.LEVEL_15, Properties.LEVEL_3, Properties.BITES, Properties.HONEY_LEVEL, Properties.LAYERS, Properties.MOISTURE, Properties.LEVEL_8, Properties.LEVEL_1_8
     };
 
     public static void register() {

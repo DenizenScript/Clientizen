@@ -14,8 +14,15 @@ public class MaterialInstrument extends MaterialEnumProperty {
     // The instrument played by a note block, see <@link url https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Instrument.html>
     // -->
 
-    // TODO: material properties - bukkit conversion
-    public static EnumProperty<?>[] handledProperties = {Properties.INSTRUMENT};
+    public static final EnumProperty<?>[] handledProperties = {Properties.INSTRUMENT};
+
+    enum BukkitInstruments implements EnumStringIdentifiable {
+        PIANO, BASS_DRUM, SNARE_DRUM, STICKS, BASS_GUITAR, FLUTE, BELL, GUITAR, CHIME, XYLOPHONE, IRON_XYLOPHONE, COW_BELL, DIDGERIDOO, BIT, BANJO, PLING, ZOMBIE, SKELETON, CREEPER, DRAGON, WITHER_SKELETON, PIGLIN, CUSTOM_HEAD;
+    }
+
+    static {
+        convertEnum(Properties.INSTRUMENT, BukkitInstruments.class);
+    }
 
     public static void register() {
         autoRegister("instrument", MaterialInstrument.class);

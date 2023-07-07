@@ -16,16 +16,16 @@ public class MaterialSwitched extends MaterialBooleanProperty {
     // - a Powerable material (like pressure plates) is activated
     // - an Openable material (like doors) is open
     // - a dispenser is powered and should dispense its contents
-    // - a daylight sensor can see the sun
+    // - a daylight sensor is inverted (detects darkness instead of light)
     // - a lightable block is lit
     // - a piston block is extended
     // - an end portal frame has an ender eye in it
     // - a hopper is NOT being powered by redstone
     // - a sculk_shrieker can summon a warden
     // -->
-
-    // TODO: material properties - verify all relevant properties are included
-    public static final BooleanProperty[] handledProperties = {Properties.EYE, Properties.POWERED, Properties.ENABLED};
+    public static final BooleanProperty[] handledProperties = {
+            Properties.POWERED, Properties.OPEN, Properties.TRIGGERED, Properties.INVERTED, Properties.LIT, Properties.EXTENDED, Properties.EYE, Properties.ENABLED, Properties.CAN_SUMMON
+    };
 
     public static void register() {
         autoRegister("switched", MaterialSwitched.class);

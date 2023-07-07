@@ -12,6 +12,7 @@ import net.minecraft.state.property.Property;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends Comparable<V>> extends ObjectProperty<MaterialTag, ElementTag> {
@@ -26,11 +27,19 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
         return propertyID;
     }
 
+    public V processPropertyValue(V value) {
+        return value;
+    }
+
     @Override
     @SuppressWarnings("deprecation")
     public String getPropertyString() {
         V value = object.state.get(internalProperty);
-        return isDefaultValue(value) ? null : internalProperty.name(value);
+        if (isDefaultValue(value)) {
+            return null;
+        }
+        V processedValue = processPropertyValue(value);
+        return processedValue == null ? null : internalProperty.name(processedValue);
     }
 
     public boolean isDefaultValue(V value) {
@@ -39,15 +48,23 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
 
     @Override
     public ElementTag getPropertyValue() {
-        return new ElementTag(internalProperty.name(object.state.get(internalProperty)));
+        V processedValue = processPropertyValue(object.state.get(internalProperty));
+        return processedValue == null ? null : new ElementTag(internalProperty.name(processedValue), true);
+    }
+
+    public V parsePropertyValue(ElementTag input, Mechanism mechanism) {
+        return internalProperty.parse(input.asLowerString()).orElse(null);
     }
 
     @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
-        internalProperty.parse(value.asLowerString()).ifPresentOrElse(
-                newValue -> object.state = object.state.with(internalProperty, newValue),
-                () -> mechanism.echoError("Invalid " + DebugInternals.getClassNameOpti(internalProperty.getType()) + " specified, must be one of: "
-                        + internalProperty.getValues().stream().map(internalProperty::name).collect(Collectors.joining(", ")) + '.'));
+        V parsedValue = parsePropertyValue(value, mechanism);
+        if (parsedValue == null) {
+            mechanism.echoError("Invalid " + DebugInternals.getClassNameOpti(internalProperty.getType()) + " specified, must be one of: "
+                    + internalProperty.getValues().stream().map(this::processPropertyValue).filter(Objects::nonNull).map(internalProperty::name).collect(Collectors.joining(", ")) + '.');
+            return;
+        }
+        object.state = object.state.with(internalProperty, parsedValue);
     }
 
     @SafeVarargs
