@@ -162,6 +162,13 @@ public class EntityTag implements ObjectTag, Adjustable {
     public static void register() {
         PropertyParser.registerPropertyTagHandlers(EntityTag.class, tagProcessor);
 
+        // <--[tag]
+        // @attribute <EntityTag.entity_type>
+        // @returns ElementTag
+        // @group data
+        // @description
+        // Returns an entity's type.
+        // -->
         tagProcessor.registerTag(ElementTag.class, "entity_type", (attribute, object) -> {
             return new ElementTag(object.getTypeName(), true);
         });

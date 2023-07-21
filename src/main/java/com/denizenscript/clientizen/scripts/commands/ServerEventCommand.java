@@ -17,7 +17,7 @@ import java.util.Map;
 public class ServerEventCommand extends AbstractCommand {
 
     // <--[command]
-    // @Name CustomEvent
+    // @Name ServerEvent
     // @Syntax serverevent [id:<id>] (data:<map>)
     // @Required 1
     // @Maximum 2

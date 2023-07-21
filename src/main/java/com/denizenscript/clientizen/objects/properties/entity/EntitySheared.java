@@ -19,13 +19,13 @@ public class EntitySheared extends EntityProperty<ElementTag> {
     }
 
     @Override
-    public boolean isDefaultValue(ElementTag data) {
-        return !data.asBoolean();
+    public ElementTag getPropertyValue() {
+        return new ElementTag(as(EntityType.SHEEP).isSheared());
     }
 
     @Override
-    public ElementTag getPropertyValue() {
-        return new ElementTag(as(EntityType.SHEEP).isSheared());
+    public boolean isDefaultValue(ElementTag data) {
+        return !data.asBoolean();
     }
 
     @Override

@@ -6,6 +6,6 @@ public class SendConfirmationPacketOut extends PacketOut {
 
     @Override
     public String getName() {
-        return "receive_confirmation";
+        return "confirmation";
     }
 }
