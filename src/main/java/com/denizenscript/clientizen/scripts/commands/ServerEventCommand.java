@@ -48,7 +48,7 @@ public class ServerEventCommand extends AbstractCommand {
     //     Denizen: scripting
     //     food: waffle
     //     loaded_entities: <client.loaded_entities.size>
-    // - customevent id:something_happened context:<[context]>
+    // - serverevent id:something_happened context:<[context]>
     //
     // -->
 

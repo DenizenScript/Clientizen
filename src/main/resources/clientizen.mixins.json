@@ -10,6 +10,7 @@
     "MinecraftClientMixin",
     "IntPropertyAccessor",
     "ClientWorldAccessor",
+    "StickyKeyBindingAccessor",
     "gui.WScrollPanelAccessor",
     "gui.WTextAccessor"
   ],
