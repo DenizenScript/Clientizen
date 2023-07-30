@@ -40,8 +40,8 @@ public class EntitySneaking extends EntityProperty<ElementTag> {
         getEntity().setSneaking(sneaking);
         if (getEntity() == MinecraftClient.getInstance().player) {
             KeyBindingMixinAccess keyBindingMixinAccess = (KeyBindingMixinAccess) MinecraftClient.getInstance().options.sneakKey;
-            keyBindingMixinAccess.forceSetPressed(sneaking);
-            keyBindingMixinAccess.disableUntilPress();
+            keyBindingMixinAccess.clientizen$forceSetPressed(sneaking);
+            keyBindingMixinAccess.clientizen$disableUntilPress();
         }
     }
 

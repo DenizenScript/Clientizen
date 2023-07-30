@@ -2,7 +2,7 @@ package com.denizenscript.clientizen.access;
 
 public interface KeyBindingMixinAccess {
 
-    void disableUntilPress();
+    void clientizen$disableUntilPress();
 
-    void forceSetPressed(boolean pressed);
+    void clientizen$forceSetPressed(boolean pressed);
 }
