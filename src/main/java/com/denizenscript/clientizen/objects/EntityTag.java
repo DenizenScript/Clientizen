@@ -15,6 +15,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class EntityTag implements ObjectTag, Adjustable {
@@ -42,6 +44,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     public final UUID uuid;
     public Entity entity;
     public final boolean isFake;
+    private static final List<UUID> visibleEntities = new ArrayList<>();
 
     public EntityTag(Entity entity, boolean isFake) {
         this.entity = entity;
@@ -159,6 +162,10 @@ public class EntityTag implements ObjectTag, Adjustable {
         return getEntity().getType() == type;
     }
 
+    public static List<UUID> getVisibleEntities() {
+        return visibleEntities;
+    }
+
     public static void register() {
         PropertyParser.registerPropertyTagHandlers(EntityTag.class, tagProcessor);
 
@@ -178,6 +185,18 @@ public class EntityTag implements ObjectTag, Adjustable {
             }
             return null;
         });
+
+        // <--[tag]
+        // @attribute <EntityTag.visible_to_camera>
+        // @returns ElementTag
+        // @group Clientizen
+        // @description
+        // Returns whether an entity is visible to any client's camera.
+        // This does not mean the entity will be visible to the client, but within the camera's viewing frustum.
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "visible_to_camera", ((attribute, object) -> {
+            return new ElementTag(visibleEntities.contains(object.getEntity().getUuid()));
+        }));
     }
 
     public static final ObjectTagProcessor<EntityTag> tagProcessor = new ObjectTagProcessor<>();

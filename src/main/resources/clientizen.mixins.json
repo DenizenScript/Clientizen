@@ -6,10 +6,11 @@
   "mixins": [],
   "client": [
     "ClientPlayNetworkHandlerMixin",
+    "ClientWorldAccessor",
+    "EntityVisibilityMixin",
+    "IntPropertyAccessor",
     "KeyBindingMixin",
     "MinecraftClientMixin",
-    "IntPropertyAccessor",
-    "ClientWorldAccessor",
     "gui.WScrollPanelAccessor",
     "gui.WTextAccessor"
   ],
