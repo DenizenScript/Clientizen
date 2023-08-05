@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeyBinding.class)
-public class KeyBindingMixin {
+public abstract class EventKeyBindingMixin {
 
     private static final IntSet pressedKeys = new IntArraySet();
 
