@@ -218,7 +218,7 @@ public class ModTag implements ObjectTag {
     }
 
     @Override
-    public Object getJavaObject() {
+    public ModContainer getJavaObject() {
         return modContainer;
     }
 
