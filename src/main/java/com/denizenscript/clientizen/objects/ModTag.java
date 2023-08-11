@@ -80,7 +80,7 @@ public class ModTag implements ObjectTag {
         // @description
         // Returns a mod's id.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "id", (attribute, object) -> {
+        tagProcessor.registerStaticTag(ElementTag.class, "id", (attribute, object) -> {
             return new ElementTag(object.getMetadata().getId(), true);
         });
 
@@ -90,7 +90,7 @@ public class ModTag implements ObjectTag {
         // @description
         // Returns a mod's display name.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "display_name", (attribute, object) -> {
+        tagProcessor.registerStaticTag(ElementTag.class, "display_name", (attribute, object) -> {
             return new ElementTag(object.getMetadata().getName(), true);
         });
 
@@ -100,7 +100,7 @@ public class ModTag implements ObjectTag {
         // @description
         // Returns a mod's description.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "description", (attribute, object) -> {
+        tagProcessor.registerStaticTag(ElementTag.class, "description", (attribute, object) -> {
             return new ElementTag(object.getMetadata().getDescription(), true);
         });
 
@@ -110,7 +110,7 @@ public class ModTag implements ObjectTag {
         // @description
         // Returns a mod's version.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "version", (attribute, object) -> {
+        tagProcessor.registerStaticTag(ElementTag.class, "version", (attribute, object) -> {
             return new ElementTag(object.getMetadata().getVersion().getFriendlyString(), true);
         });
 
@@ -122,7 +122,7 @@ public class ModTag implements ObjectTag {
         // The contact information is a map of contact platforms to identification on that platform.
         // Note that mods can provide anything here, although most mods will obviously provide valid info.
         // -->
-        tagProcessor.registerTag(MapTag.class, "authors", (attribute, object) -> {
+        tagProcessor.registerStaticTag(MapTag.class, "authors", (attribute, object) -> {
             return Utilities.personsToMap(object.getMetadata().getAuthors());
         });
 
@@ -134,7 +134,7 @@ public class ModTag implements ObjectTag {
         // The contact information is a map of contact platforms to identification on that platform.
         // Note that mods can provide anything here, although most mods will obviously provide valid info.
         // -->
-        tagProcessor.registerTag(MapTag.class, "contributors", (attribute, object) -> {
+        tagProcessor.registerStaticTag(MapTag.class, "contributors", (attribute, object) -> {
             return Utilities.personsToMap(object.getMetadata().getContributors());
         });
 
@@ -145,7 +145,7 @@ public class ModTag implements ObjectTag {
         // Returns a mod's contact information, as a map of contact platforms to identification on that platform.
         // Note that mods can provide anything here, although most mods will obviously provide valid info.
         // -->
-        tagProcessor.registerTag(MapTag.class, "contact_info", (attribute, object) -> {
+        tagProcessor.registerStaticTag(MapTag.class, "contact_info", (attribute, object) -> {
             return Utilities.contactInfoToMap(object.getMetadata().getContact());
         });
 
@@ -155,7 +155,7 @@ public class ModTag implements ObjectTag {
         // @description
         // Returns a list of a mod's licenses.
         // -->
-        tagProcessor.registerTag(ListTag.class, "licenses", (attribute, object) -> {
+        tagProcessor.registerStaticTag(ListTag.class, "licenses", (attribute, object) -> {
             return new ListTag(object.getMetadata().getLicense(), true);
         });
 
@@ -165,7 +165,7 @@ public class ModTag implements ObjectTag {
         // @description
         // Returns a mod's type, either 'fabric' or 'builtin'.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "type", (attribute, object) -> {
+        tagProcessor.registerStaticTag(ElementTag.class, "type", (attribute, object) -> {
             return new ElementTag(object.getMetadata().getType(), true);
         });
 
@@ -175,7 +175,7 @@ public class ModTag implements ObjectTag {
         // @description
         // Returns the mod that contains this mod, if any (for things like library mods included by other mods).
         // -->
-        tagProcessor.registerTag(ModTag.class, "containing_mod", (attribute, object) -> {
+        tagProcessor.registerStaticTag(ModTag.class, "containing_mod", (attribute, object) -> {
             return object.modContainer.getContainingMod().map(ModTag::new).orElse(null);
         });
 
@@ -185,7 +185,7 @@ public class ModTag implements ObjectTag {
         // @description
         // Returns a list of mods contained by this mod (for mods that include libraries, for example).
         // -->
-        tagProcessor.registerTag(ListTag.class, "contained_mods", (attribute, object) -> {
+        tagProcessor.registerStaticTag(ListTag.class, "contained_mods", (attribute, object) -> {
             return new ListTag(object.modContainer.getContainedMods(), ModTag::new);
         });
     }
