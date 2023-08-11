@@ -29,7 +29,7 @@ public class ModTag implements ObjectTag {
     // - narrate "The mod is %VALUE%!"
     // @format
     // The identity format for mods is the mod id.
-    // For example, 'mod@clientizen' or 'mod@purpur'.
+    // For example, 'mod@clientizen' or 'mod@purpeille'.
     //
     // @description
     // A ModTag represents a currently loaded fabric mod.
