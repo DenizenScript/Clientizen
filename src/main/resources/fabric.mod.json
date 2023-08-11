@@ -6,12 +6,7 @@
   "description": "Run Denizen scripts on the client with platform-specific features",
   "authors": [
     "The Denizen Script team",
-    {
-      "name": "Aya",
-      "contact": {
-        "discord": "ayalaandtal"
-      }
-    },
+    "Aya",
     "acikek"
   ],
   "contact": {
