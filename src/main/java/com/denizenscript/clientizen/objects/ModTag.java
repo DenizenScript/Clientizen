@@ -28,7 +28,7 @@ public class ModTag implements ObjectTag {
     // @ExampleForReturns
     // - narrate "The mod is %VALUE%!"
     // @format
-    // The identity format for mods is the mod ID.
+    // The identity format for mods is the mod id.
     // For example, 'mod@clientizen' or 'mod@purpur'.
     //
     // @description
@@ -36,6 +36,10 @@ public class ModTag implements ObjectTag {
     //
     // This can be either a mod that's been downloaded and installed, a built-in mod, or a mod-within-mod (a library mod, for example)
     //
+    // @Matchable
+    // ModTag matchers:
+    // "mod" plaintext: always matches.
+    // Mod id: matches if the mod id matches the input, using advanced matchers.
     // -->
 
     @Fetchable("mod")
