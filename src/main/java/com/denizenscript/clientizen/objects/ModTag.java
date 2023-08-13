@@ -32,9 +32,9 @@ public class ModTag implements ObjectTag {
     // For example, 'mod@clientizen' or 'mod@theprinter'.
     //
     // @description
-    // A ModTag represents a currently loaded fabric mod.
+    // A ModTag represents a currently loaded mod.
     //
-    // This can be either a mod that's been downloaded and installed, a built-in mod, or a mod-within-mod (a library mod, for example)
+    // This can be either a mod that's been downloaded and installed, a built-in mod, or a mod within another mod (a library mod, for example)
     //
     // @Matchable
     // ModTag matchers:
@@ -49,7 +49,7 @@ public class ModTag implements ObjectTag {
         }
         Optional<ModTag> modTag = FabricLoader.getInstance().getModContainer(CoreUtilities.toLowerCase(input)).map(ModTag::new);
         if (modTag.isEmpty()) {
-            Utilities.echoErrorByContext(context, "valueOf ModTag returning null: '" + input + "' isn't a valid mod name.");
+            Utilities.echoErrorByContext(context, "valueOf ModTag returning null: '" + input + "' isn't a valid mod id.");
             return null;
         }
         return modTag.get();
@@ -143,6 +143,7 @@ public class ModTag implements ObjectTag {
         // @returns MapTag
         // @description
         // Returns a mod's contact information, as a map of contact platforms to identification on that platform.
+        // Some common examples are: "repo", "website", "issues", etc.
         // Note that mods can provide anything here, although most mods will obviously provide valid info.
         // -->
         tagProcessor.registerStaticTag(MapTag.class, "contact_info", (attribute, object) -> {
@@ -163,7 +164,9 @@ public class ModTag implements ObjectTag {
         // @attribute <ModTag.type>
         // @returns ElementTag
         // @description
-        // Returns a mod's type, either 'fabric' or 'builtin'.
+        // Returns a mod's type, either:
+        //  'fabric' - a regular Fabric mod, either directly installed or included by another mod.
+        //  'builtin' - a built-in mod, generally used for internal mods included by Fabric itself.
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "type", (attribute, object) -> {
             return new ElementTag(object.getMetadata().getType(), true);
