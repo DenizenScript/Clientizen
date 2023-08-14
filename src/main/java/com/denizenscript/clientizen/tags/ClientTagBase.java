@@ -14,8 +14,6 @@ import com.denizenscript.denizencore.scripts.commands.core.AdjustCommand;
 import com.denizenscript.denizencore.tags.PseudoObjectTagBase;
 import com.denizenscript.denizencore.tags.TagManager;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.FabricLoaderImpl;
-import net.fabricmc.loader.impl.metadata.AbstractModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
@@ -55,8 +53,8 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
         // -->
         tagProcessor.registerStaticTag(ListTag.class, "mods", (attribute, object) -> {
             return new ListTag(FabricLoader.getInstance().getAllMods(),
-                    modContainer -> modContainer.getContainingMod().isEmpty() && modContainer.getMetadata().getType().equals(AbstractModMetadata.TYPE_FABRIC_MOD)
-                            && !modContainer.getMetadata().getId().equals(FabricLoaderImpl.MOD_ID),
+                    modContainer -> modContainer.getContainingMod().isEmpty() && modContainer.getMetadata().getType().equals("fabric")
+                            && !modContainer.getMetadata().getId().equals("fabricloader"),
                     ModTag::new);
         });
 
