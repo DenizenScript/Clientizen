@@ -3,6 +3,7 @@ package com.denizenscript.clientizen.tags;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.clientizen.objects.LocationTag;
 import com.denizenscript.clientizen.objects.MaterialTag;
+import com.denizenscript.clientizen.objects.ModTag;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -12,6 +13,7 @@ import com.denizenscript.denizencore.objects.core.TimeTag;
 import com.denizenscript.denizencore.scripts.commands.core.AdjustCommand;
 import com.denizenscript.denizencore.tags.PseudoObjectTagBase;
 import com.denizenscript.denizencore.tags.TagManager;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
@@ -41,6 +43,29 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
                 entities.addObject(new EntityTag(entity));
             }
             return entities;
+        });
+
+        // <--[tag]
+        // @attribute <client.mods>
+        // @returns ListTag(ModTag)
+        // @description
+        // Returns a list of all currently loaded mods (this doesn't include things like mods-within-mods or built-in mods).
+        // -->
+        tagProcessor.registerStaticTag(ListTag.class, "mods", (attribute, object) -> {
+            return new ListTag(FabricLoader.getInstance().getAllMods(),
+                    modContainer -> modContainer.getContainingMod().isEmpty() && modContainer.getMetadata().getType().equals("fabric")
+                            && !modContainer.getMetadata().getId().equals("fabricloader"),
+                    ModTag::new);
+        });
+
+        // <--[tag]
+        // @attribute <client.all_mods>
+        // @returns ListTag(ModTag)
+        // @description
+        // Returns a list of all currently loaded mods, including mods-within-mods and built-in mods.
+        // -->
+        tagProcessor.registerStaticTag(ListTag.class, "all_mods", (attribute, object) -> {
+            return new ListTag(FabricLoader.getInstance().getAllMods(), ModTag::new);
         });
 
         // <--[tag]
