@@ -3,6 +3,7 @@ package com.denizenscript.clientizen.events;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
@@ -35,6 +36,13 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     public static ScreenOpenCloseEvent instance;
 
     public static Map<String, Class<?>> TYPE_MAP = new HashMap<>();
+    static {
+        ScreenEvents.AFTER_INIT.register((client, openedScreen, scaledWidth, scaledHeight) -> {
+            ScreenOpenCloseEvent.instance.handleScreenChange(openedScreen, client.currentScreen, true);
+            ScreenEvents.remove(openedScreen).register(closedScreen -> ScreenOpenCloseEvent.instance.handleScreenChange(closedScreen, null, false));
+        });
+    }
+
 
     static {
         TYPE_MAP.put("inventory", InventoryScreen.class);
