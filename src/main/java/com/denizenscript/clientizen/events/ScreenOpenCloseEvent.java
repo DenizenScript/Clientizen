@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.events;
 
+import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -37,7 +38,6 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
 
     public static ScreenOpenCloseEvent instance;
 
-    public static Map<String, Class<?>> TYPE_MAP = new HashMap<>();
     static {
         ScreenEvents.AFTER_INIT.register((client, openedScreen, scaledWidth, scaledHeight) -> {
             ScreenOpenCloseEvent.instance.handleScreenChange(openedScreen, client.currentScreen, true);
@@ -45,13 +45,15 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         });
     }
 
+    public static final Map<Class<? extends Screen>, String> TYPE_MAP = new HashMap<>();
 
     static {
-        TYPE_MAP.put("inventory", InventoryScreen.class);
-        TYPE_MAP.put("creative", CreativeInventoryScreen.class);
-        TYPE_MAP.put("pause", GameMenuScreen.class);
-        TYPE_MAP.put("options", OptionsScreen.class);
-        TYPE_MAP.put("advancements", AdvancementsScreen.class);
+        TYPE_MAP.put(InventoryScreen.class, "inventory");
+        TYPE_MAP.put(CreativeInventoryScreen.class, "creative");
+        TYPE_MAP.put(GameMenuScreen.class, "pause");
+        TYPE_MAP.put(OptionsScreen.class, "options");
+        TYPE_MAP.put(AdvancementsScreen.class, "advancements");
+        TYPE_MAP.put(ClientizenDebugScreen.class, "debug_screen");
     }
 
     public String type;
@@ -78,25 +80,38 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     @Override
     public ObjectTag getContext(String name) {
         return switch (name) {
-            case "screen_type" -> new ElementTag(type);
+            case "screen_type" -> new ElementTag(type, true);
             case "switched" -> new ElementTag(switched);
             default -> super.getContext(name);
         };
     }
 
-
     public void handleScreenChange(Screen screen, Screen otherScreen, boolean open) {
-        for (Map.Entry<String, Class<?>> pair : TYPE_MAP.entrySet()) {
-            if (pair.getKey().equals("inventory") && screen instanceof CreativeInventoryScreen) {
-                continue;
-            }
-            if (pair.getValue().isInstance(screen)) {
-                type = pair.getKey();
-                opened = open;
-                switched = otherScreen != null;
-                fire();
-                return;
-            }
+        if (!enabled) {
+            return;
         }
+        }
+        type = TYPE_MAP.computeIfAbsent(screen.getClass(), clazz -> {
+            String className = clazz.getSimpleName();
+            if (className.endsWith("Screen")) {
+                className = className.substring(0, className.length() - "Screen".length());
+            }
+            return className;
+        });
+        opened = open;
+        switched = otherScreen != null;
+        fire();
+    }
+
+    boolean enabled = false;
+
+    @Override
+    public void init() {
+        enabled = true;
+    }
+
+    @Override
+    public void destroy() {
+        enabled = false;
     }
 }
