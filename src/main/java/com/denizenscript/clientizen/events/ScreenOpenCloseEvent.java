@@ -5,6 +5,7 @@ import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
@@ -90,6 +91,9 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         if (!enabled) {
             return;
         }
+        // An InventoryScreen is always opened, which then opens a creative screen if needed
+        if (screen instanceof InventoryScreen && MinecraftClient.getInstance().interactionManager.hasCreativeInventory()) {
+            return;
         }
         type = TYPE_MAP.computeIfAbsent(screen.getClass(), clazz -> {
             String className = clazz.getSimpleName();
