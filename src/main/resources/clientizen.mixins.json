@@ -7,8 +7,9 @@
   "client": [
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldAccessor",
-    "IntPropertyAccessor",
     "EventKeyBindingMixin",
+    "IntPropertyAccessor",
+    "MinecraftClientMixin",
     "SneakingKeyBindingMixin",
     "StickyKeyBindingAccessor",
     "gui.WScrollPanelAccessor",

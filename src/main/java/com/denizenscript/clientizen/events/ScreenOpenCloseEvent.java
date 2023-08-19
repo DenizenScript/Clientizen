@@ -48,7 +48,6 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
 
     static {
         ScreenEvents.AFTER_INIT.register((client, openedScreen, scaledWidth, scaledHeight) -> {
-            ScreenOpenCloseEvent.instance.handleScreenChange(openedScreen, client.currentScreen, true);
             ScreenEvents.remove(openedScreen).register(closedScreen -> ScreenOpenCloseEvent.instance.handleScreenChange(closedScreen, null, false));
         });
         TYPE_MAP = new HashMap<>();
