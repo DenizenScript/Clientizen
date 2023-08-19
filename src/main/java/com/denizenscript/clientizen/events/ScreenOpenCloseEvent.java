@@ -34,8 +34,8 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     // @Triggers when a screen is opened or closed.
     //
     // @Context
-    // <context.screen_type> returns an ElementTag of the screen type that opened.
-    // <context.switched> returns an ElementTag(Boolean) of whether the screen was opened from another screen.
+    // <context.screen_type> returns an ElementTag of the screen type that opened/closed.
+    // <context.previous_screen_type> returns an ElementTag of the screen this screen was opened from, if any.
     //
     // -->
 
