@@ -202,7 +202,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         if (!enabled) {
             return;
         }
-        // An InventoryScreen is opened, which then opens a creative screen if needed
+        // An InventoryScreen is opened which then opens a creative screen if needed, so ignore an InventoryScreen if a creative one will be opened
         if (screen instanceof InventoryScreen && MinecraftClient.getInstance().interactionManager.hasCreativeInventory()) {
             return;
         }
