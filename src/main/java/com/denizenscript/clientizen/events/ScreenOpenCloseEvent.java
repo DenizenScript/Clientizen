@@ -159,9 +159,19 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         TYPE_MAP.put(screenType, name);
     }
 
+    public static String getScreenName(Class<? extends Screen> screenType) {
+        return TYPE_MAP.computeIfAbsent(screenType, clazz -> {
+            String className = clazz.getSimpleName();
+            if (className.endsWith("Screen")) {
+                className = className.substring(0, className.length() - "Screen".length());
+            }
+            return Utilities.camelCaseToSnake(className);
+        });
+    }
+
     public String type;
     public boolean opened;
-    public boolean switched;
+    public String previousType;
 
     public ScreenOpenCloseEvent() {
         registerCouldMatcher("screen opened|closed");
@@ -184,12 +194,12 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     public ObjectTag getContext(String name) {
         return switch (name) {
             case "screen_type" -> new ElementTag(type, true);
-            case "switched" -> new ElementTag(switched);
+            case "previous_screen_type" -> previousType != null ? new ElementTag(previousType, true) : null;
             default -> super.getContext(name);
         };
     }
 
-    public void handleScreenChange(Screen screen, Screen otherScreen, boolean open) {
+    public void handleScreenChange(Screen screen, Screen previousScreen, boolean open) {
         if (!enabled) {
             return;
         }
@@ -197,15 +207,9 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         if (screen instanceof InventoryScreen && MinecraftClient.getInstance().interactionManager.hasCreativeInventory()) {
             return;
         }
-        type = TYPE_MAP.computeIfAbsent(screen.getClass(), clazz -> {
-            String className = clazz.getSimpleName();
-            if (className.endsWith("Screen")) {
-                className = className.substring(0, className.length() - "Screen".length());
-            }
-            return Utilities.camelCaseToSnake(className);
-        });
+        type = getScreenName(screen.getClass());
+        previousType = previousScreen != null ? getScreenName(previousScreen.getClass()) : null;
         opened = open;
-        switched = otherScreen != null;
         fire();
     }
 
