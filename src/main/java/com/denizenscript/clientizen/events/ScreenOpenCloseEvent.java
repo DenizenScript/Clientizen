@@ -39,11 +39,6 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     //
     // -->
 
-    // TODO: This event needs a partial redo, mainly:
-    // - CreativeInventoryScreen no longer extends InventoryScreen
-    // - Add all relevant screen types
-    // - Potentially add support for handling screens that aren't directly defined via class name
-
     public static ScreenOpenCloseEvent instance;
 
     static {
