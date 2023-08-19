@@ -203,9 +203,13 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         if (!enabled) {
             return;
         }
-        // An InventoryScreen is always opened, which then opens a creative screen if needed
+        // An InventoryScreen is opened, which then opens a creative screen if needed
         if (screen instanceof InventoryScreen && MinecraftClient.getInstance().interactionManager.hasCreativeInventory()) {
             return;
+        }
+        // Since an inventory screen is opened internally but isn't actually visible, this doesn't count as having a previous screen
+        if (screen instanceof CreativeInventoryScreen && previousScreen instanceof InventoryScreen) {
+            previousScreen = null;
         }
         type = getScreenName(screen.getClass());
         previousType = previousScreen != null ? getScreenName(previousScreen.getClass()) : null;
