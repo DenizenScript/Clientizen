@@ -51,6 +51,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
             ScreenOpenCloseEvent.instance.handleScreenChange(openedScreen, client.currentScreen, true);
             ScreenEvents.remove(openedScreen).register(closedScreen -> ScreenOpenCloseEvent.instance.handleScreenChange(closedScreen, null, false));
         });
+        TYPE_MAP = new HashMap<>();
         // Advancement screens
         registerScreenName(AdvancementsScreen.class, "advancements");
         // In-game screens
@@ -153,7 +154,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         registerScreenName(TitleScreen.class, "title");
     }
 
-    private static final Map<Class<? extends Screen>, String> TYPE_MAP = new HashMap<>();
+    private static final Map<Class<? extends Screen>, String> TYPE_MAP;
 
     public static void registerScreenName(Class<? extends Screen> screenType, String name) {
         TYPE_MAP.put(screenType, name);
