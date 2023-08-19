@@ -30,6 +30,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     // screen opened|closed
     //
     // @Switch type:<screen_type> to only process the event if the type of screen opened matches the specified matcher.
+    // @Switch from:<screen_type> to only process the event if the screen was opened from a different screen and that screen's type matches the specified matcher.
     //
     // @Triggers when a screen is opened or closed.
     //
@@ -170,13 +171,16 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
 
     public ScreenOpenCloseEvent() {
         registerCouldMatcher("screen opened|closed");
-        registerSwitches("type");
+        registerSwitches("type", "from");
         instance = this;
     }
 
     @Override
     public boolean matches(ScriptPath path) {
         if (!runGenericSwitchCheck(path, "type", type)) {
+            return false;
+        }
+        if (!runGenericSwitchCheck(path, "from", previousType)) {
             return false;
         }
         if (opened != path.eventArgLowerAt(1).equals("opened")) {
