@@ -78,7 +78,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         registerScreenName(SignEditScreen.class, "sign_edit");
         registerScreenName(SmithingScreen.class, "smithing");
         registerScreenName(SmokerScreen.class, "smoker");
-        registerScreenName(StonecutterScreen.class, "stunecutter");
+        registerScreenName(StonecutterScreen.class, "stonecutter");
         registerScreenName(StructureBlockScreen.class, "structure_block");
         // Multiplayer screens
         registerScreenName(MultiplayerScreen.class, "multiplayer");
