@@ -32,7 +32,7 @@ public class ModTag implements ObjectTag {
     // For example, 'mod@clientizen' or 'mod@theprinter'.
     //
     // @description
-    // A ModTag represents a currently loaded mod.
+    // A ModTag represents a currently loaded Fabric mod.
     //
     // This can be either a mod that's been downloaded and installed, a built-in mod, or a mod within another mod (a library mod, for example)
     //

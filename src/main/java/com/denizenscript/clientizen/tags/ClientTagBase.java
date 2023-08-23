@@ -49,7 +49,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
         // @attribute <client.mods>
         // @returns ListTag(ModTag)
         // @description
-        // Returns a list of all currently loaded mods (this doesn't include things like mods-within-mods or built-in mods).
+        // Returns a list of all currently loaded Fabric mods (this doesn't include things like mods-within-mods or built-in mods).
         // -->
         tagProcessor.registerStaticTag(ListTag.class, "mods", (attribute, object) -> {
             return new ListTag(FabricLoader.getInstance().getAllMods(),
@@ -62,7 +62,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
         // @attribute <client.all_mods>
         // @returns ListTag(ModTag)
         // @description
-        // Returns a list of all currently loaded mods, including mods-within-mods and built-in mods.
+        // Returns a list of all currently loaded Fabric mods, including mods-within-mods and built-in mods.
         // -->
         tagProcessor.registerStaticTag(ListTag.class, "all_mods", (attribute, object) -> {
             return new ListTag(FabricLoader.getInstance().getAllMods(), ModTag::new);

@@ -10,10 +10,11 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyPressReleaseScriptEvent extends ScriptEvent {
 
-    // TODO: document all available keys somehow
     // <--[event]
     // @Events
     // <'input_device'> key pressed|released|toggled
+    //
+    // @Group input
     //
     // @Switch name:<key> to only process the event if the pressed key's name matches the specified matcher.
     //
