@@ -157,6 +157,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
 
     public static String getScreenName(Class<? extends Screen> screenType) {
         return TYPE_MAP.computeIfAbsent(screenType, clazz -> {
+            // Try dynamically generating the name - currently only for modded screens, as vanilla screens have remapped class names
             String className = clazz.getSimpleName();
             if (className.endsWith("Screen")) {
                 className = className.substring(0, className.length() - "Screen".length());
