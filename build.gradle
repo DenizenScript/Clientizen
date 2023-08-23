@@ -50,6 +50,7 @@ loom {
             property("devauth.account", "alt") // DevAuth's name for the Microsoft account in the default config
         }
     }
+    accessWidenerPath = file("src/main/resources/clientizen.accesswidener")
 }
 
 

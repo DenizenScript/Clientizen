@@ -101,7 +101,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         registerScreenName(VideoOptionsScreen.class, "video_options");
         // Packs screens
         registerScreenName(ExperimentalWarningScreen.class, "experimental_warning");
-        registerScreenName((Class<? extends Screen>) ExperimentalWarningScreen.class.getDeclaredClasses()[0], "experimental_warning_details");
+        registerScreenName(ExperimentalWarningScreen.DetailsScreen.class, "experimental_warning_details");
         registerScreenName(PackScreen.class, "pack");
         // Report screens
         registerScreenName(AbuseReportReasonScreen.class, "abuse_report_reason");
