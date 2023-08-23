@@ -21,7 +21,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -37,6 +38,12 @@ public class Clientizen implements ClientModInitializer {
     public static Identifier id(String path) {
         return new Identifier(ID, path);
     }
+
+    public static final Event<Runnable> SYNC_DISCONNECT = EventFactory.createArrayBacked(Runnable.class, listeners -> () -> {
+        for (Runnable listener : listeners) {
+            listener.run();
+        }
+    });
 
     public static String version;
 
@@ -99,7 +106,7 @@ public class Clientizen implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> DenizenCore.shutdown());
 
         // Remove scripts received from the server once the client disconnects from it
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+        SYNC_DISCONNECT.register(() -> {
             ScriptHelper.buildAdditionalScripts.clear();
             DenizenCore.reloadScripts(false, null);
         });

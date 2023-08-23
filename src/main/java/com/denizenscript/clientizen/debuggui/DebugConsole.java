@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.debuggui;
 
+import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.mixin.gui.WScrollPanelAccessor;
 import com.denizenscript.clientizen.mixin.gui.WTextAccessor;
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -12,7 +13,6 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
@@ -25,9 +25,7 @@ public class DebugConsole extends WScrollPanel {
     public static StringBuilder debugText = new StringBuilder();
 
     static {
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            debugText = new StringBuilder();
-        });
+        Clientizen.SYNC_DISCONNECT.register(() -> debugText = new StringBuilder());
     }
 
     public static ConsoleTextArea textArea;
