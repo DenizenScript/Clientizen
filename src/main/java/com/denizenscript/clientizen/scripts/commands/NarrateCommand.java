@@ -14,7 +14,7 @@ public class NarrateCommand extends AbstractCommand {
     // @Syntax narrate [<text>]
     // @Required 1
     // @Maximum 1
-    // Prints some text into the client's chat area.
+    // @Short Prints some text into the client's chat area.
     // @Group client
     //
     // @Description
@@ -24,7 +24,7 @@ public class NarrateCommand extends AbstractCommand {
     // None
     //
     // @Usage
-    // # Use to narrate text.
+    // Use to narrate text.
     // - narrate "Hello World!"
     // -->
 
