@@ -51,4 +51,20 @@ public class Utilities {
         }
         return personsMap;
     }
+
+    public static String camelCaseToSnake(String camelCase) {
+        StringBuilder snakeCaseBuilder = new StringBuilder(camelCase.length());
+        snakeCaseBuilder.append(Character.toLowerCase(camelCase.charAt(0)));
+        for (int i = 1; i < camelCase.length(); i++) {
+            char character = camelCase.charAt(i);
+            if (Character.isUpperCase(character)) {
+                snakeCaseBuilder.append('_');
+                snakeCaseBuilder.append(Character.toLowerCase(character));
+            }
+            else {
+                snakeCaseBuilder.append(character);
+            }
+        }
+        return snakeCaseBuilder.toString();
+    }
 }
