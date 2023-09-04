@@ -5,10 +5,7 @@ import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 
 public class ScreenOpenCloseEvent extends ScriptEvent {
 
@@ -71,14 +68,6 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     public void handleScreenChange(Screen screen, Screen previousScreen, boolean open) {
         if (!enabled) {
             return;
-        }
-        // An InventoryScreen is opened which then opens a creative screen if needed, so ignore an InventoryScreen if a creative one will be opened
-        if (screen instanceof InventoryScreen && MinecraftClient.getInstance().interactionManager.hasCreativeInventory()) {
-            return;
-        }
-        // Since an inventory screen is opened internally but isn't actually visible, this doesn't count as having a previous screen
-        if (screen instanceof CreativeInventoryScreen && previousScreen instanceof InventoryScreen) {
-            previousScreen = null;
         }
         type = ScreenNameMapping.getScreenName(screen.getClass());
         previousType = previousScreen != null ? ScreenNameMapping.getScreenName(previousScreen.getClass()) : null;
