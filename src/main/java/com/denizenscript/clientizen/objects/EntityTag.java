@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.objects;
 
+import com.denizenscript.clientizen.access.LivingEntityMixinAccess;
 import com.denizenscript.clientizen.mixin.ClientWorldAccessor;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.objects.*;
@@ -177,6 +178,38 @@ public class EntityTag implements ObjectTag, Adjustable {
                 return new ElementTag(livingEntity.getHealth());
             }
             return null;
+        });
+
+        // <--[tag]
+        // @attribute <EntityTag.climbing_speed>
+        // @returns ElementTag(Decimal)
+        // @mechanism EntityTag.climbing_speed
+        // @description
+        // Returns a living entity's climbing speed.
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "climbing_speed", (attribute, object) -> {
+            return object.getEntity() instanceof LivingEntityMixinAccess mixinAccess ? new ElementTag(mixinAccess.clientizen$getClimbingSpeed()) : null;
+        });
+
+
+        // <--[mechanism]
+        // @object EntityTag
+        // @name climbing_speed
+        // @input ElementTag(Decimal)
+        // @description
+        // Sets a living entity's climbing speed.
+        // @tags
+        // <EntityTag.climbing_speed>
+        // -->
+        tagProcessor.registerMechanism("climbing_speed", false, ElementTag.class, (object, mechanism, input) -> {
+            if (!mechanism.requireDouble()) {
+                return;
+            }
+            if (!(object.getEntity() instanceof LivingEntityMixinAccess mixinAccess)) {
+                mechanism.echoError("Mechanism 'climbing_speed' is only valid for living entities.");
+                return;
+            }
+            mixinAccess.clientizen$setClimbingSpeed(input.asDouble());
         });
     }
 

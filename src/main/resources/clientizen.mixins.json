@@ -5,11 +5,13 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
+    "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldAccessor",
     "ClientWorldMixin",
     "EventKeyBindingMixin",
     "IntPropertyAccessor",
+    "LivingEntityMixin",
     "MinecraftClientMixin",
     "SneakingKeyBindingMixin",
     "StickyKeyBindingAccessor",

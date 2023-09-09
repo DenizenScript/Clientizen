@@ -13,6 +13,8 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     // @Events
     // screen opened|closed
     //
+    // @Group User Interface
+    //
     // @Switch type:<screen_type> to only process the event if the type of screen opened matches the specified matcher.
     // @Switch from:<screen_type> to only process the event if the screen was opened from a different screen and that screen's type matches the specified matcher.
     //
