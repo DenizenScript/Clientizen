@@ -21,6 +21,7 @@ import net.minecraft.util.hit.BlockHitResult;
 public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
 
     public static ClientTagBase instance;
+    public static double climbingSpeed = 0.2; // 0.2 is the vanilla default
 
     public ClientTagBase() {
         instance = this;
@@ -159,6 +160,33 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
         tagProcessor.registerTag(MapTag.class, "flag_map", (attribute, object) -> {
             return DenizenCore.serverFlagMap.doFlagMapTag(attribute);
         });
+
+        // <--[tag]
+        // @attribute <client.climbing_speed>
+        // @returns ElementTag(Decimal)
+        // @mechanism client.climbing_speed
+        // @description
+        // Returns the client's climbing speed.
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "climbing_speed", (attribute, object) -> {
+            return new ElementTag(climbingSpeed);
+        });
+
+        // <--[mechanism]
+        // @object client
+        // @name climbing_speed
+        // @input ElementTag(Decimal)
+        // @description
+        // Sets the client's climbing speed.
+        // @tags
+        // <client.climbing_speed>
+        // -->
+        tagProcessor.registerMechanism("climbing_speed", false, ElementTag.class, (object, mechanism, input) -> {
+            if (mechanism.requireDouble()) {
+                climbingSpeed = input.asDouble();
+            }
+        });
+
         // TODO this is temporary and is meant for testing only, should be replaced by a proper modifyblock command
         tagProcessor.registerMechanism("modifyblock", false, MaterialTag.class, (object, mechanism, input) -> {
             MinecraftClient client = MinecraftClient.getInstance();
