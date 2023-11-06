@@ -50,11 +50,7 @@ public class DebugConsole extends WScrollPanel {
         setScrollingHorizontally(TriState.FALSE);
         setBackgroundPainter(BackgroundPainter.createColorful(Color.BLACK.toRgb()));
         setSize(window.getScaledWidth(), window.getScaledHeight() - ClientizenDebugGUI.TAB_HEIGHT);
-
-        children.remove(verticalScrollBar);
-        verticalScrollBar = new CustomScrollBar(Axis.VERTICAL, 20);
-        verticalScrollBar.setParent(this);
-        children.add(verticalScrollBar);
+        verticalScrollBar.setScrollingSpeed(20);
 
         WPlainPanel heldPanel = (WPlainPanel) ((WScrollPanelAccessor) this).getWidget();
         heldPanel.setInsets(new Insets(5, 5, 0, 0));
@@ -71,22 +67,6 @@ public class DebugConsole extends WScrollPanel {
     public void validate(GuiDescription description) {
         super.validate(description);
         verticalScrollBar.setValue(verticalScrollBar.getMaxScrollValue());
-    }
-
-    public static class CustomScrollBar extends WScrollBar {
-
-        public int scrollSpeed;
-
-        public CustomScrollBar(Axis axis, int scrollSpeed) {
-            super(axis);
-            this.scrollSpeed = scrollSpeed;
-        }
-
-        @Override
-        public InputResult onMouseScroll(int x, int y, double horizontalAmount, double verticalAmount) {
-            setValue(getValue() + (int) (horizontalAmount - verticalAmount) * scrollSpeed);
-            return InputResult.PROCESSED;
-        }
     }
 
     public class ConsoleTextArea extends WText {
