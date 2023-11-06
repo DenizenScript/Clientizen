@@ -83,8 +83,8 @@ public class DebugConsole extends WScrollPanel {
         }
 
         @Override
-        public InputResult onMouseScroll(int x, int y, double amount) { // Same as super method, but uses a custom scrolling speed
-            setValue(getValue() + (int) -amount * scrollSpeed);
+        public InputResult onMouseScroll(int x, int y, double horizontalAmount, double verticalAmount) {
+            setValue(getValue() + (int) (horizontalAmount - verticalAmount) * scrollSpeed);
             return InputResult.PROCESSED;
         }
     }
