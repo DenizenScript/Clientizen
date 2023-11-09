@@ -150,6 +150,27 @@ public class GuiScriptContainer extends ScriptContainer {
                 }
                 yield tabPanel;
             }
+            case SCROLL_PANEL -> {
+                WWidget content = config.contains("content") ? parseGUIWidget(config.getConfigurationSection("content"), id + ".content", context) : null;
+                if (content == null) {
+                    Debug.echoError(context, "Invalid scroll panel '" + id + "': must have valid content.");
+                    yield null;
+                }
+                WScrollPanel scrollPanel = new WScrollPanel(content);
+                scrollPanel.setLocation(x, y);
+                scrollPanel.setSize(width, height);
+                BiConsumer<String, Consumer<TriState>> hasScrollSetter = (key, setter) -> {
+                    TriState triState = ElementTag.asEnum(TriState.class, getTaggedString(config, key, context));
+                    if (triState == null) {
+                        Debug.echoError(context, "Invalid scroll panel '" + id + '.' + key + "' value: must be TRUE, DEFAULT, or FALSE.");
+                        return;
+                    }
+                    setter.accept(triState);
+                };
+                hasScrollSetter.accept("vertical_scroll", scrollPanel::setScrollingVertically);
+                hasScrollSetter.accept("horizontal_scroll", scrollPanel::setScrollingHorizontally);
+                yield scrollPanel;
+            }
             default -> null;
         };
     }
