@@ -4,6 +4,8 @@ import com.denizenscript.clientizen.events.ClientizenGuiButtonPressedScriptEvent
 import com.denizenscript.clientizen.objects.ItemTag;
 import com.denizenscript.clientizen.util.impl.ClientizenScriptEntryData;
 import com.denizenscript.denizencore.objects.ArgumentHelper;
+import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.ColorTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptBuilder;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
@@ -13,6 +15,7 @@ import com.denizenscript.denizencore.tags.TagManager;
 import com.denizenscript.denizencore.utilities.ScriptUtilities;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -44,6 +47,19 @@ public class GuiScriptContainer extends ScriptContainer {
 
     public String getTaggedString(YamlConfiguration config, String path, TagContext context) {
         return getTaggedString(config, path, null, context);
+    }
+
+    public <T extends ObjectTag> T getTaggedObject(Class<T> objectType, YamlConfiguration config, String id, String path, TagContext context) {
+        String str = config.getString(path);
+        if (str == null) {
+            return null;
+        }
+        T converted = TagManager.tagObject(str, context).asType(objectType, context);
+        if (converted == null) {
+            Debug.echoError(context, "Invalid " + DebugInternals.getClassNameOpti(objectType) + " specified at '" + id + '.' + path + "': " + str + '.');
+            return null;
+        }
+        return converted;
     }
 
     public String getTaggedString(YamlConfiguration config, String path, String defaultValue, TagContext context) {
@@ -200,7 +216,21 @@ public class GuiScriptContainer extends ScriptContainer {
                 });
                 yield button;
             }
-            default -> null;
+            case TEXT -> {
+                String textContent = getTaggedString(config, "text", context);
+                if (textContent == null) {
+                    Debug.echoError(context, "Invalid text element '" + id + "': must have text.");
+                    yield null;
+                }
+                WText text = new WText(Text.literal(textContent));
+                text.setLocation(x, y);
+                text.setSize(width, height);
+                ColorTag color = getTaggedObject(ColorTag.class, config, id, "color", context);
+                if (color != null) {
+                    text.setColor(color.asRGB());
+                }
+                yield text;
+            }
         };
     }
 
@@ -208,19 +238,19 @@ public class GuiScriptContainer extends ScriptContainer {
         if (config == null) {
             return null;
         }
-        ItemTag item = ItemTag.valueOf(config.getString("item"), context);
+        ItemTag item = getTaggedObject(ItemTag.class, config, id, "item", context);
         if (item != null) {
             return new ItemIcon(item.getStack());
         }
         String texturePath = getTaggedString(config, "texture", context);
         if (texturePath == null) {
-            Debug.echoError("Invalid icon '" + id + "': must have a valid item or texture.");
+            Debug.echoError(context, "Invalid icon '" + id + "': must have a valid item or texture.");
             return null;
         }
         // TODO: sprite sheet support
         Identifier texture = Identifier.tryParse(texturePath);
         if (texture == null) {
-            Debug.echoError("Invalid icon '" + id + "': invalid texture path specified.");
+            Debug.echoError(context, "Invalid icon '" + id + "': invalid texture path specified.");
             return null;
         }
         return new TextureIcon(texture);
