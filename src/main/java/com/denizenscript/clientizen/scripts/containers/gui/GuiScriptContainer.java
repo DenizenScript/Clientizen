@@ -19,6 +19,7 @@ import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
@@ -49,6 +50,29 @@ public class GuiScriptContainer extends ScriptContainer {
         return getTaggedString(config, path, null, context);
     }
 
+    public String getTaggedString(YamlConfiguration config, String path, String defaultValue, TagContext context) {
+        String str = config.getString(path);
+        return str != null ? TagManager.tag(str, context) : defaultValue;
+    }
+
+    public Integer getTaggedInt(YamlConfiguration config, String id, String path, TagContext context) {
+        return getTaggedInt(config, id, path, null, context);
+    }
+
+    public Integer getTaggedInt(YamlConfiguration config, String id, String path, Integer defaultValue, TagContext context) {
+        String str = getTaggedString(config, path, context);
+        if (str == null) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(str);
+        }
+        catch (NumberFormatException numberFormatException) {
+            Debug.echoError("Invalid number at '" + id + '.' + path + "': " + str + '.');
+            return null;
+        }
+    }
+
     public <T extends ObjectTag> T getTaggedObject(Class<T> objectType, YamlConfiguration config, String id, String path, TagContext context) {
         String str = config.getString(path);
         if (str == null) {
@@ -60,11 +84,6 @@ public class GuiScriptContainer extends ScriptContainer {
             return null;
         }
         return converted;
-    }
-
-    public String getTaggedString(YamlConfiguration config, String path, String defaultValue, TagContext context) {
-        String str = config.getString(path);
-        return str != null ? TagManager.tag(str, context) : defaultValue;
     }
 
     public List<String> getTaggedStringList(YamlConfiguration config, String path, TagContext context) {
@@ -124,6 +143,10 @@ public class GuiScriptContainer extends ScriptContainer {
                 WPlainPanel plainPanel = new WPlainPanel();
                 plainPanel.setLocation(x, y);
                 plainPanel.setSize(width, height);
+                Insets insets = parseInsets(config.getConfigurationSection("insets"), id + ".insets", context);
+                if (insets != null) {
+                    plainPanel.setInsets(insets);
+                }
                 YamlConfiguration children = config.getConfigurationSection("children");
                 if (children == null) {
                     yield plainPanel;
@@ -254,5 +277,24 @@ public class GuiScriptContainer extends ScriptContainer {
             return null;
         }
         return new TextureIcon(texture);
+    }
+
+    public Insets parseInsets(YamlConfiguration config, String id, TagContext context) {
+        if (config == null) {
+            return null;
+        }
+        Integer all = getTaggedInt(config, id, "all", context);
+        if (all != null) {
+            return new Insets(all);
+        }
+        Integer top = getTaggedInt(config, id, "top", context),
+                left = getTaggedInt(config, id, "left", context),
+                bottom = getTaggedInt(config, id, "bottom", context),
+                right = getTaggedInt(config, id, "right", context);
+        if (top == null || left == null || bottom == null || right == null) {
+            Debug.echoError(context, "Invalid insets at '" + id + "': must have top/left/bottom/right values.");
+            return null;
+        }
+        return new Insets(top, left, bottom, right);
     }
 }
