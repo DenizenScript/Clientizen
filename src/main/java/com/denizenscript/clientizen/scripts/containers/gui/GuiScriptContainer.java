@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.scripts.containers.gui;
 
 import com.denizenscript.clientizen.events.ClientizenGuiButtonPressedScriptEvent;
 import com.denizenscript.clientizen.objects.ItemTag;
+import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.clientizen.util.impl.ClientizenScriptEntryData;
 import com.denizenscript.denizencore.objects.ArgumentHelper;
 import com.denizenscript.denizencore.objects.ObjectTag;
@@ -10,6 +11,7 @@ import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptBuilder;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
+import com.denizenscript.denizencore.tags.ParseableTag;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.tags.TagManager;
 import com.denizenscript.denizencore.utilities.ScriptUtilities;
@@ -20,6 +22,7 @@ import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
@@ -39,7 +42,9 @@ public class GuiScriptContainer extends ScriptContainer {
         TAB_PANEL,
         SCROLL_PANEL,
         BUTTON,
-        TEXT
+        TEXT,
+        LABEL,
+        DYNAMIC_LABEL
     }
 
     public GuiScriptContainer(YamlConfiguration configurationSection, String scriptContainerName) {
@@ -253,6 +258,50 @@ public class GuiScriptContainer extends ScriptContainer {
                     text.setColor(color.asRGB());
                 }
                 yield text;
+            }
+            case LABEL -> {
+                String text = getTaggedString(config, "text", context);
+                if (text == null) {
+                    Debug.echoError(context, "Invalid label element '" + id + "': must have text.");
+                    yield null;
+                }
+                WLabel label = new WLabel(Text.literal(text));
+                label.setLocation(x, y);
+                label.setSize(width, height);
+                VerticalAlignment verticalAlignment = getEnum(VerticalAlignment.class, config, id, "vertical_alignment", context);
+                if (verticalAlignment != null) {
+                    label.setVerticalAlignment(verticalAlignment);
+                }
+                HorizontalAlignment horizontalAlignment = getEnum(HorizontalAlignment.class, config, id, "horizontal_alignment", context);
+                if (horizontalAlignment != null) {
+                    label.setHorizontalAlignment(horizontalAlignment);
+                }
+                ColorTag color = getTaggedObject(ColorTag.class, config, id, "color", context);
+                if (color != null) {
+                    label.setColor(color.asRGB());
+                }
+                yield label;
+            }
+            case DYNAMIC_LABEL -> {
+                String text = config.getString("text");
+                if (text == null) {
+                    Debug.echoError(context, "Invalid dynamic label element '" + id + "': must have text.");
+                    yield null;
+                }
+                TagContext contextFromScript = new ClientizenTagContext(this);
+                ParseableTag parseableTag = TagManager.parseTextToTag(text, contextFromScript);
+                WDynamicLabel dynamicLabel = new WDynamicLabel(() -> parseableTag.parse(contextFromScript).toString());
+                dynamicLabel.setLocation(x, y);
+                dynamicLabel.setSize(width, height);
+                HorizontalAlignment horizontalAlignment = getEnum(HorizontalAlignment.class, config, id, "horizontal_alignment", context);
+                if (horizontalAlignment != null) {
+                    dynamicLabel.setAlignment(horizontalAlignment);
+                }
+                ColorTag color = getTaggedObject(ColorTag.class, config, id, "color", context);
+                if (color != null) {
+                    dynamicLabel.setColor(color.asRGB(), WDynamicLabel.DEFAULT_DARKMODE_TEXT_COLOR);
+                }
+                yield dynamicLabel;
             }
         };
     }
