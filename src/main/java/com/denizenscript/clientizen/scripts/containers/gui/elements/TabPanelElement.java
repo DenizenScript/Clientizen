@@ -26,7 +26,7 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
                 Debug.echoError(context, "Invalid tab '" + tabId + "' in tab panel '" + pathToElement + "': no options/config found.");
                 continue;
             }
-            WWidget content = container.parseGUIWidget(tabConfig.getConfigurationSection("content"), pathToElement + ".tabs." + tabId + ".content", context);
+            WWidget content = container.parseGUIWidget(tabConfig, "content", pathToElement + ".tabs." + tabId, context);
             if (content == null) {
                 Debug.echoError(context, "Invalid tab '" + tabId + "' in tab panel '" + pathToElement + "': must have valid content.");
                 continue;

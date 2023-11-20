@@ -23,12 +23,7 @@ public class PlainPanelElement implements GuiScriptContainer.GuiElementParser {
             return plainPanel;
         }
         for (StringHolder childIdHolder : children.contents.keySet()) {
-            YamlConfiguration childConfig = children.getConfigurationSection(childIdHolder.str);
-            if (childConfig == null) {
-                Debug.echoError("Invalid GUI element '" + childIdHolder + "' in plain panel '" + pathToElement + "': no options/config found.");
-                continue;
-            }
-            WWidget child = container.parseGUIWidget(childConfig, pathToElement + ".children." + childIdHolder, context);
+            WWidget child = container.parseGUIWidget(children, childIdHolder.str, pathToElement + ".children", context);
             if (child != null) {
                 plainPanel.add(child, child.getX(), child.getY(), child.getWidth(), child.getHeight());
             }

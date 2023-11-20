@@ -24,7 +24,7 @@ public class GuiCommand extends AbstractCommand implements Holdable {
     public static void autoExecute(ScriptEntry scriptEntry,
                                    @ArgLinear @ArgName("script") ScriptTag script) {
         if (script.getContainer() instanceof GuiScriptContainer guiScriptContainer) {
-            WPanel rootPanel = guiScriptContainer.createGUI(scriptEntry.getContext());
+            WPanel rootPanel = guiScriptContainer.createGUIRoot(scriptEntry.getContext());
             MinecraftClient client = MinecraftClient.getInstance();
             client.send(() -> client.setScreen(new GuiScriptScreen(new GuiScriptGuiDescription(rootPanel))));
         }

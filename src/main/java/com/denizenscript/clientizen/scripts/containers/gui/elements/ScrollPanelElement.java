@@ -12,7 +12,7 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
-        WWidget content = container.parseGUIWidget(config.getConfigurationSection("content"), pathToElement + ".content", context);
+        WWidget content = container.parseGUIWidget(config, "content", pathToElement, context);
         if (content == null) {
             Debug.echoError(context, "Invalid scroll panel '" + pathToElement + "': must have valid content.");
             return null;
