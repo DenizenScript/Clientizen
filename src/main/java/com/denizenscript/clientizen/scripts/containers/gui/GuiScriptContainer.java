@@ -5,6 +5,7 @@ import com.denizenscript.clientizen.scripts.containers.gui.elements.*;
 import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.core.ListTag;
 import com.denizenscript.denizencore.scripts.ScriptBuilder;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
@@ -37,6 +38,7 @@ public class GuiScriptContainer extends ScriptContainer {
         registerGuiElement("text", new TextElement());
         registerGuiElement("label", new LabelElement());
         registerGuiElement("dynamic_label", new DynamicLabelElement());
+        registerGuiElement("item", new ItemElement());
     }
 
     private static final Map<String, GuiElementParser> guiElementParsers;
@@ -94,6 +96,18 @@ public class GuiScriptContainer extends ScriptContainer {
             return null;
         }
         return converted;
+    }
+
+    public static <T extends ObjectTag> List<T> getTaggedObjectList(Class<T> objectType, YamlConfiguration config, String pathToList, String path, TagContext context) {
+        Object object = config.get(path);
+        if (object == null) {
+            return null;
+        }
+        ListTag list = CoreUtilities.objectToTagForm(object, context, true, true, true).asType(ListTag.class, context);
+        if (list == null) {
+            return null;
+        }
+        return list.filter(objectType, context);
     }
 
     public static List<String> getTaggedStringList(YamlConfiguration config, String path, TagContext context) {
