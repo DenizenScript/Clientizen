@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.scripts.containers.gui;
 
 import com.denizenscript.clientizen.objects.ItemTag;
 import com.denizenscript.clientizen.scripts.containers.gui.elements.*;
+import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptBuilder;
@@ -40,7 +41,9 @@ public class GuiScriptContainer extends ScriptContainer {
     private static final Map<String, GuiElementParser> guiElementParsers;
 
     public static void registerGuiElement(String typeName, GuiElementParser parser) {
-        guiElementParsers.put(typeName, parser);
+        if (guiElementParsers.putIfAbsent(typeName, parser) != null) {
+            throw new InvalidArgumentsRuntimeException("A GUI element with type '" + typeName + "' is already registered.");
+        }
     }
 
     public GuiScriptContainer(YamlConfiguration configurationSection, String scriptContainerName) {

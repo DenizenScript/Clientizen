@@ -3,7 +3,6 @@ package com.denizenscript.clientizen.scripts.containers.gui.elements;
 import com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
-import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
