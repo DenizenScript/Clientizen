@@ -18,6 +18,7 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
             return null;
         }
         WScrollPanel scrollPanel = new WScrollPanel(content);
+        GuiScriptContainer.applyInsets(config, pathToElement, scrollPanel::setInsets, context);
         TriState verticalScroll = GuiScriptContainer.getEnum(TriState.class, config, pathToElement, "vertical_scroll", context);
         TriState horizontalScroll = GuiScriptContainer.getEnum(TriState.class, config, pathToElement, "horizontal_scroll", context);
         if (verticalScroll != null) {

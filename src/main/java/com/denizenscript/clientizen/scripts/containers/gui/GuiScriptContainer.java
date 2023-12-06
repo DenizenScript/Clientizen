@@ -23,6 +23,7 @@ import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 import net.minecraft.util.Identifier;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GuiScriptContainer extends ScriptContainer {
@@ -174,6 +175,13 @@ public class GuiScriptContainer extends ScriptContainer {
         widget.setLocation(x, y);
         widget.setSize(width, height);
         return widget;
+    }
+
+    public static void applyInsets(YamlConfiguration config, String pathToElement, Consumer<Insets> setter, TagContext context) {
+        Insets insets = parseInsets(config.getConfigurationSection("insets"), pathToElement + ".insets", context);
+        if (insets != null) {
+            setter.accept(insets);
+        }
     }
 
     public static Icon parseIcon(YamlConfiguration config, String id, TagContext context) {
