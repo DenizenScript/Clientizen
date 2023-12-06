@@ -19,18 +19,18 @@ public class ButtonElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
-        String label = config.getString("label");
+        String label = GuiScriptContainer.getTaggedString(config, "label", context);
         Icon icon = GuiScriptContainer.parseIcon(config.getConfigurationSection("icon"), pathToElement + ".icon", context);
         WButton button = new WButton(icon, label != null ? Text.literal(label) : null);
-        HorizontalAlignment textAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, pathToElement, "text_alignment", context);
-        if (textAlignment != null) {
-            button.setAlignment(textAlignment);
+        HorizontalAlignment horizontalTextAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, pathToElement, "horizontal_text_alignment", context);
+        if (horizontalTextAlignment != null) {
+            button.setAlignment(horizontalTextAlignment);
         }
-        List<ScriptEntry> onClick = container.getEntries(new ClientizenScriptEntryData(), pathToElement.substring(pathToElement.indexOf('.') + 1) + ".on_click");
+        final List<ScriptEntry> onClick = container.getEntries(new ClientizenScriptEntryData(), pathToElement.substring(container.getName().length() + 1) + ".on_click");
+        final String queueName = onClick != null ? pathToElement.substring(pathToElement.lastIndexOf('.') + 1) + "_pressed" : null;
         button.setOnClick(() -> {
             if (onClick != null) {
-                String buttonName = pathToElement.substring(pathToElement.lastIndexOf('.') + 1);
-                ScriptUtilities.createAndStartQueueArbitrary(buttonName + "_pressed", onClick, null, null, null);
+                ScriptUtilities.createAndStartQueueArbitrary(queueName, onClick, null, null, null);
             }
             ClientizenGuiButtonPressedScriptEvent.instance.handleButtonPress(pathToElement);
         });

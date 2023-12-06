@@ -32,6 +32,7 @@ public class ClientizenGuiButtonPressedScriptEvent extends ScriptEvent {
         };
     }
 
+    // TODO: proper identification system for UI elements
     public void handleButtonPress(String id) {
         if (!enabled) {
             return;
