@@ -18,17 +18,17 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String text = config.getString("text");
         if (text == null) {
-            Debug.echoError(context, "Invalid dynamic label element '" + pathToElement + "': must have text.");
+            Debug.echoError("must have text.");
             return null;
         }
         TagContext contextFromScript = new ClientizenTagContext(container);
         ParseableTag parseableTag = TagManager.parseTextToTag(text, contextFromScript);
         WDynamicLabel dynamicLabel = new WDynamicLabel(() -> parseableTag.parse(contextFromScript).toString());
-        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, pathToElement, "horizontal_alignment", context);
+        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
             dynamicLabel.setAlignment(horizontalAlignment);
         }
-        ColorTag color = GuiScriptContainer.getTaggedObject(ColorTag.class, config, pathToElement, "color", context);
+        ColorTag color = GuiScriptContainer.getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
             dynamicLabel.setColor(color.asRGB(), WDynamicLabel.DEFAULT_DARKMODE_TEXT_COLOR);
         }

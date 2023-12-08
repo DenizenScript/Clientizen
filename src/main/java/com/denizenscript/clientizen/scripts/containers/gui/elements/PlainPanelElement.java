@@ -12,7 +12,7 @@ public class PlainPanelElement implements GuiScriptContainer.GuiElementParser {
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WPlainPanel plainPanel = new WPlainPanel();
-        GuiScriptContainer.applyInsets(config, pathToElement, plainPanel::setInsets, context);
+        GuiScriptContainer.applyInsets(config, plainPanel::setInsets, context);
         YamlConfiguration children = config.getConfigurationSection("children");
         if (children == null) {
             return plainPanel;

@@ -15,11 +15,11 @@ public class TextElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String textContent = GuiScriptContainer.getTaggedString(config, "text", context);
         if (textContent == null) {
-            Debug.echoError(context, "Invalid text element '" + pathToElement + "': must have text.");
+            Debug.echoError("must have text.");
             return null;
         }
         WText text = new WText(Text.literal(textContent));
-        ColorTag color = GuiScriptContainer.getTaggedObject(ColorTag.class, config, pathToElement, "color", context);
+        ColorTag color = GuiScriptContainer.getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
             text.setColor(color.asRGB());
         }

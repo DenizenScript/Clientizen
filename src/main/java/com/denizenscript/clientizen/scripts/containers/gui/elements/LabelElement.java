@@ -17,19 +17,19 @@ public class LabelElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String text = GuiScriptContainer.getTaggedString(config, "text", context);
         if (text == null) {
-            Debug.echoError(context, "Invalid label element '" + pathToElement + "': must have text.");
+            Debug.echoError("must have text.");
             return null;
         }
         WLabel label = new WLabel(Text.literal(text));
-        VerticalAlignment verticalAlignment = GuiScriptContainer.getEnum(VerticalAlignment.class, config, pathToElement, "vertical_alignment", context);
+        VerticalAlignment verticalAlignment = GuiScriptContainer.getEnum(VerticalAlignment.class, config, "vertical_alignment", context);
         if (verticalAlignment != null) {
             label.setVerticalAlignment(verticalAlignment);
         }
-        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, pathToElement, "horizontal_alignment", context);
+        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
             label.setHorizontalAlignment(horizontalAlignment);
         }
-        ColorTag color = GuiScriptContainer.getTaggedObject(ColorTag.class, config, pathToElement, "color", context);
+        ColorTag color = GuiScriptContainer.getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
             label.setColor(color.asRGB());
         }

@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.scripts.containers.gui;
 
 import com.denizenscript.clientizen.objects.ItemTag;
 import com.denizenscript.clientizen.scripts.containers.gui.elements.*;
+import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -25,6 +26,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class GuiScriptContainer extends ScriptContainer {
@@ -67,11 +69,11 @@ public class GuiScriptContainer extends ScriptContainer {
         return str != null ? TagManager.tag(str, context) : defaultValue;
     }
 
-    public static Integer getTaggedInt(YamlConfiguration config, String pathToInt, String path, TagContext context) {
-        return getTaggedInt(config, pathToInt, path, null, context);
+    public static Integer getTaggedInt(YamlConfiguration config, String path, TagContext context) {
+        return getTaggedInt(config, path, null, context);
     }
 
-    public static Integer getTaggedInt(YamlConfiguration config, String pathToInt, String path, Integer defaultValue, TagContext context) {
+    public static Integer getTaggedInt(YamlConfiguration config, String path, Integer defaultValue, TagContext context) {
         String str = getTaggedString(config, path, context);
         if (str == null) {
             return defaultValue;
@@ -80,25 +82,25 @@ public class GuiScriptContainer extends ScriptContainer {
             return Integer.parseInt(str);
         }
         catch (NumberFormatException numberFormatException) {
-            Debug.echoError("Invalid number at '" + pathToInt + '.' + path + "': " + str + '.');
+            Debug.echoError("Invalid number specified under '" + path + "': " + str + '.');
             return null;
         }
     }
 
-    public static <T extends ObjectTag> T getTaggedObject(Class<T> objectType, YamlConfiguration config, String pathToObject, String path, TagContext context) {
+    public static <T extends ObjectTag> T getTaggedObject(Class<T> objectType, YamlConfiguration config, String path, TagContext context) {
         String str = config.getString(path);
         if (str == null) {
             return null;
         }
         T converted = TagManager.tagObject(str, context).asType(objectType, context);
         if (converted == null) {
-            Debug.echoError(context, "Invalid " + DebugInternals.getClassNameOpti(objectType) + " specified at '" + pathToObject + '.' + path + "': " + str + '.');
+            Debug.echoError("Invalid " + DebugInternals.getClassNameOpti(objectType) + " specified under '" + path + "': " + str + '.');
             return null;
         }
         return converted;
     }
 
-    public static <T extends ObjectTag> List<T> getTaggedObjectList(Class<T> objectType, YamlConfiguration config, String pathToList, String path, TagContext context) {
+    public static <T extends ObjectTag> List<T> getTaggedObjectList(Class<T> objectType, YamlConfiguration config, String path, TagContext context) {
         Object object = config.get(path);
         if (object == null) {
             return null;
@@ -122,29 +124,46 @@ public class GuiScriptContainer extends ScriptContainer {
         return taggedList;
     }
 
-    public static <T extends Enum<T>> T getEnum(Class<T> enumClass, YamlConfiguration config, String pathToEnum, String path, TagContext context) {
+    public static <T extends Enum<T>> T getEnum(Class<T> enumClass, YamlConfiguration config, String path, TagContext context) {
         String str = getTaggedString(config, path, context);
         if (str == null) {
             return null;
         }
         T converted = ElementTag.asEnum(enumClass, str);
         if (converted == null) {
-            Debug.echoError(context, "Invalid '" + pathToEnum + '.' + path + "' value: must be one of " + Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).collect(Collectors.joining(", ")) + '.');
+            Debug.echoError("Invalid '" + path + "' value '" + str + "': must be one of " + Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).collect(Collectors.joining(", ")) + '.');
             return null;
         }
         return converted;
     }
 
-    public WPanel createGUIRoot(TagContext context) {
-        if (!(createGUI(context) instanceof WPanel rootPanel)) {
-            Debug.echoError(context, "Invalid GUI script '" + getName() + "': must have a panel as the root element.");
+    public static class ContextStringSupplier implements Supplier<String> {
+
+        public String context;
+
+        @Override
+        public String get() {
+            return context;
+        }
+    }
+
+    public static ContextStringSupplier currentContextSupplier = null;
+
+    public WPanel createGUIRoot() {
+        currentContextSupplier = new ContextStringSupplier();
+        Debug.pushErrorContext(currentContextSupplier);
+        WWidget created = createGUI();
+        Debug.popErrorContext();
+        currentContextSupplier = null;
+        if (!(created instanceof WPanel rootPanel)) {
+            Debug.echoError("Invalid GUI script '" + getOriginalName() + "': must have a panel as the root element.");
             return null;
         }
         return rootPanel;
     }
 
-    public WWidget createGUI(TagContext context) {
-        return parseGUIWidget(getContents(), "", getName(), context);
+    public WWidget createGUI() {
+        return parseGUIWidget(getContents(), "", getOriginalName(), new ClientizenTagContext(this));
     }
 
     public WWidget parseGUIWidget(YamlConfiguration config, String key, String pathToWidgetConfig, TagContext context) {
@@ -160,7 +179,7 @@ public class GuiScriptContainer extends ScriptContainer {
                 Debug.echoError("Invalid GUI script container specified for GUI element '" + pathToWidget + "': " + guiScriptName + '.');
                 return null;
             }
-            return guiScript.createGUI(context);
+            return guiScript.createGUI();
         }
         String uiType = widgetConfig.getString("ui_type");
         if (uiType == null) {
@@ -172,17 +191,20 @@ public class GuiScriptContainer extends ScriptContainer {
             Debug.echoError("Invalid type specified for GUI element '" + pathToWidget + "': " + uiType + '.');
             return null;
         }
-        Integer width = getTaggedInt(widgetConfig, pathToWidget, "width", 18, context), height = getTaggedInt(widgetConfig, pathToWidget, "height", 18, context);
+        Integer width = getTaggedInt(widgetConfig, "width", 18, context), height = getTaggedInt(widgetConfig, "height", 18, context);
         if (width == null || height == null) {
-            Debug.echoError(context, "Invalid GUI element '" + pathToWidget + "': must have valid width and height.");
+            Debug.echoError("Invalid GUI element '" + pathToWidget + "': must have valid width and height.");
             return null;
         }
-        Integer x = getTaggedInt(widgetConfig, pathToWidget, "x", 0, context), y = getTaggedInt(widgetConfig, pathToWidget, "y", 0, context);
+        Integer x = getTaggedInt(widgetConfig, "x", 0, context), y = getTaggedInt(widgetConfig, "y", 0, context);
         if (x == null || y == null) {
-            Debug.echoError(context, "Invalid GUI element '" + pathToWidget + "': must have valid x and y values.");
+            Debug.echoError("Invalid GUI element '" + pathToWidget + "': must have valid x and y values.");
             return null;
         }
+        String previousContext = currentContextSupplier.context;
+        currentContextSupplier.context = "while parsing GUI element '<A>" + pathToWidget + "<LR>' of type '<A>" + uiType + "<LR>'";
         WWidget widget = parser.parse(this, widgetConfig, pathToWidget, context);
+        currentContextSupplier.context = previousContext;
         if (widget == null) {
             return null;
         }
@@ -191,49 +213,49 @@ public class GuiScriptContainer extends ScriptContainer {
         return widget;
     }
 
-    public static void applyInsets(YamlConfiguration config, String pathToElement, Consumer<Insets> setter, TagContext context) {
-        Insets insets = parseInsets(config.getConfigurationSection("insets"), pathToElement + ".insets", context);
+    public static void applyInsets(YamlConfiguration config, Consumer<Insets> setter, TagContext context) {
+        Insets insets = parseInsets(config.getConfigurationSection("insets"), context);
         if (insets != null) {
             setter.accept(insets);
         }
     }
 
-    public static Icon parseIcon(YamlConfiguration config, String id, TagContext context) {
+    public static Icon parseIcon(YamlConfiguration config, TagContext context) {
         if (config == null) {
             return null;
         }
-        ItemTag item = getTaggedObject(ItemTag.class, config, id, "item", context);
+        ItemTag item = getTaggedObject(ItemTag.class, config, "item", context);
         if (item != null) {
             return new ItemIcon(item.getStack());
         }
         String texturePath = getTaggedString(config, "texture", context);
         if (texturePath == null) {
-            Debug.echoError(context, "Invalid icon '" + id + "': must have a valid item or texture.");
+            Debug.echoError("Invalid icon: must have a valid item or texture.");
             return null;
         }
         // TODO: sprite sheet support
         Identifier texture = Identifier.tryParse(texturePath);
         if (texture == null) {
-            Debug.echoError(context, "Invalid icon '" + id + "': invalid texture path specified.");
+            Debug.echoError("Invalid icon: invalid texture path specified.");
             return null;
         }
         return new TextureIcon(texture);
     }
 
-    public static Insets parseInsets(YamlConfiguration config, String id, TagContext context) {
+    public static Insets parseInsets(YamlConfiguration config, TagContext context) {
         if (config == null) {
             return null;
         }
-        Integer all = getTaggedInt(config, id, "all", context);
+        Integer all = getTaggedInt(config, "all", context);
         if (all != null) {
             return new Insets(all);
         }
-        Integer top = getTaggedInt(config, id, "top", context),
-                left = getTaggedInt(config, id, "left", context),
-                bottom = getTaggedInt(config, id, "bottom", context),
-                right = getTaggedInt(config, id, "right", context);
+        Integer top = getTaggedInt(config, "top", context),
+                left = getTaggedInt(config, "left", context),
+                bottom = getTaggedInt(config, "bottom", context),
+                right = getTaggedInt(config, "right", context);
         if (top == null || left == null || bottom == null || right == null) {
-            Debug.echoError(context, "Invalid insets at '" + id + "': must have top/left/bottom/right values.");
+            Debug.echoError("Invalid insets: must have top/left/bottom/right values.");
             return null;
         }
         return new Insets(top, left, bottom, right);

@@ -23,12 +23,12 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
             String tabId = tabIdHolder.str;
             YamlConfiguration tabConfig = tabsConfig.getConfigurationSection(tabId);
             if (tabConfig == null) {
-                Debug.echoError(context, "Invalid tab '" + tabId + "' in tab panel '" + pathToElement + "': no options/config found.");
+                Debug.echoError("Invalid tab '" + tabId + "': no options/config found.");
                 continue;
             }
             WWidget content = container.parseGUIWidget(tabConfig, "content", pathToElement + ".tabs." + tabId, context);
             if (content == null) {
-                Debug.echoError(context, "Invalid tab '" + tabId + "' in tab panel '" + pathToElement + "': must have valid content.");
+                Debug.echoError("Invalid tab '" + tabId + "': must have valid content.");
                 continue;
             }
             WTabPanel.Tab.Builder tabBuilder = new WTabPanel.Tab.Builder(content);
@@ -39,7 +39,7 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
                 tabBuilder.tooltip(GuiScriptContainer.getTaggedStringList(tabConfig, "tooltip", context).stream().map(Text::literal).toArray(Text[]::new));
             }
             if (tabConfig.contains("icon")) {
-                Icon icon = GuiScriptContainer.parseIcon(tabConfig.getConfigurationSection("icon"), tabId, context);
+                Icon icon = GuiScriptContainer.parseIcon(tabConfig.getConfigurationSection("icon"), context);
                 if (icon != null) {
                     tabBuilder.icon(icon);
                 }

@@ -15,13 +15,13 @@ public class ItemElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
-        List<ItemTag> items = GuiScriptContainer.getTaggedObjectList(ItemTag.class, config, pathToElement, "items", context);
+        List<ItemTag> items = GuiScriptContainer.getTaggedObjectList(ItemTag.class, config, "items", context);
         if (items == null) {
-            Debug.echoError("Invalid item element '" + pathToElement + "': must specify a list of items.");
+            Debug.echoError("must specify a list of items.");
             return null;
         }
         WItem item = new WItem(items.stream().map(ItemTag::getStack).toList());
-        DurationTag duration = GuiScriptContainer.getTaggedObject(DurationTag.class, config, pathToElement, "duration", context);
+        DurationTag duration = GuiScriptContainer.getTaggedObject(DurationTag.class, config, "duration", context);
         if (duration != null) {
             item.setDuration(duration.getTicksAsInt());
         }

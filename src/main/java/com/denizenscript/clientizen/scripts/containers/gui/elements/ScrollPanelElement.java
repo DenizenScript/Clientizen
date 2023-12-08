@@ -14,13 +14,13 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WWidget content = container.parseGUIWidget(config, "content", pathToElement, context);
         if (content == null) {
-            Debug.echoError(context, "Invalid scroll panel '" + pathToElement + "': must have valid content.");
+            Debug.echoError("must have valid content.");
             return null;
         }
         WScrollPanel scrollPanel = new WScrollPanel(content);
-        GuiScriptContainer.applyInsets(config, pathToElement, scrollPanel::setInsets, context);
-        TriState verticalScroll = GuiScriptContainer.getEnum(TriState.class, config, pathToElement, "vertical_scroll", context);
-        TriState horizontalScroll = GuiScriptContainer.getEnum(TriState.class, config, pathToElement, "horizontal_scroll", context);
+        GuiScriptContainer.applyInsets(config, scrollPanel::setInsets, context);
+        TriState verticalScroll = GuiScriptContainer.getEnum(TriState.class, config, "vertical_scroll", context);
+        TriState horizontalScroll = GuiScriptContainer.getEnum(TriState.class, config, "horizontal_scroll", context);
         if (verticalScroll != null) {
             scrollPanel.setScrollingVertically(verticalScroll);
         }
