@@ -27,6 +27,14 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
         if (horizontalScroll != null) {
             scrollPanel.setScrollingHorizontally(horizontalScroll);
         }
+        Integer verticalScrollSpeed = GuiScriptContainer.getTaggedInt(config, "vertical_scroll_speed", context);
+        Integer horizontalScrollSpeed = GuiScriptContainer.getTaggedInt(config, "horizontal_scroll_speed", context);
+        if (verticalScrollSpeed != null) {
+            scrollPanel.getVerticalScrollBar().setScrollingSpeed(verticalScrollSpeed);
+        }
+        if (horizontalScrollSpeed != null) {
+            scrollPanel.getHorizontalScrollBar().setScrollingSpeed(horizontalScrollSpeed);
+        }
         return scrollPanel;
     }
 }
