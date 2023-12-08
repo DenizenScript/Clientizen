@@ -1,7 +1,6 @@
 package com.denizenscript.clientizen.scripts.containers.gui.elements;
 
 import com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer;
-import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.objects.core.ColorTag;
 import com.denizenscript.denizencore.tags.ParseableTag;
 import com.denizenscript.denizencore.tags.TagContext;
@@ -21,9 +20,17 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
             Debug.echoError("must have text.");
             return null;
         }
-        TagContext contextFromScript = new ClientizenTagContext(container);
-        ParseableTag parseableTag = TagManager.parseTextToTag(text, contextFromScript);
-        WDynamicLabel dynamicLabel = new WDynamicLabel(() -> parseableTag.parse(contextFromScript).toString());
+        final ParseableTag parseableTag = TagManager.parseTextToTag(text, context);
+        final String errorContext = "while parsing text for dynamic label '<A>" + pathToElement + "<LR>'";
+        WDynamicLabel dynamicLabel = new WDynamicLabel(() -> {
+            Debug.pushErrorContext(errorContext);
+            try {
+                return parseableTag.parse(context).toString();
+            }
+            finally {
+                Debug.popErrorContext();
+            }
+        });
         HorizontalAlignment horizontalAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
             dynamicLabel.setAlignment(horizontalAlignment);
