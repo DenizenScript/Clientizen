@@ -41,6 +41,7 @@ public class GuiScriptContainer extends ScriptContainer {
         registerGuiElement("label", new LabelElement());
         registerGuiElement("dynamic_label", new DynamicLabelElement());
         registerGuiElement("item", new ItemElement());
+        registerGuiElement("text_field", new TextFieldElement());
     }
 
     private static final Map<String, GuiElementParser> guiElementParsers;
@@ -85,6 +86,19 @@ public class GuiScriptContainer extends ScriptContainer {
             Debug.echoError("Invalid number specified under '" + path + "': " + str + '.');
             return null;
         }
+    }
+
+    public static Boolean getTaggedBoolean(YamlConfiguration config, String path, TagContext context) {
+        String str = getTaggedString(config, path, context);
+        if (str == null) {
+            return null;
+        }
+        boolean equalsTrue = CoreUtilities.equalsIgnoreCase(str, "true");
+        if (!equalsTrue && !CoreUtilities.equalsIgnoreCase(str, "false")) {
+            Debug.echoError("Invalid boolean '" + str + "' specified under '" + path + "': must be either 'true' or 'false'.");
+            return null;
+        }
+        return equalsTrue;
     }
 
     public static <T extends ObjectTag> T getTaggedObject(Class<T> objectType, YamlConfiguration config, String path, TagContext context) {
