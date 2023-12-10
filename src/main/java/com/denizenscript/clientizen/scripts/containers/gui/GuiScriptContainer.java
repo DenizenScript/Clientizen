@@ -44,6 +44,8 @@ public class GuiScriptContainer extends ScriptContainer {
         registerGuiElement("dynamic_label", new DynamicLabelElement());
         registerGuiElement("item", new ItemElement());
         registerGuiElement("text_field", new TextFieldElement());
+        registerGuiElement("slider", new SliderElement());
+        registerGuiElement("labeled_slider", new LabeledSliderElement());
     }
 
     private static final Map<String, GuiElementParser> guiElementParsers;
