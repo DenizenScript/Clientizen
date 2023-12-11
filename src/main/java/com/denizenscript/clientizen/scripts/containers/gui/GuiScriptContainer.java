@@ -19,6 +19,7 @@ import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
@@ -46,6 +47,7 @@ public class GuiScriptContainer extends ScriptContainer {
         registerGuiElement("text_field", new TextFieldElement());
         registerGuiElement("slider", new SliderElement());
         registerGuiElement("labeled_slider", new LabeledSliderElement());
+        registerGuiElement("bar", new BarElement());
     }
 
     private static final Map<String, GuiElementParser> guiElementParsers;
@@ -238,28 +240,6 @@ public class GuiScriptContainer extends ScriptContainer {
         }
     }
 
-    public static Icon parseIcon(YamlConfiguration config, TagContext context) {
-        if (config == null) {
-            return null;
-        }
-        ItemTag item = getTaggedObject(ItemTag.class, config, "item", context);
-        if (item != null) {
-            return new ItemIcon(item.getStack());
-        }
-        String texturePath = getTaggedString(config, "texture", context);
-        if (texturePath == null) {
-            Debug.echoError("Invalid icon: must have a valid item or texture.");
-            return null;
-        }
-        // TODO: sprite sheet support
-        Identifier texture = Identifier.tryParse(texturePath);
-        if (texture == null) {
-            Debug.echoError("Invalid icon: invalid texture path specified.");
-            return null;
-        }
-        return new TextureIcon(texture);
-    }
-
     public static Insets parseInsets(YamlConfiguration config, TagContext context) {
         if (config == null) {
             return null;
@@ -277,5 +257,39 @@ public class GuiScriptContainer extends ScriptContainer {
             return null;
         }
         return new Insets(top, left, bottom, right);
+    }
+
+    public static Texture parseTexture(YamlConfiguration config, TagContext context) {
+        if (config == null) {
+            return null;
+        }
+        String texturePath = getTaggedString(config, "texture", context);
+        if (texturePath == null) {
+            Debug.echoError("Invalid texture: must specify a texture path.");
+            return null;
+        }
+        // TODO: sprite sheet support
+        Identifier texture = Identifier.tryParse(texturePath);
+        if (texture == null) {
+            Debug.echoError("Invalid texture: invalid texture path '" + texturePath + "' specified.");
+            return null;
+        }
+        return new Texture(texture);
+    }
+
+    public static Icon parseIcon(YamlConfiguration config, TagContext context) {
+        if (config == null) {
+            return null;
+        }
+        ItemTag item = getTaggedObject(ItemTag.class, config, "item", context);
+        if (item != null) {
+            return new ItemIcon(item.getStack());
+        }
+        Texture texture = parseTexture(config, context);
+        if (texture == null) {
+            Debug.echoError("Invalid icon: must have a valid item or texture.");
+            return null;
+        }
+        return new TextureIcon(texture);
     }
 }
