@@ -21,11 +21,11 @@ public class LabelElement implements GuiScriptContainer.GuiElementParser {
             return null;
         }
         WLabel label = new WLabel(Text.literal(text));
-        VerticalAlignment verticalAlignment = GuiScriptContainer.getEnum(VerticalAlignment.class, config, "vertical_alignment", context);
+        VerticalAlignment verticalAlignment = GuiScriptContainer.getTaggedEnum(VerticalAlignment.class, config, "vertical_alignment", context);
         if (verticalAlignment != null) {
             label.setVerticalAlignment(verticalAlignment);
         }
-        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
+        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getTaggedEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
             label.setHorizontalAlignment(horizontalAlignment);
         }

@@ -32,8 +32,9 @@ import java.util.stream.Collectors;
 
 public class GuiScriptContainer extends ScriptContainer {
 
+    private static final Map<String, GuiElementParser> guiElementParsers = new HashMap<>();
+
     static {
-        guiElementParsers = new HashMap<>();
         registerGuiElement("plain_panel", new PlainPanelElement());
         registerGuiElement("tab_panel", new TabPanelElement());
         registerGuiElement("scroll_panel", new ScrollPanelElement());
@@ -49,8 +50,6 @@ public class GuiScriptContainer extends ScriptContainer {
         registerGuiElement("labeled_slider", new LabeledSliderElement());
         registerGuiElement("bar", new BarElement());
     }
-
-    private static final Map<String, GuiElementParser> guiElementParsers;
 
     public static void registerGuiElement(String typeName, GuiElementParser parser) {
         if (guiElementParsers.putIfAbsent(typeName, parser) != null) {
@@ -87,6 +86,24 @@ public class GuiScriptContainer extends ScriptContainer {
         }
         try {
             return Integer.parseInt(str);
+        }
+        catch (NumberFormatException numberFormatException) {
+            Debug.echoError("Invalid integer number specified under '" + path + "': " + str + '.');
+            return null;
+        }
+    }
+
+    public static Float getTaggedFloat(YamlConfiguration config, String path, TagContext context) {
+        return getTaggedFloat(config, path, null, context);
+    }
+
+    public static Float getTaggedFloat(YamlConfiguration config, String path, Float defaultValue, TagContext context) {
+        String str = getTaggedString(config, path, context);
+        if (str == null) {
+            return defaultValue;
+        }
+        try {
+            return Float.parseFloat(str);
         }
         catch (NumberFormatException numberFormatException) {
             Debug.echoError("Invalid number specified under '" + path + "': " + str + '.');
@@ -144,10 +161,14 @@ public class GuiScriptContainer extends ScriptContainer {
         return taggedList;
     }
 
-    public static <T extends Enum<T>> T getEnum(Class<T> enumClass, YamlConfiguration config, String path, TagContext context) {
+    public static <T extends Enum<T>> T getTaggedEnum(Class<T> enumClass, YamlConfiguration config, String path, TagContext context) {
+        return getTaggedEnum(enumClass, null, config, path, context);
+    }
+
+    public static <T extends Enum<T>> T getTaggedEnum(Class<T> enumClass, T defaultValue, YamlConfiguration config, String path, TagContext context) {
         String str = getTaggedString(config, path, context);
         if (str == null) {
-            return null;
+            return defaultValue;
         }
         T converted = ElementTag.asEnum(enumClass, str);
         if (converted == null) {
@@ -259,22 +280,38 @@ public class GuiScriptContainer extends ScriptContainer {
         return new Insets(top, left, bottom, right);
     }
 
-    public static Texture parseTexture(YamlConfiguration config, TagContext context) {
+    public static Texture parseTexture(YamlConfiguration config, String path, TagContext context) {
         if (config == null) {
             return null;
         }
-        String texturePath = getTaggedString(config, "texture", context);
-        if (texturePath == null) {
+        YamlConfiguration textureConfig = config.getConfigurationSection(path);
+        String pathStr = textureConfig != null ? getTaggedString(textureConfig, "texture", context) : getTaggedString(config, path, context);
+        if (pathStr == null) {
             Debug.echoError("Invalid texture: must specify a texture path.");
             return null;
         }
-        // TODO: sprite sheet support
-        Identifier texture = Identifier.tryParse(texturePath);
-        if (texture == null) {
-            Debug.echoError("Invalid texture: invalid texture path '" + texturePath + "' specified.");
+        Identifier texturePath = Identifier.tryParse(pathStr);
+        if (texturePath == null) {
+            Debug.echoError("Invalid texture: invalid texture path '" + pathStr + "' specified.");
             return null;
         }
-        return new Texture(texture);
+        if (textureConfig == null) {
+            return new Texture(texturePath);
+        }
+        Texture.Type type = getTaggedEnum(Texture.Type.class, Texture.Type.STANDALONE, textureConfig, "type", context);
+        if (type == null) {
+            Debug.echoError("Invalid texture: invalid type specified.");
+            return null;
+        }
+        Float uStart = getTaggedFloat(config, "u_start", 0f, context),
+                vStart = getTaggedFloat(config, "v_start", 0f, context),
+                uEnd = getTaggedFloat(config, "u_end", 1f, context),
+                vEnd = getTaggedFloat(config, "v_end", 1f, context);
+        if (uStart == null || vStart == null || uEnd == null || vEnd == null) {
+            Debug.echoError("Invalid texture: invalid UV coordinates specified.");
+            return null;
+        }
+        return new Texture(texturePath, type, uStart, vStart, uEnd, vEnd);
     }
 
     public static Icon parseIcon(YamlConfiguration config, TagContext context) {
@@ -285,7 +322,7 @@ public class GuiScriptContainer extends ScriptContainer {
         if (item != null) {
             return new ItemIcon(item.getStack());
         }
-        Texture texture = parseTexture(config, context);
+        Texture texture = parseTexture(config, "", context);
         if (texture == null) {
             Debug.echoError("Invalid icon: must have a valid item or texture.");
             return null;

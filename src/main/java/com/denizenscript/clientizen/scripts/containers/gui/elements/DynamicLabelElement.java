@@ -31,7 +31,7 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
                 Debug.popErrorContext();
             }
         });
-        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
+        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getTaggedEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
             dynamicLabel.setAlignment(horizontalAlignment);
         }

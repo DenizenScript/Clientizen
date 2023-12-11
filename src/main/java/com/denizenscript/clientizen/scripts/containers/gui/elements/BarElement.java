@@ -18,13 +18,13 @@ public class BarElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
-        WBar.Direction direction = getEnum(WBar.Direction.class, config, "direction", context);
+        WBar.Direction direction = getTaggedEnum(WBar.Direction.class, config, "direction", context);
         if (direction == null) {
             Debug.echoError("must specify a direction.");
             return null;
         }
-        Texture backgroundTexture = parseTexture(config.getConfigurationSection("background"), context);
-        Texture barTexture = parseTexture(config.getConfigurationSection("bar"), context);
+        Texture backgroundTexture = parseTexture(config, "background", context);
+        Texture barTexture = parseTexture(config, "bar", context);
         WBar bar = new WBar(backgroundTexture, barTexture, VALUE_INDEX, MAX_VALUE_INDEX, direction);
         PropertyDelegate properties = new BarPropertyDelegate();
         bar.setProperties(properties);

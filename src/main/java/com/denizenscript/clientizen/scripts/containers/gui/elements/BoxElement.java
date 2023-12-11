@@ -17,7 +17,7 @@ public class BoxElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
-        Axis axis = getEnum(Axis.class, config, "axis", context);
+        Axis axis = getTaggedEnum(Axis.class, config, "axis", context);
         if (axis == null) {
             Debug.echoError("must specify an axis.");
             return null;
@@ -28,11 +28,11 @@ public class BoxElement implements GuiScriptContainer.GuiElementParser {
         if (spacing != null) {
             box.setSpacing(spacing);
         }
-        VerticalAlignment verticalAlignment = getEnum(VerticalAlignment.class, config, "vertical_alignment", context);
+        VerticalAlignment verticalAlignment = getTaggedEnum(VerticalAlignment.class, config, "vertical_alignment", context);
         if (verticalAlignment != null) {
             box.setVerticalAlignment(verticalAlignment);
         }
-        HorizontalAlignment horizontalAlignment = getEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
+        HorizontalAlignment horizontalAlignment = getTaggedEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
             box.setHorizontalAlignment(horizontalAlignment);
         }

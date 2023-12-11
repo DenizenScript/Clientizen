@@ -22,7 +22,7 @@ public class ButtonElement implements GuiScriptContainer.GuiElementParser {
         String label = GuiScriptContainer.getTaggedString(config, "label", context);
         Icon icon = GuiScriptContainer.parseIcon(config.getConfigurationSection("icon"), context);
         WButton button = new WButton(icon, label != null ? Text.literal(label) : null);
-        HorizontalAlignment horizontalTextAlignment = GuiScriptContainer.getEnum(HorizontalAlignment.class, config, "horizontal_text_alignment", context);
+        HorizontalAlignment horizontalTextAlignment = GuiScriptContainer.getTaggedEnum(HorizontalAlignment.class, config, "horizontal_text_alignment", context);
         if (horizontalTextAlignment != null) {
             button.setAlignment(horizontalTextAlignment);
         }
