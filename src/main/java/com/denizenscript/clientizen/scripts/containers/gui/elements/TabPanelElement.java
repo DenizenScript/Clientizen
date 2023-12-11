@@ -39,7 +39,7 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
                 tabBuilder.tooltip(GuiScriptContainer.getTaggedStringList(tabConfig, "tooltip", context).stream().map(Text::literal).toArray(Text[]::new));
             }
             if (tabConfig.contains("icon")) {
-                Icon icon = GuiScriptContainer.parseIcon(tabConfig.getConfigurationSection("icon"), context);
+                Icon icon = GuiScriptContainer.parseIcon(tabConfig, "icon", context);
                 if (icon != null) {
                     tabBuilder.icon(icon);
                 }

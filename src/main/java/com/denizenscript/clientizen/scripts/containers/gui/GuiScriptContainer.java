@@ -303,10 +303,10 @@ public class GuiScriptContainer extends ScriptContainer {
             Debug.echoError("Invalid texture: invalid type specified.");
             return null;
         }
-        Float uStart = getTaggedFloat(config, "u_start", 0f, context),
-                vStart = getTaggedFloat(config, "v_start", 0f, context),
-                uEnd = getTaggedFloat(config, "u_end", 1f, context),
-                vEnd = getTaggedFloat(config, "v_end", 1f, context);
+        Float uStart = getTaggedFloat(textureConfig, "u_start", 0f, context),
+                vStart = getTaggedFloat(textureConfig, "v_start", 0f, context),
+                uEnd = getTaggedFloat(textureConfig, "u_end", 1f, context),
+                vEnd = getTaggedFloat(textureConfig, "v_end", 1f, context);
         if (uStart == null || vStart == null || uEnd == null || vEnd == null) {
             Debug.echoError("Invalid texture: invalid UV coordinates specified.");
             return null;
@@ -314,15 +314,18 @@ public class GuiScriptContainer extends ScriptContainer {
         return new Texture(texturePath, type, uStart, vStart, uEnd, vEnd);
     }
 
-    public static Icon parseIcon(YamlConfiguration config, TagContext context) {
+    public static Icon parseIcon(YamlConfiguration config, String path, TagContext context) {
         if (config == null) {
             return null;
         }
-        ItemTag item = getTaggedObject(ItemTag.class, config, "item", context);
-        if (item != null) {
-            return new ItemIcon(item.getStack());
+        ObjectTag itemObject = getTaggedObject(ObjectTag.class, config, path, context);
+        if (itemObject != null) {
+            ItemTag item = itemObject.asType(ItemTag.class, CoreUtilities.noDebugContext);
+            if (item != null) {
+                return new ItemIcon(item.getStack());
+            }
         }
-        Texture texture = parseTexture(config, "", context);
+        Texture texture = parseTexture(config, path, context);
         if (texture == null) {
             Debug.echoError("Invalid icon: must have a valid item or texture.");
             return null;

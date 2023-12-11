@@ -20,7 +20,7 @@ public class ButtonElement implements GuiScriptContainer.GuiElementParser {
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String label = GuiScriptContainer.getTaggedString(config, "label", context);
-        Icon icon = GuiScriptContainer.parseIcon(config.getConfigurationSection("icon"), context);
+        Icon icon = GuiScriptContainer.parseIcon(config, "icon", context);
         WButton button = new WButton(icon, label != null ? Text.literal(label) : null);
         HorizontalAlignment horizontalTextAlignment = GuiScriptContainer.getTaggedEnum(HorizontalAlignment.class, config, "horizontal_text_alignment", context);
         if (horizontalTextAlignment != null) {
