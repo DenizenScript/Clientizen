@@ -49,6 +49,7 @@ public class GuiScriptContainer extends ScriptContainer {
         registerGuiElement("slider", new SliderElement());
         registerGuiElement("labeled_slider", new LabeledSliderElement());
         registerGuiElement("bar", new BarElement());
+        registerGuiElement("sprite", new SpriteElement());
     }
 
     public static void registerGuiElement(String typeName, GuiElementParser parser) {
