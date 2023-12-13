@@ -28,12 +28,12 @@ public class SpriteElement implements GuiScriptContainer.GuiElementParser {
         }
         DurationTag frameTime = getTaggedObject(DurationTag.class, config, "frame_time", context);
         if (frameTime == null) {
-            Debug.echoError("must specify a frame time.");
+            Debug.echoError("Must specify a frame time.");
             return null;
         }
         YamlConfiguration frames = config.getConfigurationSection("frames");
         if (frames == null) {
-            Debug.echoError("must specify a single texture or frames for an animation.");
+            Debug.echoError("Must specify a single texture or frames for an animation.");
             return null;
         }
         List<Texture> frameTextures = new ArrayList<>(frames.contents.size());

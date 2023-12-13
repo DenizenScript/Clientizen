@@ -19,7 +19,7 @@ public class BoxElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         Axis axis = getTaggedEnum(Axis.class, config, "axis", context);
         if (axis == null) {
-            Debug.echoError("must specify an axis.");
+            Debug.echoError("Must specify an axis.");
             return null;
         }
         WBox box = new WBox(axis);

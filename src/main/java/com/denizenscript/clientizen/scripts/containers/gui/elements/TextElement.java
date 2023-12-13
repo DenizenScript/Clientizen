@@ -17,7 +17,7 @@ public class TextElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String textContent = getTaggedString(config, "text", context);
         if (textContent == null) {
-            Debug.echoError("must have text.");
+            Debug.echoError("Must have text.");
             return null;
         }
         WText text = new WText(Text.literal(textContent));

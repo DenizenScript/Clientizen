@@ -16,7 +16,7 @@ public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         Integer gridSize = getTaggedInt(config, "grid_size", context);
         if (gridSize == null) {
-            Debug.echoError("must specify a grid size.");
+            Debug.echoError("Must specify a grid size.");
             return null;
         }
         WGridPanel gridPanel = new WGridPanel(gridSize);

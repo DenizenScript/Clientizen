@@ -19,7 +19,7 @@ public class LabelElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String text = getTaggedString(config, "text", context);
         if (text == null) {
-            Debug.echoError("must have text.");
+            Debug.echoError("Must have text.");
             return null;
         }
         WLabel label = new WLabel(Text.literal(text));

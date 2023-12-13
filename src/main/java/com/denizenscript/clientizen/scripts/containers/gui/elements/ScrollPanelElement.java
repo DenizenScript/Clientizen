@@ -16,7 +16,7 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WWidget content = container.parseGUIWidget(config, "content", pathToElement, context);
         if (content == null) {
-            Debug.echoError("must have valid content.");
+            Debug.echoError("Must have valid content.");
             return null;
         }
         WScrollPanel scrollPanel = new WScrollPanel(content);

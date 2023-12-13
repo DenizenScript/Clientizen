@@ -20,7 +20,7 @@ public class ItemElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         List<ItemTag> items = getTaggedObjectList(ItemTag.class, config, "items", context);
         if (items == null) {
-            Debug.echoError("must specify a list of items.");
+            Debug.echoError("Must specify a list of items.");
             return null;
         }
         WItem item = new WItem(items.stream().map(ItemTag::getStack).toList());

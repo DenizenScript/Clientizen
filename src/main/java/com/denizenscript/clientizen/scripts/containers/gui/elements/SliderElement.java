@@ -34,7 +34,7 @@ public class SliderElement implements GuiScriptContainer.GuiElementParser {
         Integer max = getTaggedInt(config, "max", context);
         Axis axis = getTaggedEnum(Axis.class, config, "axis", context);
         if (min == null || max == null || axis == null) {
-            Debug.echoError("must specify min and max values, and an axis.");
+            Debug.echoError("Must specify min and max values, and an axis.");
             return null;
         }
         T slider = constructor.apply(min, max, axis);

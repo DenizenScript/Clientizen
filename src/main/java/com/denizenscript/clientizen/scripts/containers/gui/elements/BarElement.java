@@ -20,7 +20,7 @@ public class BarElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WBar.Direction direction = getTaggedEnum(WBar.Direction.class, config, "direction", context);
         if (direction == null) {
-            Debug.echoError("must specify a direction.");
+            Debug.echoError("Must specify a direction.");
             return null;
         }
         Texture backgroundTexture = parseTexture(config, "background", context);

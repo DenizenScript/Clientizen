@@ -194,7 +194,13 @@ public class GuiScriptContainer extends ScriptContainer {
 
     public static class ContextStringSupplier implements Supplier<String> {
 
-        public String context;
+        String context;
+
+        public String set(String newContext) {
+            String previousContext = context;
+            context = newContext;
+            return previousContext;
+        }
 
         @Override
         public String get() {
@@ -239,28 +245,32 @@ public class GuiScriptContainer extends ScriptContainer {
         }
         String uiType = widgetConfig.getString("ui_type");
         if (uiType == null) {
-            Debug.echoError("Invalid GUI element '" + debugPathToWidget + "' is missing a type!");
+            String previousContext = currentContextSupplier.set(null);
+            Debug.echoError(this, "Invalid GUI element '" + debugPathToWidget + "' is missing a type!");
+            currentContextSupplier.set(previousContext);
             return null;
         }
+        String previousContext = currentContextSupplier.set("while parsing GUI element '<A>" + debugPathToWidget + "<LR>' of type '<A>" + uiType + "<LR>' in script '<A>" + getName() + "<LR>'");
         GuiElementParser parser = guiElementParsers.get(CoreUtilities.toLowerCase(uiType));
         if (parser == null) {
-            Debug.echoError("Invalid type specified for GUI element '" + debugPathToWidget + "': " + uiType + '.');
+            Debug.echoError("Invalid type specified: " + uiType + '.');
+            currentContextSupplier.set(previousContext);
             return null;
         }
         Integer width = getTaggedInt(widgetConfig, "width", 18, context), height = getTaggedInt(widgetConfig, "height", 18, context);
         if (width == null || height == null) {
-            Debug.echoError("Invalid GUI element '" + debugPathToWidget + "': must have valid width and height.");
+            Debug.echoError("Invalid width/height specified.");
+            currentContextSupplier.set(previousContext);
             return null;
         }
         Integer x = getTaggedInt(widgetConfig, "x", 0, context), y = getTaggedInt(widgetConfig, "y", 0, context);
         if (x == null || y == null) {
-            Debug.echoError("Invalid GUI element '" + debugPathToWidget + "': must have valid x and y values.");
+            Debug.echoError("Invalid x/y values specified.");
+            currentContextSupplier.set(previousContext);
             return null;
         }
-        String previousContext = currentContextSupplier.context;
-        currentContextSupplier.context = "while parsing GUI element '<A>" + debugPathToWidget + "<LR>' of type '<A>" + uiType + "<LR>' in script '<A>" + getName() + "<LR>'";
         WWidget widget = parser.parse(this, widgetConfig, pathToWidget, context);
-        currentContextSupplier.context = previousContext;
+        currentContextSupplier.set(previousContext);
         if (widget == null) {
             return null;
         }

@@ -19,7 +19,7 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String text = config.getString("text");
         if (text == null) {
-            Debug.echoError("must have text.");
+            Debug.echoError("Must have text.");
             return null;
         }
         final ParseableTag parseableTag = TagManager.parseTextToTag(text, context);
