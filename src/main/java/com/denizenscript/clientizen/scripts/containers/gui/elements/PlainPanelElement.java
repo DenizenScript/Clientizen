@@ -16,13 +16,13 @@ public class PlainPanelElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WPlainPanel plainPanel = new WPlainPanel();
         applyInsets(config, plainPanel::setInsets, context);
-        YamlConfiguration children = config.getConfigurationSection("children");
-        if (children == null) {
+        YamlConfiguration content = config.getConfigurationSection("content");
+        if (content == null) {
             return plainPanel;
         }
-        String childrenPath = getSubPath(pathToElement, "children");
-        for (StringHolder childIdHolder : children.contents.keySet()) {
-            WWidget child = container.parseGUIWidget(children, childIdHolder.str, childrenPath, context);
+        String contentPath = getSubPath(pathToElement, "content");
+        for (StringHolder contentIdHolder : content.contents.keySet()) {
+            WWidget child = container.parseGUIWidget(content, contentIdHolder.str, contentPath, context);
             if (child != null) {
                 plainPanel.add(child, child.getX(), child.getY(), child.getWidth(), child.getHeight());
             }
