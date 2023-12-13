@@ -10,6 +10,8 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.minecraft.text.Text;
 
+import java.util.List;
+
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedStringList;
@@ -38,17 +40,17 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
                 continue;
             }
             WTabPanel.Tab.Builder tabBuilder = new WTabPanel.Tab.Builder(content);
-            if (tabConfig.contains("title")) {
-                tabBuilder.title(Text.literal(getTaggedString(tabConfig, "title", context)));
+            String title = getTaggedString(tabConfig, "title", context);
+            if (title != null) {
+                tabBuilder.title(Text.literal(title));
             }
-            if (tabConfig.contains("tooltip")) {
-                tabBuilder.tooltip(getTaggedStringList(tabConfig, "tooltip", context).stream().map(Text::literal).toArray(Text[]::new));
+            List<String> tooltip = getTaggedStringList(tabConfig, "tooltip", context);
+            if (tooltip != null) {
+                tabBuilder.tooltip(tooltip.stream().map(Text::literal).toArray(Text[]::new));
             }
-            if (tabConfig.contains("icon")) {
-                Icon icon = parseIcon(tabConfig, "icon", context);
-                if (icon != null) {
-                    tabBuilder.icon(icon);
-                }
+            Icon icon = parseIcon(tabConfig, "icon", context);
+            if (icon != null) {
+                tabBuilder.icon(icon);
             }
             tabPanel.add(tabBuilder.build());
         }
