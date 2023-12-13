@@ -180,6 +180,18 @@ public class GuiScriptContainer extends ScriptContainer {
         return converted;
     }
 
+    public static String getSubPath(String path, String subKey) {
+        return path.isEmpty() ? subKey : path + '.' + subKey;
+    }
+
+    public static String getWidgetId(String path) {
+        return path.substring(path.lastIndexOf('.') + 1);
+    }
+
+    public static String getDebugPath(String path) {
+        return path.isEmpty() ? "(root element)" : path;
+    }
+
     public static class ContextStringSupplier implements Supplier<String> {
 
         public String context;
@@ -206,7 +218,7 @@ public class GuiScriptContainer extends ScriptContainer {
     }
 
     public WWidget createGUI() {
-        return parseGUIWidget(getContents(), "", getOriginalName(), new ClientizenTagContext(this));
+        return parseGUIWidget(getContents(), "", "", new ClientizenTagContext(this));
     }
 
     public WWidget parseGUIWidget(YamlConfiguration config, String key, String pathToWidgetConfig, TagContext context) {
@@ -214,38 +226,39 @@ public class GuiScriptContainer extends ScriptContainer {
             return null;
         }
         String pathToWidget = key.isEmpty() ? pathToWidgetConfig : pathToWidgetConfig + '.' + key;
+        String debugPathToWidget = getDebugPath(pathToWidget);
         YamlConfiguration widgetConfig = config.getConfigurationSection(key);
         if (widgetConfig == null) {
             String guiScriptName = config.getString(key);
             GuiScriptContainer guiScript = ScriptRegistry.getScriptContainerAs(guiScriptName, GuiScriptContainer.class);
             if (guiScript == null) {
-                Debug.echoError("Invalid GUI script container specified for GUI element '" + pathToWidget + "': " + guiScriptName + '.');
+                Debug.echoError("Invalid GUI script container specified for GUI element '" + debugPathToWidget + "': " + guiScriptName + '.');
                 return null;
             }
             return guiScript.createGUI();
         }
         String uiType = widgetConfig.getString("ui_type");
         if (uiType == null) {
-            Debug.echoError("Invalid GUI element '" + pathToWidget + "' is missing a type!");
+            Debug.echoError("Invalid GUI element '" + debugPathToWidget + "' is missing a type!");
             return null;
         }
         GuiElementParser parser = guiElementParsers.get(CoreUtilities.toLowerCase(uiType));
         if (parser == null) {
-            Debug.echoError("Invalid type specified for GUI element '" + pathToWidget + "': " + uiType + '.');
+            Debug.echoError("Invalid type specified for GUI element '" + debugPathToWidget + "': " + uiType + '.');
             return null;
         }
         Integer width = getTaggedInt(widgetConfig, "width", 18, context), height = getTaggedInt(widgetConfig, "height", 18, context);
         if (width == null || height == null) {
-            Debug.echoError("Invalid GUI element '" + pathToWidget + "': must have valid width and height.");
+            Debug.echoError("Invalid GUI element '" + debugPathToWidget + "': must have valid width and height.");
             return null;
         }
         Integer x = getTaggedInt(widgetConfig, "x", 0, context), y = getTaggedInt(widgetConfig, "y", 0, context);
         if (x == null || y == null) {
-            Debug.echoError("Invalid GUI element '" + pathToWidget + "': must have valid x and y values.");
+            Debug.echoError("Invalid GUI element '" + debugPathToWidget + "': must have valid x and y values.");
             return null;
         }
         String previousContext = currentContextSupplier.context;
-        currentContextSupplier.context = "while parsing GUI element '<A>" + pathToWidget + "<LR>' of type '<A>" + uiType + "<LR>'";
+        currentContextSupplier.context = "while parsing GUI element '<A>" + debugPathToWidget + "<LR>' of type '<A>" + uiType + "<LR>' in script '<A>" + getName() + "<LR>'";
         WWidget widget = parser.parse(this, widgetConfig, pathToWidget, context);
         currentContextSupplier.context = previousContext;
         if (widget == null) {

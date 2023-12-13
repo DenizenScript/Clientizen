@@ -43,10 +43,10 @@ public class ToggleButtonElement implements GuiScriptContainer.GuiElementParser 
         if (state != null) {
             toggleButton.setToggle(state);
         }
-        final List<ScriptEntry> onToggle = container.getEntries(new ClientizenScriptEntryData(), pathToElement.substring(container.getName().length() + 1) + ".on_toggle");
+        final List<ScriptEntry> onToggle = container.getEntries(new ClientizenScriptEntryData(), getSubPath(pathToElement, "on_toggle"));
         if (onToggle != null) {
             final ContextSource.SimpleMap contextSource = new ContextSource.SimpleMap();
-            final String queueName = pathToElement.substring(pathToElement.lastIndexOf('.') + 1) + "_toggled";
+            final String queueName = getWidgetId(pathToElement) + "_toggled";
             toggleButton.setOnToggle(newValue -> {
                 contextSource.contexts = Map.of("new_value", new ElementTag(newValue));
                 ScriptUtilities.createAndStartQueueArbitrary(queueName, onToggle, null, contextSource, null);

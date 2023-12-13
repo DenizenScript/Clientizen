@@ -20,8 +20,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
 
 public class SliderElement implements GuiScriptContainer.GuiElementParser {
 
@@ -33,7 +32,7 @@ public class SliderElement implements GuiScriptContainer.GuiElementParser {
     public static <T extends WAbstractSlider> T parseSlider(TriFunction<Integer, Integer, Axis, T> constructor, GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         Integer min = getTaggedInt(config, "min", context);
         Integer max = getTaggedInt(config, "max", context);
-        Axis axis = GuiScriptContainer.getTaggedEnum(Axis.class, config, "axis", context);
+        Axis axis = getTaggedEnum(Axis.class, config, "axis", context);
         if (min == null || max == null || axis == null) {
             Debug.echoError("must specify min and max values, and an axis.");
             return null;
@@ -43,7 +42,7 @@ public class SliderElement implements GuiScriptContainer.GuiElementParser {
         if (value != null) {
             slider.setValue(value);
         }
-        WAbstractSlider.Direction direction = GuiScriptContainer.getTaggedEnum(WAbstractSlider.Direction.class, config, "direction", context);
+        WAbstractSlider.Direction direction = getTaggedEnum(WAbstractSlider.Direction.class, config, "direction", context);
         if (direction != null) {
             slider.setDirection(direction);
         }
@@ -54,11 +53,11 @@ public class SliderElement implements GuiScriptContainer.GuiElementParser {
     }
 
     private static void addListener(Consumer<IntConsumer> setter, GuiScriptContainer container, String pathToElement, String scriptPath, String queueSuffix) {
-        final List<ScriptEntry> toRun = container.getEntries(new ClientizenScriptEntryData(), pathToElement.substring(container.getName().length() + 1) + '.' + scriptPath);
+        final List<ScriptEntry> toRun = container.getEntries(new ClientizenScriptEntryData(), getSubPath(pathToElement, scriptPath));
         if (toRun == null) {
             return;
         }
-        final String queueName = pathToElement.substring(pathToElement.lastIndexOf('.') + 1) + queueSuffix;
+        final String queueName = getWidgetId(pathToElement) + queueSuffix;
         final ContextSource.SimpleMap contextSource = new ContextSource.SimpleMap();
         setter.accept(newValue -> {
             contextSource.contexts = Map.of("new_value", new ElementTag(newValue));

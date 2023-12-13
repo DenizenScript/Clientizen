@@ -8,6 +8,8 @@ import io.github.cottonmc.cotton.gui.widget.WScrollPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.fabricmc.fabric.api.util.TriState;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+
 public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
@@ -18,17 +20,17 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
             return null;
         }
         WScrollPanel scrollPanel = new WScrollPanel(content);
-        GuiScriptContainer.applyInsets(config, scrollPanel::setInsets, context);
-        TriState verticalScroll = GuiScriptContainer.getTaggedEnum(TriState.class, config, "vertical_scroll", context);
-        TriState horizontalScroll = GuiScriptContainer.getTaggedEnum(TriState.class, config, "horizontal_scroll", context);
+        applyInsets(config, scrollPanel::setInsets, context);
+        TriState verticalScroll = getTaggedEnum(TriState.class, config, "vertical_scroll", context);
+        TriState horizontalScroll = getTaggedEnum(TriState.class, config, "horizontal_scroll", context);
         if (verticalScroll != null) {
             scrollPanel.setScrollingVertically(verticalScroll);
         }
         if (horizontalScroll != null) {
             scrollPanel.setScrollingHorizontally(horizontalScroll);
         }
-        Integer verticalScrollSpeed = GuiScriptContainer.getTaggedInt(config, "vertical_scroll_speed", context);
-        Integer horizontalScrollSpeed = GuiScriptContainer.getTaggedInt(config, "horizontal_scroll_speed", context);
+        Integer verticalScrollSpeed = getTaggedInt(config, "vertical_scroll_speed", context);
+        Integer horizontalScrollSpeed = getTaggedInt(config, "horizontal_scroll_speed", context);
         if (verticalScrollSpeed != null) {
             scrollPanel.getVerticalScrollBar().setScrollingSpeed(verticalScrollSpeed);
         }

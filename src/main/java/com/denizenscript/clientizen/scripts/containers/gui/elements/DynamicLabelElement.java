@@ -11,6 +11,8 @@ import io.github.cottonmc.cotton.gui.widget.WDynamicLabel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+
 public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
@@ -21,7 +23,7 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
             return null;
         }
         final ParseableTag parseableTag = TagManager.parseTextToTag(text, context);
-        final String errorContext = "while parsing text for dynamic label '<A>" + pathToElement + "<LR>'";
+        final String errorContext = "while parsing text for dynamic label '<A>" + getDebugPath(pathToElement) + "<LR>'";
         WDynamicLabel dynamicLabel = new WDynamicLabel(() -> {
             Debug.pushErrorContext(errorContext);
             try {
@@ -31,11 +33,11 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
                 Debug.popErrorContext();
             }
         });
-        HorizontalAlignment horizontalAlignment = GuiScriptContainer.getTaggedEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
+        HorizontalAlignment horizontalAlignment = getTaggedEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
             dynamicLabel.setAlignment(horizontalAlignment);
         }
-        ColorTag color = GuiScriptContainer.getTaggedObject(ColorTag.class, config, "color", context);
+        ColorTag color = getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
             dynamicLabel.setColor(color.asRGB(), WDynamicLabel.DEFAULT_DARKMODE_TEXT_COLOR);
         }

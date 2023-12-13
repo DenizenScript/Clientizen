@@ -40,8 +40,9 @@ public class BoxElement implements GuiScriptContainer.GuiElementParser {
         if (content == null) {
             return box;
         }
+        String contentPath = getSubPath(pathToElement, "content");
         for (StringHolder contentIdHolder : content.contents.keySet()) {
-            WWidget child = container.parseGUIWidget(content, contentIdHolder.str, pathToElement + ".content", context);
+            WWidget child = container.parseGUIWidget(content, contentIdHolder.str, contentPath, context);
             if (child != null) {
                 box.add(child, child.getWidth(), child.getHeight());
             }

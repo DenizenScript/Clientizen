@@ -14,6 +14,7 @@ import net.minecraft.text.Text;
 
 import java.util.Map;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getDebugPath;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
 
 public class LabeledSliderElement implements GuiScriptContainer.GuiElementParser {
@@ -31,7 +32,7 @@ public class LabeledSliderElement implements GuiScriptContainer.GuiElementParser
         String dynamicLabel = config.getString("dynamic_label");
         if (dynamicLabel != null) {
             final ParseableTag dynamicLabelTag = TagManager.parseTextToTag(dynamicLabel, context);
-            final String errorContext = "while parsing dynamic label for labeled slider '<A>" + pathToElement + "<LR>'";
+            final String errorContext = "while parsing dynamic label for labeled slider '<A>" + getDebugPath(pathToElement) + "<LR>'";
             final TagContext labelContext = context.clone();
             final ContextSource.SimpleMap contextSource = new ContextSource.SimpleMap();
             labelContext.contextSource = contextSource;

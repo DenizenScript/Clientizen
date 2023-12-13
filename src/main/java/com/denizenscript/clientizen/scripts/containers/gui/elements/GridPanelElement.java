@@ -28,8 +28,9 @@ public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
         if (children == null) {
             return gridPanel;
         }
+        String childrenPath = getSubPath(pathToElement, "children");
         for (StringHolder childIdHolder : children.contents.keySet()) {
-            WWidget child = container.parseGUIWidget(children, childIdHolder.str, pathToElement + ".children", context);
+            WWidget child = container.parseGUIWidget(children, childIdHolder.str, childrenPath, context);
             if (child != null) {
                 gridPanel.add(child, child.getX(), child.getY(), child.getWidth(), child.getHeight());
             }

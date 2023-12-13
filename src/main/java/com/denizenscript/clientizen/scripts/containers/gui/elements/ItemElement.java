@@ -11,17 +11,20 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 
 import java.util.List;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedObject;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedObjectList;
+
 public class ItemElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
-        List<ItemTag> items = GuiScriptContainer.getTaggedObjectList(ItemTag.class, config, "items", context);
+        List<ItemTag> items = getTaggedObjectList(ItemTag.class, config, "items", context);
         if (items == null) {
             Debug.echoError("must specify a list of items.");
             return null;
         }
         WItem item = new WItem(items.stream().map(ItemTag::getStack).toList());
-        DurationTag duration = GuiScriptContainer.getTaggedObject(DurationTag.class, config, "duration", context);
+        DurationTag duration = getTaggedObject(DurationTag.class, config, "duration", context);
         if (duration != null) {
             item.setDuration(duration.getTicksAsInt());
         }

@@ -10,6 +10,8 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.minecraft.text.Text;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+
 public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
@@ -19,6 +21,7 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
         if (tabsConfig == null) {
             return tabPanel;
         }
+        String tabsPath = getSubPath(pathToElement, "tabs");
         for (StringHolder tabIdHolder : tabsConfig.contents.keySet()) {
             String tabId = tabIdHolder.str;
             YamlConfiguration tabConfig = tabsConfig.getConfigurationSection(tabId);
@@ -26,20 +29,20 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
                 Debug.echoError("Invalid tab '" + tabId + "': no options/config found.");
                 continue;
             }
-            WWidget content = container.parseGUIWidget(tabConfig, "content", pathToElement + ".tabs." + tabId, context);
+            WWidget content = container.parseGUIWidget(tabConfig, "content", getSubPath(tabsPath, tabId), context);
             if (content == null) {
                 Debug.echoError("Invalid tab '" + tabId + "': must have valid content.");
                 continue;
             }
             WTabPanel.Tab.Builder tabBuilder = new WTabPanel.Tab.Builder(content);
             if (tabConfig.contains("title")) {
-                tabBuilder.title(Text.literal(GuiScriptContainer.getTaggedString(tabConfig, "title", context)));
+                tabBuilder.title(Text.literal(getTaggedString(tabConfig, "title", context)));
             }
             if (tabConfig.contains("tooltip")) {
-                tabBuilder.tooltip(GuiScriptContainer.getTaggedStringList(tabConfig, "tooltip", context).stream().map(Text::literal).toArray(Text[]::new));
+                tabBuilder.tooltip(getTaggedStringList(tabConfig, "tooltip", context).stream().map(Text::literal).toArray(Text[]::new));
             }
             if (tabConfig.contains("icon")) {
-                Icon icon = GuiScriptContainer.parseIcon(tabConfig, "icon", context);
+                Icon icon = parseIcon(tabConfig, "icon", context);
                 if (icon != null) {
                     tabBuilder.icon(icon);
                 }

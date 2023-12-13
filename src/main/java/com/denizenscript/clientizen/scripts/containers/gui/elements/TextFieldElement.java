@@ -57,7 +57,7 @@ public class TextFieldElement implements GuiScriptContainer.GuiElementParser {
         String inputChecker = config.getString("input_checker");
         if (inputChecker != null) {
             final ParseableTag checkerTag = TagManager.parseTextToTag(inputChecker, context);
-            final String errorContext = "in input checker for text field '<A>" + pathToElement + "<LR>'";
+            final String errorContext = "in input checker for text field '<A>" + getDebugPath(pathToElement) + "<LR>'";
             final TagContext checkingContext = context.clone();
             final ContextSource.SimpleMap contextSource = new ContextSource.SimpleMap();
             checkingContext.contextSource = contextSource;
@@ -77,10 +77,10 @@ public class TextFieldElement implements GuiScriptContainer.GuiElementParser {
                 }
             });
         }
-        final List<ScriptEntry> onChange = container.getEntries(new ClientizenScriptEntryData(), pathToElement.substring(container.getName().length() + 1) + ".on_change");
+        final List<ScriptEntry> onChange = container.getEntries(new ClientizenScriptEntryData(), getSubPath(pathToElement, "on_change"));
         if (onChange != null) {
             final ContextSource.SimpleMap mapContextSource = new ContextSource.SimpleMap();
-            final String queueName = pathToElement.substring(pathToElement.lastIndexOf('.') + 1) + "_changed";
+            final String queueName = getWidgetId(pathToElement) + "_changed";
             textField.setChangedListener(newText -> {
                 mapContextSource.contexts = Map.of("new_text", new ElementTag(newText, true));
                 ScriptUtilities.createAndStartQueueArbitrary(queueName, onChange, null, mapContextSource, null);

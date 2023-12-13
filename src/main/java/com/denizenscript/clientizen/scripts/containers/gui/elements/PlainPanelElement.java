@@ -7,18 +7,22 @@ import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyInsets;
+
 public class PlainPanelElement implements GuiScriptContainer.GuiElementParser {
 
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WPlainPanel plainPanel = new WPlainPanel();
-        GuiScriptContainer.applyInsets(config, plainPanel::setInsets, context);
+        applyInsets(config, plainPanel::setInsets, context);
         YamlConfiguration children = config.getConfigurationSection("children");
         if (children == null) {
             return plainPanel;
         }
+        String childrenPath = getSubPath(pathToElement, "children");
         for (StringHolder childIdHolder : children.contents.keySet()) {
-            WWidget child = container.parseGUIWidget(children, childIdHolder.str, pathToElement + ".children", context);
+            WWidget child = container.parseGUIWidget(children, childIdHolder.str, childrenPath, context);
             if (child != null) {
                 plainPanel.add(child, child.getX(), child.getY(), child.getWidth(), child.getHeight());
             }
