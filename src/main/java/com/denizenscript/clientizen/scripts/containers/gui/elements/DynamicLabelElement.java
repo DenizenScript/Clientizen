@@ -11,7 +11,9 @@ import io.github.cottonmc.cotton.gui.widget.WDynamicLabel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getDebugPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedObject;
 
 public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser {
 

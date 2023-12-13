@@ -10,7 +10,10 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.minecraft.text.Text;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedStringList;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.parseIcon;
 
 public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
 

@@ -15,7 +15,11 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getWidgetId;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.parseIcon;
 
 public class ButtonElement implements GuiScriptContainer.GuiElementParser {
 

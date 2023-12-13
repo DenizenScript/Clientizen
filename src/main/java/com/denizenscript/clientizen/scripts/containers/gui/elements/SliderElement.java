@@ -20,7 +20,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getWidgetId;
 
 public class SliderElement implements GuiScriptContainer.GuiElementParser {
 

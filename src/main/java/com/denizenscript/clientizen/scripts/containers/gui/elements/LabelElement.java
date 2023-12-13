@@ -11,7 +11,9 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import net.minecraft.text.Text;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedObject;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
 
 public class LabelElement implements GuiScriptContainer.GuiElementParser {
 

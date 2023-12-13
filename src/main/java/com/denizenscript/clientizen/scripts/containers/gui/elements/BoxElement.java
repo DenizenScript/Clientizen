@@ -11,7 +11,10 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyInsets;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
 
 public class BoxElement implements GuiScriptContainer.GuiElementParser {
 

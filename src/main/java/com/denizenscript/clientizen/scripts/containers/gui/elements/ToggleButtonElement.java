@@ -16,7 +16,11 @@ import net.minecraft.text.Text;
 import java.util.List;
 import java.util.Map;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedBoolean;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getWidgetId;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.parseTexture;
 
 public class ToggleButtonElement implements GuiScriptContainer.GuiElementParser {
 

@@ -7,8 +7,8 @@ import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyInsets;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
 
 public class PlainPanelElement implements GuiScriptContainer.GuiElementParser {
 

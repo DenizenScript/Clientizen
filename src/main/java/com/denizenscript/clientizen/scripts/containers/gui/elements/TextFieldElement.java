@@ -19,7 +19,13 @@ import net.minecraft.text.Text;
 import java.util.List;
 import java.util.Map;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getDebugPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedBoolean;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedObject;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getWidgetId;
 
 public class TextFieldElement implements GuiScriptContainer.GuiElementParser {
 

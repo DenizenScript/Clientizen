@@ -10,7 +10,10 @@ import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.text.Text;
 
-import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.*;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.parseTexture;
 
 public class BarElement implements GuiScriptContainer.GuiElementParser {
 
