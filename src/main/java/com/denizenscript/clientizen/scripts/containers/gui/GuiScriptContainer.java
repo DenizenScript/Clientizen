@@ -282,13 +282,12 @@ public class GuiScriptContainer extends ScriptContainer {
     }
 
     public static Texture parseTexture(YamlConfiguration config, String path, TagContext context) {
-        if (config == null) {
-            return null;
-        }
         YamlConfiguration textureConfig = config.getConfigurationSection(path);
         String pathStr = textureConfig != null ? getTaggedString(textureConfig, "texture", context) : getTaggedString(config, path, context);
         if (pathStr == null) {
-            Debug.echoError("Invalid texture: must specify a texture path.");
+            if (textureConfig != null) {
+                Debug.echoError("Invalid texture: must specify a texture path.");
+            }
             return null;
         }
         Identifier texturePath = Identifier.tryParse(pathStr);
@@ -316,15 +315,13 @@ public class GuiScriptContainer extends ScriptContainer {
     }
 
     public static Icon parseIcon(YamlConfiguration config, String path, TagContext context) {
-        if (config == null) {
+        ObjectTag itemObject = getTaggedObject(ObjectTag.class, config, path, context);
+        if (itemObject == null) { // The config doesn't have that key
             return null;
         }
-        ObjectTag itemObject = getTaggedObject(ObjectTag.class, config, path, context);
-        if (itemObject != null) {
-            ItemTag item = itemObject.asType(ItemTag.class, CoreUtilities.noDebugContext);
-            if (item != null) {
-                return new ItemIcon(item.getStack());
-            }
+        ItemTag item = itemObject.asType(ItemTag.class, CoreUtilities.noDebugContext);
+        if (item != null) {
+            return new ItemIcon(item.getStack());
         }
         Texture texture = parseTexture(config, path, context);
         if (texture == null) {
