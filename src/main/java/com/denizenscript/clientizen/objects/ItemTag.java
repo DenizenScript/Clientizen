@@ -57,9 +57,6 @@ public class ItemTag implements ObjectTag, Adjustable {
 
     @Fetchable("i")
     public static ItemTag valueOf(String string, TagContext context) {
-        if (string == null) {
-            return null;
-        }
         if (string.startsWith("i@")) {
             string = string.substring("i@".length());
         }
