@@ -24,6 +24,32 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class ToggleButtonElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Toggle Button GUI Element
+    // @group GUI System
+    // @description
+    // Toggle buttons control a single boolean value, toggling it when pressed; they have a UI type of "toggle_button".
+    // See also <@link language Button GUI Element> for normal buttons.
+    //
+    // <code>
+    // ui_type: toggle_button
+    // # The toggle button's label, optional.
+    // label: <text>
+    // # The texture to display when the toggle button is set to "true", optional.
+    // on_texture: <GUI Texture>
+    // # The texture to display when the toggle button is set to "false", optional.
+    // off_texture: <GUI Texture>
+    // # The texture to display when the toggle button is focused, optional.
+    // focused_texture: <GUI Texture>
+    // # The state the toggle button should be set to, optional (defaults to false).
+    // state: <boolean>
+    // # Code to run when the toggle button is toggled, optional.
+    // # Provides <context.new_value>, returning an ElementTag(Boolean) of the toggle button's new value.
+    // on_toggle:
+    // - <script>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WToggleButton toggleButton = new WToggleButton();

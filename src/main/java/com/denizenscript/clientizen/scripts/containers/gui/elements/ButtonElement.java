@@ -28,6 +28,7 @@ public class ButtonElement implements GuiScriptContainer.GuiElementParser {
     // @group GUI System
     // @description
     // Buttons are clickable GUI elements that can run code when clicked, with the UI type "button".
+    // See also <@link language Toggle Button GUI Element>, for buttons made specifically to control a single boolean value.
     //
     // <code>
     // ui_type: button
