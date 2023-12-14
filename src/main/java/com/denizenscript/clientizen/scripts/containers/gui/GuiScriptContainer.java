@@ -245,6 +245,9 @@ public class GuiScriptContainer extends ScriptContainer {
         WWidget created = createGUI();
         Debug.popErrorContext();
         currentContextSupplier = null;
+        if (created == null) {
+            return null;
+        }
         if (!(created instanceof WPanel rootPanel)) {
             Debug.echoError("Invalid GUI script '" + getOriginalName() + "': must have a panel as the root element.");
             return null;

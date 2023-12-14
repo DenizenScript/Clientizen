@@ -6,6 +6,5 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 public class GuiScriptGuiDescription extends LightweightGuiDescription {
     public GuiScriptGuiDescription(WPanel rootPanel) {
         setRootPanel(rootPanel);
-        rootPanel.validate(this);
     }
 }
