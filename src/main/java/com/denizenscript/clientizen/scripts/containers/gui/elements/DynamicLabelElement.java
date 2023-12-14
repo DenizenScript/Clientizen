@@ -17,6 +17,26 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Dynamic Label GUI Element
+    // @group GUI System
+    // @description
+    // Dynamic labels are GUI Elements that work similarly to <@link language Label GUI Element>, but with a dynamically updating text, and a UI type of "dynamic_label".
+    //
+    // <code>
+    // ui_type: dynamic_label
+    // # The dynamically updating text for the label, required.
+    // text: <text>
+    // # The horizontal alignment for the label's text, optional.
+    // horizontal_alignment: LEFT/CENTER/RIGHT
+    // # The color for the label's text, optional.
+    // color: <ColorTag>
+    // </code>
+    // The text is parsed every time the label is rendered, which means tags in it are constantly read.
+    // This is fine for simple tags, but in the case of highly complex ones it may be better to implement
+    // your own system for updating the text using a normal label, to only do it when relevant.
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String text = config.getString("text");
