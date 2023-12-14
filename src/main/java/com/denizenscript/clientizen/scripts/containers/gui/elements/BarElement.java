@@ -17,6 +17,29 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class BarElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Bar GUI Element
+    // @group GUI System
+    // @description
+    // Bars are GUI elements that work as a progress bar, with the UI type "bar".
+    //
+    // <code>
+    // ui_type: bar
+    // # The direction a bar moves in as its value increases, required.
+    // direction: UP/RIGHT/DOWN/LEFT
+    // # The texture used for the bar's background, optional.
+    // background: <GUI Texture>
+    // # The texture used for the bar's progress meter, optional.
+    // bar: <GUI Texture>
+    // # The amount of progress the bar made out of its max progress, optional.
+    // value: <number>
+    // # The max value a bar can have, a bar's value is counting up towards this value, optional.
+    // max_value: <number>
+    // # A tooltip to be shown when hovering over the bar.
+    // tooltip: <text>
+    // </code>
+    // -->
+
     public static final int VALUE_INDEX = 0, MAX_VALUE_INDEX = 1;
 
     @Override
