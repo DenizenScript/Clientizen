@@ -16,6 +16,21 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class ItemElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Item GUI Element
+    // @group GUI System
+    // @description
+    // Item GUI elements show an item, potentially looping over a list of items and switching between them, with a UI type of "item".
+    //
+    // <code>
+    // ui_type: item
+    // # The item (or list of items) to display, required.
+    // items: <ListTag(ItemTag)>
+    // # The duration to show each item for when more than one is specified, optional.
+    // duration: <DurationTag>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         List<ItemTag> items = getTaggedObjectList(ItemTag.class, config, "items", context);
