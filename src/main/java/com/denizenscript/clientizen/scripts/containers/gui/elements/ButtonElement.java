@@ -41,7 +41,7 @@ public class ButtonElement implements GuiScriptContainer.GuiElementParser {
     // horizontal_text_alignment: LEFT/CENTER/RIGHT
     // # Code to run when the button is pressed, optional.
     // on_click:
-    // - <code>
+    // - <script>
     // </code>
     // -->
 
