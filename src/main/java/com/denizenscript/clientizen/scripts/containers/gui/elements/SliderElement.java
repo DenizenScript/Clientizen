@@ -47,10 +47,12 @@ public class SliderElement implements GuiScriptContainer.GuiElementParser {
     // # The value the slider should be on, optional.
     // value: <number>
     // # Code to run when the slider's value is changed in the slightest (each number it goes through while dragging), optional.
+    // # Allows <context.new_value>, for the slider's new value.
     // # Should generally prefer listening to the final value set instead of this.
     // on_change:
     // - <code>
     // # Code to run when the slider's value is set (the user finished changing it), optional.
+    // # Allows <context.new_value>, for the slider's new value.
     // on_set:
     // - <code>
     // </code>
