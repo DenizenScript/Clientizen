@@ -32,6 +32,24 @@ import java.util.stream.Collectors;
 
 public class GuiScriptContainer extends ScriptContainer {
 
+    // <--[language]
+    // @name GUI Script Containers
+    // @group Script Container System
+    // @description
+    // GUI script containers represent a UI element (such as a button, scroll panel, etc.).
+    // They contain a <@link language GUI Element>, and can be opened using <@link command Gui>.
+    //
+    // <code>
+    // # An example of a basic GUI script container, with a plain panel as its element.
+    // my_gui:
+    //     type: gui
+    //     ui_type: plain_panel
+    //     width: 200
+    //     height: 200
+    //     content: <GUI Element>
+    // </code>
+    // -->
+
     private static final Map<String, GuiElementParser> guiElementParsers = new HashMap<>();
 
     static {
@@ -62,6 +80,17 @@ public class GuiScriptContainer extends ScriptContainer {
     public GuiScriptContainer(YamlConfiguration configurationSection, String scriptContainerName) {
         super(configurationSection, scriptContainerName);
     }
+
+    // <--[language]
+    // @name GUI Element
+    // @group GUI System
+    // @description
+    // A GUI element is a single object in a GUI.
+    // It takes in a required "ui_type" key, which controls its type; see the "GUI System" group on the meta docs for documentation on each type.
+    // It also takes in optional "width" and "height" keys to control it's size, and optional "x" and "y" keys to control its position.
+    // A GUI element's position is the position of its top left corner, relative to the top left corner of its parent element.
+    // "parent element" refers to the GUI element this element is in, for example a button inside a plain panel.
+    // -->
 
     @FunctionalInterface
     public interface GuiElementParser {
