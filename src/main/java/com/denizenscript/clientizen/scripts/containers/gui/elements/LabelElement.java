@@ -17,6 +17,26 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class LabelElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Label GUI Element
+    // @group GUI System
+    // @description
+    // Labels are simple, single lines of text, with a UI type of "label".
+    // See <@link language Text GUI Element>s for proper multi-line text.
+    //
+    // <code>
+    // ui_type: label
+    // # The text the label will show, optional.
+    // text: <text>
+    // # The vertical alignment for the label's text, optional.
+    // vertical_alignment: TOP/CENTER/BOTTOM
+    // # The horizontal alignment for the label's text, optional.
+    // horizontal_alignment: LEFT/CENTER/RIGHT
+    // # The label's text color, optional.
+    // color: <ColorTag>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String text = getTaggedString(config, "text", context);
