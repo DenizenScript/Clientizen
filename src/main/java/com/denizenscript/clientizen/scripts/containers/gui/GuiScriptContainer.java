@@ -315,6 +315,26 @@ public class GuiScriptContainer extends ScriptContainer {
         }
     }
 
+    // <--[language]
+    // @name GUI Insets
+    // @group GUI System
+    // @description
+    // GUI elements that contain other elements sometimes allow setting insets.
+    // Insets are a set of distances elements within another element should keep from its edges.
+    // So for example, in a plain panel with an inset of 5 on all directions, all elements within it will automatically be at least 5 away from its edges.
+    //
+    // An example of a basic insets config:
+    // <code>
+    // # All 4 of these are required, and control the distance from different edges.
+    // top: <number>
+    // left: <number>
+    // bottom: <number>
+    // right: <number>
+    // Optionally replace all 4 of these with this single key, which sets a single inset for all edges.
+    // all: <number>
+    // </code>
+    // -->
+
     public static Insets parseInsets(YamlConfiguration config, TagContext context) {
         if (config == null) {
             return null;
@@ -333,6 +353,32 @@ public class GuiScriptContainer extends ScriptContainer {
         }
         return new Insets(top, left, bottom, right);
     }
+
+    // <--[language]
+    // @name GUI Textures
+    // @group GUI System
+    // @description
+    // GUI Textures directly relate to textures loaded in from resource packs (including the built-in one).
+    // They can be a single texture, or a section of a texture from a sprite sheet.
+    // Since these use the resources system, you can also add and use custom textures yourself via custom resource packs.
+    //
+    // Textures can either be a single texture path: minecraft:textures/block/cobblestone.png
+    // Or a section of a sprite sheet:
+    // <code>
+    // # Required, the sprite sheet to use a part of
+    // texture: <texture path>
+    // # The left edge of the area to use
+    // u_start: <decimal>
+    // # The top edge of the area to use
+    // v_start: <decimal>
+    // # The right edge of the area to use
+    // u_end: <decimal>
+    // # The bottom edge of the area to use
+    // v_end: <decimal>
+    // </code>
+    // All of the UV values are between 0 and 1 and are relative to the entire image.
+    // So for example: 0, 0, 1, 1 (in order) will be the entire image, 0.5, 0.5, 1, 1 will be the bottom right half, etc.
+    // -->
 
     public static Texture parseTexture(YamlConfiguration config, String path, TagContext context) {
         YamlConfiguration textureConfig = config.getConfigurationSection(path);
@@ -366,6 +412,15 @@ public class GuiScriptContainer extends ScriptContainer {
         }
         return new Texture(texturePath, type, uStart, vStart, uEnd, vEnd);
     }
+
+    // <--[language]
+    // @name GUI Icons
+    // @group GUI System
+    // @description
+    // Icons can take in either:
+    // A single <@link ObjectType ItemTag>, to have the icon show an item.
+    // Or a <@link language GUI Textures>, to have the icon show a specific texture.
+    // -->
 
     public static Icon parseIcon(YamlConfiguration config, String path, TagContext context) {
         ObjectTag itemObject = getTaggedObject(ObjectTag.class, config, path, context);
