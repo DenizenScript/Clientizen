@@ -18,7 +18,7 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
     // @name Scroll Panel GUI Element
     // @group GUI System
     // @description
-    // Scroll panels are a type of panel that lets you scroll through its content, with a UI type of "scroll_panel".
+    // Scroll panels are a type of panel that lets you scroll through its content; they have a UI type of "scroll_panel".
     //
     // <code>
     // # The scroll panel's contained GUI element, required.

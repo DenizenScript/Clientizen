@@ -20,7 +20,7 @@ public class ItemElement implements GuiScriptContainer.GuiElementParser {
     // @name Item GUI Element
     // @group GUI System
     // @description
-    // Item GUI elements show an item, potentially looping over a list of items and switching between them, with a UI type of "item".
+    // Item GUI elements show an item, potentially looping over a list of items and switching between them; they have a UI type of "item".
     //
     // <code>
     // ui_type: item

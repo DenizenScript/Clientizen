@@ -21,7 +21,7 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
     // @name Dynamic Label GUI Element
     // @group GUI System
     // @description
-    // Dynamic labels are GUI Elements that work similarly to <@link language Label GUI Element>, but with a dynamically updating text, and a UI type of "dynamic_label".
+    // Dynamic labels work similarly to <@link language Label GUI Element>s, but with dynamically updating text; they have a UI type of "dynamic_label".
     //
     // <code>
     // ui_type: dynamic_label

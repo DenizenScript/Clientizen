@@ -18,7 +18,7 @@ public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
     // @name Grid Panel GUI Element
     // @group GUI System
     // @description
-    // Grid panels are a type of panel that aligns the elements it contains along a grid of squares (known as cells), with a UI type of "grid_panel".
+    // Grid panels are a type of panel that aligns the elements it contains along a grid of squares (known as cells); they have a UI type of "grid_panel".
     // The x/y/width/height of every element within it is in grid cells instead of individual pixels,
     // which means that, for example, "x: 2" would mean 2 grid cells off.
     //

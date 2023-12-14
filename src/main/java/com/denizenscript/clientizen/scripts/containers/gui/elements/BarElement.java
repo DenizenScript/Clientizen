@@ -21,7 +21,7 @@ public class BarElement implements GuiScriptContainer.GuiElementParser {
     // @name Bar GUI Element
     // @group GUI System
     // @description
-    // Bars are GUI elements that work as a progress bar, with the UI type "bar".
+    // Bars are GUI elements that work as a progress bar; they have a UI type of "bar".
     //
     // <code>
     // ui_type: bar

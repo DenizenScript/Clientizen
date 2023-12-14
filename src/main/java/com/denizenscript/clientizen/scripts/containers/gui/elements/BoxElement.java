@@ -22,7 +22,7 @@ public class BoxElement implements GuiScriptContainer.GuiElementParser {
     // @name Box GUI Element
     // @group GUI System
     // @description
-    // Boxes are a type of panel that that sort the elements they contain evenly along an axis, with the UI type "box".
+    // Boxes are a type of panel that that sort the elements they contain evenly along an axis; they have a UI type of "box".
     //
     // <code>
     // ui_type: box
