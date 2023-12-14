@@ -181,15 +181,11 @@ public class GuiScriptContainer extends ScriptContainer {
     }
 
     public static List<String> getTaggedStringList(YamlConfiguration config, String path, TagContext context) {
-        List<String> stringList = config.getStringList(path);
-        if (stringList == null) {
+        Object object = config.get(path);
+        if (object == null) {
             return null;
         }
-        List<String> taggedList = new ArrayList<>(stringList.size());
-        for (String str : stringList) {
-            taggedList.add(TagManager.tag(ScriptBuilder.stripLinePrefix(str), context));
-        }
-        return taggedList;
+        return CoreUtilities.objectToTagForm(object, context, true, true, true).asType(ListTag.class, context);
     }
 
     public static <T extends Enum<T>> T getTaggedEnum(Class<T> enumClass, YamlConfiguration config, String path, TagContext context) {
