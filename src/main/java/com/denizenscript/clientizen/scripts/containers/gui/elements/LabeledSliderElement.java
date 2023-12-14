@@ -19,6 +19,24 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class LabeledSliderElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Labeled Slider GUI Element
+    // @group GUI System
+    // @description
+    // Labeled sliders work similarly to <@link language Slider GUI Element>s, but have a label and a different design; they have a UI type of "labeled_slider".
+    //
+    // Labeled sliders have all the same keys and values as normal <@link language Slider GUI Element>s, and additionally:
+    // <code>
+    // ui_type: labeled_slider
+    // # A static unchanging label for the slider, optional.
+    // label: <text>
+    // # A dynamic label for the slider that updates every time its value changes, optional.
+    // # It takes in <context.value>, for the slider value the label is being parsed for.
+    // # Note that this overrides the normal label if specified.
+    // dynamic_label: <text>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WLabeledSlider labeledSlider = SliderElement.parseSlider(WLabeledSlider::new, container, config, pathToElement, context);
