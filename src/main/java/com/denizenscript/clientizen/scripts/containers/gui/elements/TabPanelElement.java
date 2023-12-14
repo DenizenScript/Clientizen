@@ -19,6 +19,28 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Tab Panel GUI Element
+    // @group GUI System
+    // @description
+    // Tab panels are a type of panel that contains several elements, each under its own tab; they have a UI type of "tab_panel".
+    //
+    // <code>
+    // ui_type: tab_panel
+    // # A tab panel's tabs, optional.
+    // tabs:
+    //     <tab id>:
+    //         # A tab's content, required.
+    //         content: <GUI Element>
+    //         # A tab's title, optional.
+    //         title: <text>
+    //         # A tab's tooltip (shown when hovering over it), optional.
+    //         tooltip: <ListTag>
+    //         # A tab's icon, optional.
+    //         icon: <GUI Icon>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WTabPanel tabPanel = new WTabPanel();
