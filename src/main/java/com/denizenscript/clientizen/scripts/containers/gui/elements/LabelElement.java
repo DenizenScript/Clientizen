@@ -22,7 +22,8 @@ public class LabelElement implements GuiScriptContainer.GuiElementParser {
     // @group GUI System
     // @description
     // Labels are simple, single lines of text, with a UI type of "label".
-    // See <@link language Text GUI Element>s for proper multi-line text.
+    // See <@link language Text GUI Element>s for multi-line text,
+    // and <@link language Dynamic Label GUI Element> for dynamically updating labels.
     //
     // <code>
     // ui_type: label

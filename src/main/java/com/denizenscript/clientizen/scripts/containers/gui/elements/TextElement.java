@@ -14,6 +14,22 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class TextElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Text GUI Element
+    // @group GUI System
+    // @description
+    // Text GUI elements display (potentially multi-line) text; they have a UI type of "text".
+    // See also <@link language Label GUI Element>.
+    //
+    // <code>
+    // ui_type: text
+    // # The text element's text, required.
+    // text: <text>
+    // # The text element's text color, optional.
+    // color: <ColorTag>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         String textContent = getTaggedString(config, "text", context);
