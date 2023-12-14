@@ -19,6 +19,26 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class SpriteElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Sprite GUI Element
+    // @group GUI System
+    // @description
+    // Sprites display a <@link language GUI Textures>, optionally taking a list and cycling between them; they have a UI type of "sprite".
+    //
+    // <code>
+    // ui_type: sprite
+    // # A single texture to display, optional (must specify either this or a list of frames).
+    // texture: <GUI Texture>
+    // # A list of frames to display, optional (must specify either this or a single texture).
+    // frames:
+    //     <key>: <GUI Texture>
+    // # The time to display each frame for, required when specifying frames.
+    // frame_time: <DurationTag>
+    // # A tint to apply onto each texture shown by the sprite element, optional.
+    // tint: <ColorTag>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         ColorTag tint = getTaggedObject(ColorTag.class, config, "tint", context);
