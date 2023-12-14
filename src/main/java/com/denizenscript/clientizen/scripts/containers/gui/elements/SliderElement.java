@@ -27,27 +27,63 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class SliderElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Slider GUI Element
+    // @group GUI System
+    // @description
+    // Sliders allow controlling a number (integer) value, with a customizable min/max values; they have a UI type of "slider".
+    //
+    // <code>
+    // ui_type: slider
+    // # The minimum value the slider can hold, optional (defaults to 0).
+    // min: <number>
+    // # The maximum value the slider can hold, required.
+    // max: <number>
+    // # The axis the slider slides along, required.
+    // axis: HORIZONTAL/VERTICAL
+    // # The direction the slider slides in along its axis to increase its value, optional.
+    // # Defaults to UP for vertical sliders, and RIGHT for horizontal sliders.
+    // direction: UP/DOWN/LEFT/RIGHT
+    // # The value the slider should be on, optional.
+    // value: <number>
+    // # Code to run when the slider's value is changed in the slightest (each number it goes through while dragging), optional.
+    // # Should generally prefer listening to the final value set instead of this.
+    // on_change:
+    // - <code>
+    // # Code to run when the slider's value is set (the user finished changing it), optional.
+    // on_set:
+    // - <code>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         return parseSlider(WSlider::new, container, config, pathToElement, context);
     }
 
     public static <T extends WAbstractSlider> T parseSlider(TriFunction<Integer, Integer, Axis, T> constructor, GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
-        Integer min = getTaggedInt(config, "min", context);
+        Integer min = getTaggedInt(config, "min", 0, context);
+        if (min == null) {
+            return null;
+        }
         Integer max = getTaggedInt(config, "max", context);
+        if (max == null) {
+            Debug.echoError("Must specify a max value");
+            return null;
+        }
         Axis axis = getTaggedEnum(Axis.class, config, "axis", context);
-        if (min == null || max == null || axis == null) {
-            Debug.echoError("Must specify min and max values, and an axis.");
+        if (axis == null) {
+            Debug.echoError("Must specify an axis.");
             return null;
         }
         T slider = constructor.apply(min, max, axis);
-        Integer value = getTaggedInt(config, "value", context);
-        if (value != null) {
-            slider.setValue(value);
-        }
         WAbstractSlider.Direction direction = getTaggedEnum(WAbstractSlider.Direction.class, config, "direction", context);
         if (direction != null) {
             slider.setDirection(direction);
+        }
+        Integer value = getTaggedInt(config, "value", context);
+        if (value != null) {
+            slider.setValue(value);
         }
         // TODO: proper id system - events
         addListener(slider::setValueChangeListener, container, pathToElement, "on_change", "_change");

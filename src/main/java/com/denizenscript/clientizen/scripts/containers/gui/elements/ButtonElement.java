@@ -39,9 +39,9 @@ public class ButtonElement implements GuiScriptContainer.GuiElementParser {
     // icon_size: <number>
     // # Horizontal text alignment for the button's label, optional.
     // horizontal_text_alignment: LEFT/CENTER/RIGHT
-    // # Script to run when the button is pressed, optional.
+    // # Code to run when the button is pressed, optional.
     // on_click:
-    // - <script>
+    // - <code>
     // </code>
     // -->
 
