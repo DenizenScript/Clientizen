@@ -28,6 +28,8 @@ public class BoxElement implements GuiScriptContainer.GuiElementParser {
     // ui_type: box
     // # The axis to sort the elements in the box along, required.
     // axis: HORIZONTAL/VERTICAL
+    // # The box's insets, optional.
+    // insets: <GUI Insets>
     // # The spacing between elements in the box, optional.
     // spacing: <number>
     // # The vertical alignment for elements in the box, optional.

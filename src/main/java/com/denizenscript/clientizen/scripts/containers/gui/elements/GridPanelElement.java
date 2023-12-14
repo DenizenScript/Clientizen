@@ -14,6 +14,30 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Grid Panel GUI Element
+    // @group GUI System
+    // @description
+    // Grid panels are a type of panel that aligns the elements it contains along a grid of squares (known as cells), with a UI type of "grid_panel".
+    // The x/y/width/height of every element within it is in grid cells instead of individual pixels,
+    // which means that, for example, "x: 2" would mean 2 grid cells off.
+    //
+    // <code>
+    // ui_type: grid_panel
+    // # The size of each cell in the grid, required.
+    // grid_size: <number>
+    // # The grid panel's insets, optional.
+    // insets: <GUI Insets>
+    // # The horizontal gap between grid cells, optional.
+    // horizontal_gap: <number>
+    // # The vertical gap between grid cells, optional.
+    // vertical_gap: <number>
+    // # The GUI elements in the grid panel, optional.
+    // content:
+    //     <key>: <GUI Element>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         Integer gridSize = getTaggedInt(config, "grid_size", context);
@@ -26,13 +50,13 @@ public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
         Integer horizontalGap = getTaggedInt(config, "horizontal_gap", context);
         Integer verticalGap = getTaggedInt(config, "vertical_gap", context);
         gridPanel.setGaps(horizontalGap != null ? horizontalGap : 0, verticalGap != null ? verticalGap : 0);
-        YamlConfiguration children = config.getConfigurationSection("children");
-        if (children == null) {
+        YamlConfiguration content = config.getConfigurationSection("content");
+        if (content == null) {
             return gridPanel;
         }
-        String childrenPath = getSubPath(pathToElement, "children");
-        for (StringHolder childIdHolder : children.contents.keySet()) {
-            WWidget child = container.parseGUIWidget(children, childIdHolder.str, childrenPath, context);
+        String contentPath = getSubPath(pathToElement, "content");
+        for (StringHolder contentIdHolder : content.contents.keySet()) {
+            WWidget child = container.parseGUIWidget(content, contentIdHolder.str, contentPath, context);
             if (child != null) {
                 gridPanel.add(child, child.getX(), child.getY(), child.getWidth(), child.getHeight());
             }
