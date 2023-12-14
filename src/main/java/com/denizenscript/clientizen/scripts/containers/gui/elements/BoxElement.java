@@ -18,6 +18,28 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 
 public class BoxElement implements GuiScriptContainer.GuiElementParser {
 
+    // <--[language]
+    // @name Box GUI Element
+    // @group GUI System
+    // @description
+    // Boxes are a type of panel that that sort the elements they contain evenly along an axis, with the UI type "box".
+    //
+    // <code>
+    // ui_type: box
+    // # The axis to sort the elements in the box along, required.
+    // axis: HORIZONTAL/VERTICAL
+    // # The spacing between elements in the box, optional.
+    // spacing: <number>
+    // # The vertical alignment for elements in the box, optional.
+    // vertical_alignment: TOP/CENTER/BOTTOM
+    // # The horizontal alignment for elements in the box, optional.
+    // horizontal_alignment: LEFT/CENTER/RIGHT
+    // # The elements in the box, optional.
+    // content:
+    //     <key>: <GUI Element>
+    // </code>
+    // -->
+
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         Axis axis = getTaggedEnum(Axis.class, config, "axis", context);
