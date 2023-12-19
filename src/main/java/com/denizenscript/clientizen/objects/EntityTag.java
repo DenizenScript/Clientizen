@@ -179,6 +179,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         tagProcessor.registerTag(ElementTag.class, "entity_type", (attribute, object) -> {
             return new ElementTag(object.getTypeName(), true);
         });
+
         tagProcessor.registerTag(ElementTag.class, "health", (attribute, object) -> {
             if (object.getEntity() instanceof LivingEntity livingEntity) {
                 return new ElementTag(livingEntity.getHealth());

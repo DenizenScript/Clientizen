@@ -22,7 +22,7 @@ public class ServerEventCommand extends AbstractCommand {
     // @Required 1
     // @Maximum 2
     // @Short Sends the server an event.
-    // @Group core
+    // @Group client
     //
     // @Description
     // Sends the server the client is currently connected to an event, potentially including extra data.
@@ -48,7 +48,7 @@ public class ServerEventCommand extends AbstractCommand {
     //     Denizen: scripting
     //     food: waffle
     //     loaded_entities: <client.loaded_entities.size>
-    // - customevent id:something_happened context:<[context]>
+    // - serverevent id:something_happened context:<[context]>
     //
     // -->
 

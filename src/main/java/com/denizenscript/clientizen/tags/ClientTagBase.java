@@ -3,6 +3,7 @@ package com.denizenscript.clientizen.tags;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.clientizen.objects.LocationTag;
 import com.denizenscript.clientizen.objects.MaterialTag;
+import com.denizenscript.clientizen.objects.ModTag;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -12,6 +13,7 @@ import com.denizenscript.denizencore.objects.core.TimeTag;
 import com.denizenscript.denizencore.scripts.commands.core.AdjustCommand;
 import com.denizenscript.denizencore.tags.PseudoObjectTagBase;
 import com.denizenscript.denizencore.tags.TagManager;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
@@ -19,6 +21,7 @@ import net.minecraft.util.hit.BlockHitResult;
 public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
 
     public static ClientTagBase instance;
+    public static double climbingSpeed = 0.2; // 0.2 is the vanilla default
 
     public ClientTagBase() {
         instance = this;
@@ -41,6 +44,29 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
                 entities.addObject(new EntityTag(entity));
             }
             return entities;
+        });
+
+        // <--[tag]
+        // @attribute <client.mods>
+        // @returns ListTag(ModTag)
+        // @description
+        // Returns a list of all currently loaded Fabric mods (this doesn't include things like mods-within-mods or built-in mods).
+        // -->
+        tagProcessor.registerStaticTag(ListTag.class, "mods", (attribute, object) -> {
+            return new ListTag(FabricLoader.getInstance().getAllMods(),
+                    modContainer -> modContainer.getContainingMod().isEmpty() && modContainer.getMetadata().getType().equals("fabric")
+                            && !modContainer.getMetadata().getId().equals("fabricloader"),
+                    ModTag::new);
+        });
+
+        // <--[tag]
+        // @attribute <client.all_mods>
+        // @returns ListTag(ModTag)
+        // @description
+        // Returns a list of all currently loaded Fabric mods, including mods-within-mods and built-in mods.
+        // -->
+        tagProcessor.registerStaticTag(ListTag.class, "all_mods", (attribute, object) -> {
+            return new ListTag(FabricLoader.getInstance().getAllMods(), ModTag::new);
         });
 
         // <--[tag]
@@ -134,6 +160,33 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
         tagProcessor.registerTag(MapTag.class, "flag_map", (attribute, object) -> {
             return DenizenCore.serverFlagMap.doFlagMapTag(attribute);
         });
+
+        // <--[tag]
+        // @attribute <client.climbing_speed>
+        // @returns ElementTag(Decimal)
+        // @mechanism client.climbing_speed
+        // @description
+        // Returns the client's climbing speed.
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "climbing_speed", (attribute, object) -> {
+            return new ElementTag(climbingSpeed);
+        });
+
+        // <--[mechanism]
+        // @object client
+        // @name climbing_speed
+        // @input ElementTag(Decimal)
+        // @description
+        // Sets the client's climbing speed.
+        // @tags
+        // <client.climbing_speed>
+        // -->
+        tagProcessor.registerMechanism("climbing_speed", false, ElementTag.class, (object, mechanism, input) -> {
+            if (mechanism.requireDouble()) {
+                climbingSpeed = input.asDouble();
+            }
+        });
+
         // TODO this is temporary and is meant for testing only, should be replaced by a proper modifyblock command
         tagProcessor.registerMechanism("modifyblock", false, MaterialTag.class, (object, mechanism, input) -> {
             MinecraftClient client = MinecraftClient.getInstance();

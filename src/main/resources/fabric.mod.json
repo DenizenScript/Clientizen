@@ -24,10 +24,11 @@
   "mixins": [
     "clientizen.mixins.json"
   ],
+  "accessWidener": "clientizen.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.9",
     "fabric-api": "*",
-    "minecraft": "~1.20.1",
+    "minecraft": "1.20.4",
     "java": ">=17"
   }
 }

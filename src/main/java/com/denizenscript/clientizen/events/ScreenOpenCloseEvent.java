@@ -1,65 +1,58 @@
 package com.denizenscript.clientizen.events;
 
+import com.denizenscript.clientizen.util.ScreenNameMapping;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import net.minecraft.client.gui.screen.GameMenuScreen;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.option.OptionsScreen;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ScreenOpenCloseEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
-    // <'screen_type'> screen opened|closed
+    // screen opened|closed
+    //
+    // @Group User Interface
+    //
+    // @Switch type:<screen_type> to only process the event if the type of screen opened matches the specified matcher.
+    // @Switch from:<screen_type> to only process the event if the screen was opened from a different screen and that screen's type matches the specified matcher.
     //
     // @Triggers when a screen is opened or closed.
     //
     // @Context
-    // <context.screen_type> returns an ElementTag of the screen type that opened.
-    // <context.switched> returns an ElementTag(Boolean) of whether the screen was opened from another screen.
+    // <context.screen_type> returns an ElementTag of the screen type that opened/closed.
+    // <context.previous_screen_type> returns an ElementTag of the screen this screen was opened from, if any.
     //
     // -->
 
-    // TODO: This event needs a partial redo, mainly:
-    // - CreativeInventoryScreen no longer extends InventoryScreen
-    // - Add all relevant screen types
-    // - Potentially add support for handling screens that aren't directly defined via class name
-
     public static ScreenOpenCloseEvent instance;
 
-    public static Map<String, Class<?>> TYPE_MAP = new HashMap<>();
-
     static {
-        TYPE_MAP.put("inventory", InventoryScreen.class);
-        TYPE_MAP.put("creative", CreativeInventoryScreen.class);
-        TYPE_MAP.put("pause", GameMenuScreen.class);
-        TYPE_MAP.put("options", OptionsScreen.class);
-        TYPE_MAP.put("advancements", AdvancementsScreen.class);
+        ScreenEvents.AFTER_INIT.register((client, openedScreen, scaledWidth, scaledHeight) -> {
+            ScreenEvents.remove(openedScreen).register(closedScreen -> ScreenOpenCloseEvent.instance.handleScreenChange(closedScreen, null, false));
+        });
     }
 
     public String type;
     public boolean opened;
-    public boolean switched;
+    public String previousType;
 
     public ScreenOpenCloseEvent() {
-        registerCouldMatcher("<'screen_type'> screen opened|closed");
+        registerCouldMatcher("screen opened|closed");
+        registerSwitches("type", "from");
         instance = this;
     }
 
     @Override
     public boolean matches(ScriptPath path) {
-        String screenMatcher = path.eventArgLowerAt(0);
-        if (!runGenericCheck(screenMatcher, type)) {
+        if (!runGenericSwitchCheck(path, "type", type)) {
             return false;
         }
-        if (opened != path.eventArgLowerAt(2).equals("opened")) {
+        if (!runGenericSwitchCheck(path, "from", previousType)) {
+            return false;
+        }
+        if (opened != path.eventArgLowerAt(1).equals("opened")) {
             return false;
         }
         return super.matches(path);
@@ -68,25 +61,31 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     @Override
     public ObjectTag getContext(String name) {
         return switch (name) {
-            case "screen_type" -> new ElementTag(type);
-            case "switched" -> new ElementTag(switched);
+            case "screen_type" -> new ElementTag(type, true);
+            case "previous_screen_type" -> previousType != null ? new ElementTag(previousType, true) : null;
             default -> super.getContext(name);
         };
     }
 
-
-    public void handleScreenChange(Screen screen, Screen otherScreen, boolean open) {
-        for (Map.Entry<String, Class<?>> pair : TYPE_MAP.entrySet()) {
-            if (pair.getKey().equals("inventory") && screen instanceof CreativeInventoryScreen) {
-                continue;
-            }
-            if (pair.getValue().isInstance(screen)) {
-                type = pair.getKey();
-                opened = open;
-                switched = otherScreen != null;
-                fire();
-                return;
-            }
+    public void handleScreenChange(Screen screen, Screen previousScreen, boolean open) {
+        if (!enabled) {
+            return;
         }
+        type = ScreenNameMapping.getScreenName(screen.getClass());
+        previousType = previousScreen != null ? ScreenNameMapping.getScreenName(previousScreen.getClass()) : null;
+        opened = open;
+        fire();
+    }
+
+    boolean enabled = false;
+
+    @Override
+    public void init() {
+        enabled = true;
+    }
+
+    @Override
+    public void destroy() {
+        enabled = false;
     }
 }

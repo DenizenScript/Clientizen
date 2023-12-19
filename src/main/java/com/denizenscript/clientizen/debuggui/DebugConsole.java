@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.debuggui;
 
+import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.mixin.gui.WScrollPanelAccessor;
 import com.denizenscript.clientizen.mixin.gui.WTextAccessor;
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -12,7 +13,6 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
@@ -25,9 +25,7 @@ public class DebugConsole extends WScrollPanel {
     public static StringBuilder debugText = new StringBuilder();
 
     static {
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            debugText = new StringBuilder();
-        });
+        Clientizen.SYNC_DISCONNECT.register(() -> debugText = new StringBuilder());
     }
 
     public static ConsoleTextArea textArea;
@@ -52,11 +50,7 @@ public class DebugConsole extends WScrollPanel {
         setScrollingHorizontally(TriState.FALSE);
         setBackgroundPainter(BackgroundPainter.createColorful(Color.BLACK.toRgb()));
         setSize(window.getScaledWidth(), window.getScaledHeight() - ClientizenDebugGUI.TAB_HEIGHT);
-
-        children.remove(verticalScrollBar);
-        verticalScrollBar = new CustomScrollBar(Axis.VERTICAL, 20);
-        verticalScrollBar.setParent(this);
-        children.add(verticalScrollBar);
+        verticalScrollBar.setScrollingSpeed(20);
 
         WPlainPanel heldPanel = (WPlainPanel) ((WScrollPanelAccessor) this).getWidget();
         heldPanel.setInsets(new Insets(5, 5, 0, 0));
@@ -73,22 +67,6 @@ public class DebugConsole extends WScrollPanel {
     public void validate(GuiDescription description) {
         super.validate(description);
         verticalScrollBar.setValue(verticalScrollBar.getMaxScrollValue());
-    }
-
-    public static class CustomScrollBar extends WScrollBar {
-
-        public int scrollSpeed;
-
-        public CustomScrollBar(Axis axis, int scrollSpeed) {
-            super(axis);
-            this.scrollSpeed = scrollSpeed;
-        }
-
-        @Override
-        public InputResult onMouseScroll(int x, int y, double amount) { // Same as super method, but uses a custom scrolling speed
-            setValue(getValue() + (int) -amount * scrollSpeed);
-            return InputResult.PROCESSED;
-        }
     }
 
     public class ConsoleTextArea extends WText {

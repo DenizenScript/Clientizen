@@ -3,6 +3,7 @@ package com.denizenscript.clientizen.objects.properties;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.clientizen.objects.ItemTag;
 import com.denizenscript.clientizen.objects.properties.entity.EntitySheared;
+import com.denizenscript.clientizen.objects.properties.entity.EntitySneaking;
 import com.denizenscript.clientizen.objects.properties.item.ItemDurability;
 import com.denizenscript.clientizen.objects.properties.item.ItemServerScript;
 import com.denizenscript.clientizen.objects.properties.material.*;
@@ -26,5 +27,6 @@ public class PropertyRegistry {
 
         // Entity properties
         PropertyParser.registerProperty(EntitySheared.class, EntityTag.class);
+        PropertyParser.registerProperty(EntitySneaking.class, EntityTag.class);
     }
 }
