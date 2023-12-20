@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.objects;
 
 import com.denizenscript.clientizen.mixin.ClientWorldAccessor;
 import com.denizenscript.clientizen.util.Utilities;
+import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.*;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
@@ -13,6 +14,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.AbstractDecorationEntity;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.Monster;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.FishEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.text.Text;
 
 import java.util.UUID;
@@ -36,6 +44,19 @@ public class EntityTag implements ObjectTag, Adjustable {
     // An EntityTag represents a spawned entity or a generic entity type.
     //
     // Note that a spawned entity can be a living entity (a player, animal, monster, etc.) or a non-living entity (a painting, item frame, etc).
+    //
+    // @Matchable
+    // EntityTag matchers, sometimes identified as <entity>:
+    // "entity" plaintext, always matches.
+    // "vehicle" plaintext: matches for any vehicle type (minecarts, boats, horses, etc).
+    // "fish" plaintext: matches for any fish type (cod, pufferfish, etc).
+    // "projectile" plaintext: matches for any projectile type (arrow, trident, fish hook, snowball, etc).
+    // "hanging" plaintext: matches for any hanging type (painting, item_frame, etc).
+    // "monster" plaintext: matches for any monster type (creepers, zombies, etc).
+    // "animal" plaintext: matches for any animal type (pigs, cows, etc).
+    // "mob" plaintext: matches for any mob type (creepers, pigs, etc).
+    // "living" plaintext: matches for any living type (players, pigs, creepers, etc).
+    // Any entity type name: matches if the entity is of the given type, using advanced matchers.
     //
     // -->
 
@@ -242,6 +263,24 @@ public class EntityTag implements ObjectTag, Adjustable {
     @Override
     public boolean isUnique() {
         return uuid != null;
+    }
+
+    @Override
+    public boolean advancedMatches(String matcher) {
+        return ScriptEvent.createMatcher(matcher).doesMatch(getTypeName(), text ->
+                switch (text) {
+                    case "entity" -> true;
+                    case "vehicle" -> getEntity() instanceof VehicleEntity;
+                    case "fish" -> getEntity() instanceof FishEntity;
+                    case "projectile" -> getEntity() instanceof ProjectileEntity;
+                    case "hanging" -> getEntity() instanceof AbstractDecorationEntity;
+                    case "monster" -> getEntity() instanceof Monster;
+                    case "animal" -> getEntity() instanceof AnimalEntity;
+                    case "mob" -> getEntity() instanceof MobEntity;
+                    case "living" -> getEntity() instanceof LivingEntity;
+                    default -> false;
+                }
+        );
     }
 
     private String prefix = "Entity";
