@@ -192,7 +192,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // @returns ElementTag
         // @group Clientizen
         // @description
-        // Returns whether an entity is visible to any client's camera.
+        // Returns whether an entity is visible to the client's camera.
         // This does not mean the entity will be visible to the client, but within the camera's viewing frustum.
         // -->
         tagProcessor.registerTag(ElementTag.class, "visible_to_camera", ((attribute, object) -> {

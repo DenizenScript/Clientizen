@@ -11,11 +11,11 @@ public class EntitySeenUnseenByCamera extends ScriptEvent {
     // @Events
     // <'entity'> seen|unseen by camera
     //
-    // @Triggers when an entity is seen by any client's camera. This does not mean the entity will be visible to the client, but within the camera's viewing frustum.
+    // @Triggers when an entity is seen by the client's camera. This does not mean the entity will be visible to the client, but within the camera's viewing frustum.
     //
     // @Context
     // <context.entity> returns an EntityTag of the entity being seen or unseen.
-    // <context.switched> returns an ElementTag(Boolean) of whether the entity is being seen or unseen.
+    // <context.seen> returns an ElementTag(Boolean) of whether the entity is being seen or unseen.
     //
     // @Warning This event may fire very rapidly.
     // -->
