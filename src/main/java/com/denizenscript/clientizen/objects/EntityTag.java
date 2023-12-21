@@ -46,7 +46,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     // Note that a spawned entity can be a living entity (a player, animal, monster, etc.) or a non-living entity (a painting, item frame, etc).
     //
     // @Matchable
-    // EntityTag matchers, sometimes identified as <entity>:
+    // EntityTag matchers, sometimes identified as "<entity>":
     // "entity" plaintext, always matches.
     // "vehicle" plaintext: matches for any vehicle type (minecarts, boats, horses, etc).
     // "fish" plaintext: matches for any fish type (cod, pufferfish, etc).

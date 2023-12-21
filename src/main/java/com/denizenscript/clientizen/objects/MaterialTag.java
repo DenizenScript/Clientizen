@@ -40,7 +40,7 @@ public class MaterialTag implements ObjectTag, Adjustable {
     // Material types: <@link url https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html>.
     //
     // @Matchable
-    // MaterialTag matchers, sometimes identified as <material>:
+    // MaterialTag matchers, sometimes identified as "<material>":
     // "material" plaintext: always matches.
     // "block" plaintext: matches if the material is a block-type material.
     // "item" plaintext: matches if the material is an item-type material.
