@@ -6,27 +6,27 @@ import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import net.minecraft.entity.Entity;
 
-public class EntitySeenUnseenByCamera extends ScriptEvent {
+public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
-    // <entity> seen|unseen by camera
+    // <entity> starts|stops rendering
     //
-    // @Triggers when an entity is seen by the client's camera. This does not mean the entity will be visible to the client, but within the camera's viewing frustum.
+    // @Triggers when an entity is rendered by the client's camera. This does not mean the entity will always be visible, but within the camera's viewing frustum.
     //
     // @Context
-    // <context.entity> returns an EntityTag of the entity being seen or unseen.
-    // <context.seen> returns an ElementTag(Boolean) of whether the entity is being seen or unseen.
+    // <context.entity> returns an EntityTag of the entity being rendered.
+    // <context.rendered> returns an ElementTag(Boolean) of whether the entity is being rendered.
     //
     // @Warning This event may fire very rapidly.
     // -->
 
-    public static EntitySeenUnseenByCamera instance;
+    public static EntityStartsStopsRenderingScriptEvent instance;
     public EntityTag entity;
-    public boolean seen;
+    public boolean rendered;
 
-    public EntitySeenUnseenByCamera() {
-        registerCouldMatcher("<entity> seen|unseen by camera");
+    public EntityStartsStopsRenderingScriptEvent() {
+        registerCouldMatcher("<entity> starts|stops rendering");
         instance = this;
     }
 
@@ -35,7 +35,7 @@ public class EntitySeenUnseenByCamera extends ScriptEvent {
         if (!path.tryArgObject(0, entity)) {
             return false;
         }
-        if (seen != path.eventArgLowerAt(1).equals("seen")) {
+        if (rendered != path.eventArgLowerAt(1).equals("starts")) {
             return false;
         }
         return super.matches(path);
@@ -45,14 +45,14 @@ public class EntitySeenUnseenByCamera extends ScriptEvent {
     public ObjectTag getContext(String name) {
         return switch (name) {
             case "entity" -> entity;
-            case "seen" -> new ElementTag(seen);
+            case "rendered" -> new ElementTag(rendered);
             default -> super.getContext(name);
         };
     }
 
-    public void handleEntitySeenUnseen(Entity entity, boolean seen) {
+    public void handleEntityRendered(Entity entity, boolean seen) {
         this.entity = new EntityTag(entity);
-        this.seen = seen;
+        this.rendered = seen;
         fire();
     }
 }

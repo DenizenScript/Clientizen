@@ -60,7 +60,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     //
     // -->
 
-    private static final Set<UUID> visibleEntities = new HashSet<>();
+    private static final Set<UUID> renderedEntities = new HashSet<>();
 
     public final UUID uuid;
     public Entity entity;
@@ -182,8 +182,8 @@ public class EntityTag implements ObjectTag, Adjustable {
         return getEntity().getType() == type;
     }
 
-    public static Set<UUID> getVisibleEntities() {
-        return visibleEntities;
+    public static Set<UUID> getRenderedEntities() {
+        return renderedEntities;
     }
 
     public static void register() {
@@ -208,15 +208,15 @@ public class EntityTag implements ObjectTag, Adjustable {
         });
 
         // <--[tag]
-        // @attribute <EntityTag.visible_to_camera>
+        // @attribute <EntityTag.is_rendered>
         // @returns ElementTag
         // @group Clientizen
         // @description
-        // Returns whether an entity is visible to the client's camera.
-        // This does not mean the entity will be visible to the client, but within the camera's viewing frustum.
+        // Returns whether an entity is being rendered by the client's camera.
+        // This does not mean the entity will always be visible, but within the camera's viewing frustum.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "visible_to_camera", ((attribute, object) -> {
-            return new ElementTag(visibleEntities.contains(object.getEntity().getUuid()));
+        tagProcessor.registerTag(ElementTag.class, "is_rendered", ((attribute, object) -> {
+            return new ElementTag(renderedEntities.contains(object.getEntity().getUuid()));
         }));
     }
 

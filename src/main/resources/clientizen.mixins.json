@@ -7,7 +7,7 @@
   "client": [
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldAccessor",
-    "EntityVisibilityMixin",
+    "EntityRenderedMixin",
     "ClientWorldMixin",
     "EventKeyBindingMixin",
     "IntPropertyAccessor",
