@@ -208,14 +208,14 @@ public class EntityTag implements ObjectTag, Adjustable {
         });
 
         // <--[tag]
-        // @attribute <EntityTag.is_rendered>
+        // @attribute <EntityTag.is_rendering>
         // @returns ElementTag
         // @group Clientizen
         // @description
         // Returns whether an entity is being rendered by the client's camera.
         // This does not mean the entity will always be visible, but within the camera's viewing frustum.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "is_rendered", ((attribute, object) -> {
+        tagProcessor.registerTag(ElementTag.class, "is_rendering", ((attribute, object) -> {
             return new ElementTag(renderedEntities.contains(object.getEntity().getUuid()));
         }));
     }
