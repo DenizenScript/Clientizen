@@ -1,14 +1,18 @@
 package com.denizenscript.clientizen.objects;
 
 import com.denizenscript.clientizen.util.Utilities;
+import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.*;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
@@ -35,6 +39,13 @@ public class ItemTag implements ObjectTag, Adjustable {
     //
     // Find a list of valid materials at <@link url https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html>
     // Note that some materials on that list are exclusively for use with blocks, and cannot be held as items.
+    //
+    // @Matchable
+    // ItemTag matchers, sometimes identified as "<item>":
+    // "item" plaintext: always matches.
+    // "item_enchanted:<enchantment>": matches if the item is enchanted with the given enchantment (excluding enchantment books), allows advanced matchers.
+    // "server_script:<name>": matches if the item is from the given server-side item script, allows advanced matchers.
+    // Any item name: matches if the item is of the given type, using advanced matchers.
     //
     // -->
 
@@ -133,6 +144,39 @@ public class ItemTag implements ObjectTag, Adjustable {
     @Override
     public boolean isUnique() {
         return false;
+    }
+
+    @Override
+    public boolean advancedMatches(String matcher) {
+        return ScriptEvent.createMatcher(matcher).doesMatch(getName(), text -> {
+            if (text.equals("item")) {
+                return true;
+            }
+            int colonIndex = text.indexOf(':');
+            if (colonIndex != -1) {
+                String prefix = text.substring(0, colonIndex);
+                String value = text.substring(colonIndex + 1);
+                switch (prefix) {
+                    case "item_enchanted" -> {
+                        NbtList enchantments = getStack().getEnchantments();
+                        if (enchantments.isEmpty()) {
+                            return false;
+                        }
+                        ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(value);
+                        for (Enchantment enchantment : EnchantmentHelper.fromNbt(enchantments).keySet()) {
+                            if (matchHelper.doesMatch(Utilities.idToString(Registries.ENCHANTMENT.getId(enchantment)))) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    case "server_script" -> {
+                        return script != null && ScriptEvent.runGenericCheck(value, script);
+                    }
+                }
+            }
+            return false;
+        });
     }
 
     String prefix = "Item";

@@ -1,6 +1,7 @@
 package com.denizenscript.clientizen.objects;
 
 import com.denizenscript.clientizen.util.Utilities;
+import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.*;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
@@ -37,6 +38,13 @@ public class MaterialTag implements ObjectTag, Adjustable {
     // for specific values on the block material such as the growth stage of a plant or the orientation of a stair block.
     //
     // Material types: <@link url https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html>.
+    //
+    // @Matchable
+    // MaterialTag matchers, sometimes identified as "<material>":
+    // "material" plaintext: always matches.
+    // "block" plaintext: matches if the material is a block-type material.
+    // "item" plaintext: matches if the material is an item-type material.
+    // Any block/item name: matches if the material is of the given type, using advanced matchers.
     //
     // -->
 
@@ -96,6 +104,14 @@ public class MaterialTag implements ObjectTag, Adjustable {
         return Utilities.idToString(state != null ? Registries.BLOCK.getId(state.getBlock()) : Registries.ITEM.getId(item));
     }
 
+    public boolean isBlock() {
+        return state != null || Registries.BLOCK.containsId(Registries.ITEM.getId(item));
+    }
+
+    public boolean isItem() {
+        return item != null || Registries.ITEM.containsId(Registries.BLOCK.getId(state.getBlock()));
+    }
+
     public static void register() {
         PropertyParser.registerPropertyTagHandlers(MaterialTag.class, tagProcessor);
 
@@ -149,6 +165,18 @@ public class MaterialTag implements ObjectTag, Adjustable {
     @Override
     public ObjectTag duplicate() {
         return state != null ? new MaterialTag(state) : new MaterialTag(item);
+    }
+
+    @Override
+    public boolean advancedMatches(String matcher) {
+        return ScriptEvent.createMatcher(matcher).doesMatch(getName(), text ->
+                switch (text) {
+                    case "material" -> true;
+                    case "block" -> isBlock();
+                    case "item" -> isItem();
+                    default -> false;
+                }
+        );
     }
 
     private String prefix = "Material";
