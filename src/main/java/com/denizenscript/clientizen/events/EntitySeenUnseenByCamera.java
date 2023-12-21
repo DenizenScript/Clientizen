@@ -4,6 +4,7 @@ import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import net.minecraft.entity.Entity;
 
 public class EntitySeenUnseenByCamera extends ScriptEvent {
 
@@ -49,8 +50,8 @@ public class EntitySeenUnseenByCamera extends ScriptEvent {
         };
     }
 
-    public void handleEntitySeenUnseen(EntityTag entity, boolean seen) {
-        this.entity = entity;
+    public void handleEntitySeenUnseen(Entity entity, boolean seen) {
+        this.entity = new EntityTag(entity);
         this.seen = seen;
         fire();
     }

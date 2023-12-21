@@ -23,9 +23,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class EntityTag implements ObjectTag, Adjustable {
 
@@ -62,10 +60,11 @@ public class EntityTag implements ObjectTag, Adjustable {
     //
     // -->
 
+    private static final Set<UUID> visibleEntities = new HashSet<>();
+
     public final UUID uuid;
     public Entity entity;
     public final boolean isFake;
-    private static final List<UUID> visibleEntities = new ArrayList<>();
 
     public EntityTag(Entity entity, boolean isFake) {
         this.entity = entity;
@@ -183,7 +182,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         return getEntity().getType() == type;
     }
 
-    public static List<UUID> getVisibleEntities() {
+    public static Set<UUID> getVisibleEntities() {
         return visibleEntities;
     }
 
