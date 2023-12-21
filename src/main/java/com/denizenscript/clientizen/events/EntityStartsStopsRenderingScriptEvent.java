@@ -16,7 +16,7 @@ public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
     //
     // @Context
     // <context.entity> returns an EntityTag of the entity being rendered.
-    // <context.rendered> returns an ElementTag(Boolean) of whether the entity is being rendered.
+    // <context.rendering> returns an ElementTag(Boolean) of whether the entity is being rendered.
     //
     // @Warning This event may fire very rapidly.
     // -->
@@ -45,7 +45,7 @@ public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
     public ObjectTag getContext(String name) {
         return switch (name) {
             case "entity" -> entity;
-            case "rendered" -> new ElementTag(rendered);
+            case "rendering" -> new ElementTag(rendered);
             default -> super.getContext(name);
         };
     }
