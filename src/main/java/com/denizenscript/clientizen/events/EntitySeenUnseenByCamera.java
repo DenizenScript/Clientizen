@@ -9,7 +9,7 @@ public class EntitySeenUnseenByCamera extends ScriptEvent {
 
     // <--[event]
     // @Events
-    // <'entity'> seen|unseen by camera
+    // <entity> seen|unseen by camera
     //
     // @Triggers when an entity is seen by the client's camera. This does not mean the entity will be visible to the client, but within the camera's viewing frustum.
     //
@@ -25,14 +25,13 @@ public class EntitySeenUnseenByCamera extends ScriptEvent {
     public boolean seen;
 
     public EntitySeenUnseenByCamera() {
-        registerCouldMatcher("<'entity'> seen|unseen by camera");
+        registerCouldMatcher("<entity> seen|unseen by camera");
         instance = this;
     }
 
     @Override
     public boolean matches(ScriptPath path) {
-        // This can be simplified once Clientizen supports entity matchers
-        if (!runGenericCheck(path.eventArgLowerAt(0), entity.getTypeName()) && !runGenericCheck(path.eventArgLowerAt(0), "entity")) {
+        if (!path.tryArgObject(0, entity)) {
             return false;
         }
         if (seen != path.eventArgLowerAt(1).equals("seen")) {
