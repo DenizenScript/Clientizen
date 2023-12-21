@@ -23,7 +23,7 @@ public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
 
     public static EntityStartsStopsRenderingScriptEvent instance;
     public EntityTag entity;
-    public boolean rendered;
+    public boolean rendering;
 
     public EntityStartsStopsRenderingScriptEvent() {
         registerCouldMatcher("<entity> starts|stops rendering");
@@ -35,7 +35,7 @@ public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
         if (!path.tryArgObject(0, entity)) {
             return false;
         }
-        if (rendered != path.eventArgLowerAt(1).equals("starts")) {
+        if (rendering != path.eventArgLowerAt(1).equals("starts")) {
             return false;
         }
         return super.matches(path);
@@ -45,14 +45,14 @@ public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
     public ObjectTag getContext(String name) {
         return switch (name) {
             case "entity" -> entity;
-            case "rendering" -> new ElementTag(rendered);
+            case "rendering" -> new ElementTag(rendering);
             default -> super.getContext(name);
         };
     }
 
-    public void handleEntityRendered(Entity entity, boolean seen) {
+    public void handleEntityRendered(Entity entity, boolean rendering) {
         this.entity = new EntityTag(entity);
-        this.rendered = seen;
+        this.rendering = rendering;
         fire();
     }
 }
