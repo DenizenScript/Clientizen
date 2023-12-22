@@ -23,7 +23,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.text.Text;
 
-import java.util.UUID;
+import java.util.*;
 
 public class EntityTag implements ObjectTag, Adjustable {
 
@@ -59,6 +59,8 @@ public class EntityTag implements ObjectTag, Adjustable {
     // Any entity type name: matches if the entity is of the given type, using advanced matchers.
     //
     // -->
+
+    private static final Set<UUID> renderedEntities = new HashSet<>();
 
     public final UUID uuid;
     public Entity entity;
@@ -180,6 +182,10 @@ public class EntityTag implements ObjectTag, Adjustable {
         return getEntity().getType() == type;
     }
 
+    public static Set<UUID> getRenderedEntities() {
+        return renderedEntities;
+    }
+
     public static void register() {
         PropertyParser.registerPropertyTagHandlers(EntityTag.class, tagProcessor);
 
@@ -200,6 +206,17 @@ public class EntityTag implements ObjectTag, Adjustable {
             }
             return null;
         });
+
+        // <--[tag]
+        // @attribute <EntityTag.is_rendering>
+        // @returns ElementTag(Boolean)
+        // @description
+        // Returns whether an entity is being rendered by the client's camera.
+        // This does not mean the entity will always be visible, but within the camera's viewing frustum.
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "is_rendering", ((attribute, object) -> {
+            return new ElementTag(renderedEntities.contains(object.getEntity().getUuid()));
+        }));
     }
 
     public static final ObjectTagProcessor<EntityTag> tagProcessor = new ObjectTagProcessor<>();

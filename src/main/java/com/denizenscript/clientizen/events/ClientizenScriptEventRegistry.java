@@ -25,6 +25,7 @@ public class ClientizenScriptEventRegistry {
         // -->
         ScriptEvent.ScriptPath.notSwitches.addAll(ITEM_MATCHER_PREFIXES);
 
+        ScriptEvent.registerScriptEvent(EntityStartsStopsRenderingScriptEvent.class);
         ScriptEvent.registerScriptEvent(KeyPressReleaseScriptEvent.class);
         ScriptEvent.registerScriptEvent(ScreenOpenCloseEvent.class);
     }
