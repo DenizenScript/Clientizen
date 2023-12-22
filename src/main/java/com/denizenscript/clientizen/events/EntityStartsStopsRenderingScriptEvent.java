@@ -12,13 +12,13 @@ public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
     // @Events
     // <entity> starts|stops rendering
     //
-    // @Triggers when an entity is rendered by the client's camera. This does not mean the entity will always be visible, but within the camera's viewing frustum.
+    // @Triggers when an entity is rendered by the client. This does not mean the entity will always be visible, but within the camera's viewing frustum.
     //
     // @Context
     // <context.entity> returns an EntityTag of the entity being rendered.
     // <context.rendering> returns an ElementTag(Boolean) of whether the entity is being rendered.
     //
-    // @Warning This event may fire very rapidly.
+    // @Warning This event may fire very rapidly when the client moves the camera around a lot.
     // -->
 
     public static EntityStartsStopsRenderingScriptEvent instance;

@@ -19,11 +19,11 @@ public class EntityRenderedMixin {
     @Inject(method = "shouldRender", at = @At("RETURN"))
     private <E extends Entity> void clientizen$isEntityRendered(E entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
         UUID uuid = entity.getUuid();
-        Set<UUID> visibleEntities = EntityTag.getRenderedEntities();
-        if (cir.getReturnValue() && visibleEntities.add(uuid)) {
+        Set<UUID> renderedEntities = EntityTag.getRenderedEntities();
+        if (cir.getReturnValue() && renderedEntities.add(uuid)) {
             EntityStartsStopsRenderingScriptEvent.instance.handleEntityRendered(entity, true);
         }
-        else if (!cir.getReturnValue() && visibleEntities.remove(uuid)) {
+        else if (!cir.getReturnValue() && renderedEntities.remove(uuid)) {
             EntityStartsStopsRenderingScriptEvent.instance.handleEntityRendered(entity, false);
         }
     }
