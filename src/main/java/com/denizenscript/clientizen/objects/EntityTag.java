@@ -23,7 +23,9 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.text.Text;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class EntityTag implements ObjectTag, Adjustable {
 
@@ -200,23 +202,16 @@ public class EntityTag implements ObjectTag, Adjustable {
             return new ElementTag(object.getTypeName(), true);
         });
 
-        tagProcessor.registerTag(ElementTag.class, "health", (attribute, object) -> {
-            if (object.getEntity() instanceof LivingEntity livingEntity) {
-                return new ElementTag(livingEntity.getHealth());
-            }
-            return null;
-        });
-
         // <--[tag]
         // @attribute <EntityTag.is_rendering>
         // @returns ElementTag(Boolean)
         // @description
-        // Returns whether an entity is being rendered by the client's camera.
+        // Returns whether an entity is being rendered by the client.
         // This does not mean the entity will always be visible, but within the camera's viewing frustum.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "is_rendering", ((attribute, object) -> {
+        tagProcessor.registerTag(ElementTag.class, "is_rendering", (attribute, object) -> {
             return new ElementTag(renderedEntities.contains(object.getEntity().getUuid()));
-        }));
+        });
     }
 
     public static final ObjectTagProcessor<EntityTag> tagProcessor = new ObjectTagProcessor<>();

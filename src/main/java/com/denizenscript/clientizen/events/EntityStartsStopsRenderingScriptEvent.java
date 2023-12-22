@@ -18,10 +18,11 @@ public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
     // <context.entity> returns an EntityTag of the entity being rendered.
     // <context.rendering> returns an ElementTag(Boolean) of whether the entity is being rendered.
     //
-    // @Warning This event may fire very rapidly when the client moves the camera around a lot.
+    // @Warning This event may fire very rapidly when the client's camera moves around a lot.
     // -->
 
     public static EntityStartsStopsRenderingScriptEvent instance;
+
     public EntityTag entity;
     public boolean rendering;
 
@@ -51,6 +52,9 @@ public class EntityStartsStopsRenderingScriptEvent extends ScriptEvent {
     }
 
     public void handleEntityRendered(Entity entity, boolean rendering) {
+        if (!eventData.isEnabled) {
+            return;
+        }
         this.entity = new EntityTag(entity);
         this.rendering = rendering;
         fire();
