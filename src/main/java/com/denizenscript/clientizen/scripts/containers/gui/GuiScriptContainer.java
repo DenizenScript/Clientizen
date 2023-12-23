@@ -56,7 +56,7 @@ public class GuiScriptContainer extends ScriptContainer {
         registerGuiElement("tab_panel", new TabPanelElement());
         registerGuiElement("scroll_panel", new ScrollPanelElement());
         registerGuiElement("grid_panel", new GridPanelElement());
-        registerGuiElement("box", new BoxElement());
+        registerGuiElement("box_panel", new BoxPanelElement());
         registerGuiElement("button", new ButtonElement());
         registerGuiElement("toggle_button", new ToggleButtonElement());
         registerGuiElement("text", new TextElement());

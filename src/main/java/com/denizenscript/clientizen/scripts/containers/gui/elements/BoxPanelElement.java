@@ -16,27 +16,27 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
 
-public class BoxElement implements GuiScriptContainer.GuiElementParser {
+public class BoxPanelElement implements GuiScriptContainer.GuiElementParser {
 
     // <--[language]
-    // @name Box GUI Element
+    // @name Box Panel GUI Element
     // @group GUI System
     // @description
-    // Boxes are a type of panel that that sort the elements they contain evenly along an axis; they have a UI type of "box".
+    // Boxes are a type of panel that that sort the elements they contain evenly along an axis; they have a UI type of "box_panel".
     //
     // <code>
-    // ui_type: box
-    // # The axis to sort the elements in the box along, required.
+    // ui_type: box_panel
+    // # The axis to sort the elements in the box panel along, required.
     // axis: HORIZONTAL/VERTICAL
-    // # The box's insets, optional.
+    // # The box panel's insets, optional.
     // insets: <GUI Insets>
-    // # The spacing between elements in the box, optional.
+    // # The spacing between elements in the box panel, optional.
     // spacing: <number>
-    // # The vertical alignment for elements in the box, optional.
+    // # The vertical alignment for elements in the box panel, optional.
     // vertical_alignment: TOP/CENTER/BOTTOM
-    // # The horizontal alignment for elements in the box, optional.
+    // # The horizontal alignment for elements in the box panel, optional.
     // horizontal_alignment: LEFT/CENTER/RIGHT
-    // # The elements in the box, optional.
+    // # The elements in the box panel, optional.
     // content:
     //     <key>: <GUI Element>
     // </code>
