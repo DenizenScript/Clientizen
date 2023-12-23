@@ -43,6 +43,7 @@ public class SliderElement implements GuiScriptContainer.GuiElementParser {
     // axis: HORIZONTAL/VERTICAL
     // # The direction the slider slides in along its axis to increase its value, optional.
     // # Defaults to UP for vertical sliders, and RIGHT for horizontal sliders.
+    // # Note that the direction must match the axis, UP/DOWN for VERTICAL, and LEFT/RIGHT for HORIZONTAL.
     // direction: UP/DOWN/LEFT/RIGHT
     // # The value the slider should be on, optional.
     // value: <number>
@@ -81,6 +82,10 @@ public class SliderElement implements GuiScriptContainer.GuiElementParser {
         T slider = constructor.apply(min, max, axis);
         WAbstractSlider.Direction direction = getTaggedEnum(WAbstractSlider.Direction.class, config, "direction", context);
         if (direction != null) {
+            if (direction.getAxis() != axis) {
+                Debug.echoError("Invalid direction '" + direction + "': can't be used with axis '" + axis + "'.");
+                return null;
+            }
             slider.setDirection(direction);
         }
         Integer value = getTaggedInt(config, "value", context);
