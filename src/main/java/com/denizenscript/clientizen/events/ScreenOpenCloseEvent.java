@@ -68,24 +68,12 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     }
 
     public void handleScreenChange(Screen screen, Screen previousScreen, boolean open) {
-        if (!enabled) {
+        if (!eventData.isEnabled) {
             return;
         }
         type = ScreenNameMapping.getScreenName(screen.getClass());
         previousType = previousScreen != null ? ScreenNameMapping.getScreenName(previousScreen.getClass()) : null;
         opened = open;
         fire();
-    }
-
-    boolean enabled = false;
-
-    @Override
-    public void init() {
-        enabled = true;
-    }
-
-    @Override
-    public void destroy() {
-        enabled = false;
     }
 }

@@ -22,12 +22,9 @@ public class MaterialHalf extends MaterialEnumProperty {
 
     enum BukkitDoubleBlockHalf implements EnumStringIdentifiable {TOP, BOTTOM}
 
-    static {
+    public static void register() {
         convertEnum(Properties.DOUBLE_BLOCK_HALF, BukkitDoubleBlockHalf.class);
         removeValues(Properties.CHEST_TYPE, ChestType.SINGLE);
-    }
-
-    public static void register() {
         autoRegister("half", MaterialHalf.class);
     }
 }

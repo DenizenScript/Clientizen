@@ -23,23 +23,17 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     protected MaterialMinecraftProperty() {}
 
     @Override
-    public String getPropertyId() {
-        return propertyID;
-    }
-
-    public V processPropertyValue(V value) {
-        return value;
+    public ElementTag getPropertyValue() {
+        return rawValueToElement(processPropertyValue(object.state.get(internalProperty)));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public String getPropertyString() {
+    public ElementTag getPropertyValueNoDefault() {
         V value = object.state.get(internalProperty);
         if (isDefaultValue(value)) {
             return null;
         }
-        V processedValue = processPropertyValue(value);
-        return processedValue == null ? null : internalProperty.name(processedValue);
+        return rawValueToElement(processPropertyValue(value));
     }
 
     public boolean isDefaultValue(V value) {
@@ -47,9 +41,13 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     }
 
     @Override
-    public ElementTag getPropertyValue() {
-        V processedValue = processPropertyValue(object.state.get(internalProperty));
-        return processedValue == null ? null : new ElementTag(internalProperty.name(processedValue), true);
+    public String getPropertySavableValue() {
+        ElementTag value = getPropertyValueNoDefault();
+        return value == null ? null : value.savable();
+    }
+
+    public V processPropertyValue(V value) {
+        return value;
     }
 
     public V parsePropertyValue(ElementTag input, Mechanism mechanism) {
@@ -65,6 +63,15 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
             return;
         }
         object.state = object.state.with(internalProperty, parsedValue);
+    }
+
+    @Override
+    public String getPropertyId() {
+        return propertyID;
+    }
+    
+    private ElementTag rawValueToElement(V value) {
+        return value == null ? null : new ElementTag(internalProperty.name(value), true);
     }
 
     @SafeVarargs

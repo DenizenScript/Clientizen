@@ -20,11 +20,8 @@ public class MaterialInstrument extends MaterialEnumProperty {
         PIANO, BASS_DRUM, SNARE_DRUM, STICKS, BASS_GUITAR, FLUTE, BELL, GUITAR, CHIME, XYLOPHONE, IRON_XYLOPHONE, COW_BELL, DIDGERIDOO, BIT, BANJO, PLING, ZOMBIE, SKELETON, CREEPER, DRAGON, WITHER_SKELETON, PIGLIN, CUSTOM_HEAD;
     }
 
-    static {
-        convertEnum(Properties.INSTRUMENT, BukkitInstruments.class);
-    }
-
     public static void register() {
+        convertEnum(Properties.INSTRUMENT, BukkitInstruments.class);
         autoRegister("instrument", MaterialInstrument.class);
     }
 }
