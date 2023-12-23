@@ -15,16 +15,16 @@ import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptConta
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.parseTexture;
 
-public class BarElement implements GuiScriptContainer.GuiElementParser {
+public class ProgressBarElement implements GuiScriptContainer.GuiElementParser {
 
     // <--[language]
     // @name Bar GUI Element
     // @group GUI System
     // @description
-    // Bars are GUI elements that work as a progress bar; they have a UI type of "bar".
+    // Progress bars let you display progress out of a custom max value; they have a UI type of "progress_bar".
     //
     // <code>
-    // ui_type: bar
+    // ui_type: progress_bar
     // # The direction a bar moves in as its value increases, required.
     // direction: UP/RIGHT/DOWN/LEFT
     // # The texture used for the bar's background, optional.
@@ -52,7 +52,7 @@ public class BarElement implements GuiScriptContainer.GuiElementParser {
         Texture backgroundTexture = parseTexture(config, "background", context);
         Texture barTexture = parseTexture(config, "bar", context);
         WBar bar = new WBar(backgroundTexture, barTexture, VALUE_INDEX, MAX_VALUE_INDEX, direction);
-        PropertyDelegate properties = new BarPropertyDelegate();
+        PropertyDelegate properties = new ProgressBarPropertyDelegate();
         bar.setProperties(properties);
         Integer value = getTaggedInt(config, "value", context);
         if (value != null) {
@@ -69,7 +69,7 @@ public class BarElement implements GuiScriptContainer.GuiElementParser {
         return bar;
     }
 
-    private static class BarPropertyDelegate implements PropertyDelegate {
+    private static class ProgressBarPropertyDelegate implements PropertyDelegate {
 
         int value;
         int maxValue;

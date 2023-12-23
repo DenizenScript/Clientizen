@@ -7,7 +7,6 @@ import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.core.ListTag;
-import com.denizenscript.denizencore.scripts.ScriptBuilder;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
 import com.denizenscript.denizencore.tags.TagContext;
@@ -67,7 +66,7 @@ public class GuiScriptContainer extends ScriptContainer {
         registerGuiElement("text_field", new TextFieldElement());
         registerGuiElement("slider", new SliderElement());
         registerGuiElement("labeled_slider", new LabeledSliderElement());
-        registerGuiElement("bar", new BarElement());
+        registerGuiElement("progress_bar", new ProgressBarElement());
         registerGuiElement("sprite", new SpriteElement());
     }
 
