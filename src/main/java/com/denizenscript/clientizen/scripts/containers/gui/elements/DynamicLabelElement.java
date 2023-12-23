@@ -32,9 +32,9 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
     // # The color for the label's text, optional.
     // color: <ColorTag>
     // </code>
-    // The text is parsed every time the label is rendered, which means tags in it are constantly read.
-    // This is fine for simple tags, but in the case of highly complex ones it may be better to implement
-    // your own system for updating the text using a normal label, to only do it when relevant.
+    // The text, including tags, is parsed every frame.
+    // With complex/otherwise computationally expensive tags, you should usually prefer using your own system for updating the text,
+    // to avoid performance issues due to rapid parsing of such tags.
     // -->
 
     @Override
