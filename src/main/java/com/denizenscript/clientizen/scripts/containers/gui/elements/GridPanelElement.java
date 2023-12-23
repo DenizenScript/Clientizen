@@ -28,10 +28,10 @@ public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
     // grid_size: <number>
     // # The grid panel's insets, optional.
     // insets: <GUI Insets>
-    // # The horizontal gap between grid cells, optional.
-    // horizontal_gap: <number>
-    // # The vertical gap between grid cells, optional.
-    // vertical_gap: <number>
+    // # The horizontal spacing between grid cells, optional.
+    // horizontal_spacing: <number>
+    // # The vertical spacing between grid cells, optional.
+    // vertical_spacing: <number>
     // # The GUI elements in the grid panel, optional.
     // content:
     //     <key>: <GUI Element>
@@ -47,9 +47,9 @@ public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
         }
         WGridPanel gridPanel = new WGridPanel(gridSize);
         applyInsets(config, gridPanel::setInsets, context);
-        Integer horizontalGap = getTaggedInt(config, "horizontal_gap", context);
-        Integer verticalGap = getTaggedInt(config, "vertical_gap", context);
-        gridPanel.setGaps(horizontalGap != null ? horizontalGap : 0, verticalGap != null ? verticalGap : 0);
+        Integer horizontalSpacing = getTaggedInt(config, "horizontal_spacing", context);
+        Integer verticalSpacing = getTaggedInt(config, "vertical_spacing", context);
+        gridPanel.setGaps(horizontalSpacing != null ? horizontalSpacing : 0, verticalSpacing != null ? verticalSpacing : 0);
         YamlConfiguration content = config.getConfigurationSection("content");
         if (content == null) {
             return gridPanel;
