@@ -30,7 +30,7 @@ public class LabeledSliderElement implements GuiScriptContainer.GuiElementParser
     // ui_type: labeled_slider
     // # A static unchanging label for the slider, optional.
     // label: <text>
-    // # A dynamic label for the slider that updates every time its value changes, optional.
+    // # A dynamic label for the slider that updates every time the slider's value changes, optional.
     // # Provides <context.value>, returns an ElementTag(Number) of the slider value the label is being parsed for.
     // # Note that this overrides the normal label if specified.
     // dynamic_label: <text>
