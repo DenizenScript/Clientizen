@@ -363,19 +363,19 @@ public class GuiScriptContainer extends ScriptContainer {
     // Textures can either be a single texture path: minecraft:textures/block/cobblestone.png
     // Or a section of a sprite sheet:
     // <code>
-    // # Required, the sprite sheet to use a part of
+    // # The sprite sheet to use a part of, required.
     // texture: <texture path>
-    // # The left edge of the area to use
-    // u_start: <decimal>
-    // # The top edge of the area to use
-    // v_start: <decimal>
-    // # The right edge of the area to use
-    // u_end: <decimal>
-    // # The bottom edge of the area to use
-    // v_end: <decimal>
+    // # The left value of the top left point of the area to use, required.
+    // u: <decimal>
+    // # The top value of the top left point of the area to use, required.
+    // v: <decimal>
+    // # The width of the area to use, required.
+    // width: <decimal>
+    // # The height of the area to use, required.
+    // height: <decimal>
     // </code>
-    // All of the UV values are between 0 and 1 and are relative to the entire image.
-    // So for example: 0, 0, 1, 1 (in order) will be the entire image, 0.5, 0.5, 1, 1 will be the bottom right half, etc.
+    // All of the UV values (including the width and height) are between 0 and 1 and are relative to the entire image.
+    // So for example: 0, 0, 1, 1 (in order) will be the entire image, 0.5, 0.5, 0.5, 0.5 will be the bottom right half, etc.
     // -->
 
     public static Texture parseTexture(YamlConfiguration config, String path, TagContext context) {
@@ -400,15 +400,15 @@ public class GuiScriptContainer extends ScriptContainer {
             Debug.echoError("Invalid texture: invalid type specified.");
             return null;
         }
-        Float uStart = getTaggedFloat(textureConfig, "u_start", 0f, context),
-                vStart = getTaggedFloat(textureConfig, "v_start", 0f, context),
-                uEnd = getTaggedFloat(textureConfig, "u_end", 1f, context),
-                vEnd = getTaggedFloat(textureConfig, "v_end", 1f, context);
-        if (uStart == null || vStart == null || uEnd == null || vEnd == null) {
+        Float u = getTaggedFloat(textureConfig, "u", context),
+                v = getTaggedFloat(textureConfig, "v", context),
+                width = getTaggedFloat(textureConfig, "width", context),
+                height = getTaggedFloat(textureConfig, "height", context);
+        if (u == null || v == null || width == null || height == null) {
             Debug.echoError("Invalid texture: invalid UV coordinates specified.");
             return null;
         }
-        return new Texture(texturePath, type, uStart, vStart, uEnd, vEnd);
+        return new Texture(texturePath, type, u, v, u + width, v + height);
     }
 
     // <--[language]
