@@ -27,7 +27,7 @@ public class ItemElement implements GuiScriptContainer.GuiElementParser {
     // # The item (or list of items) to display, required.
     // items: <ListTag(ItemTag)>
     // # The duration to show each item for when more than one is specified, optional.
-    // duration: <DurationTag>
+    // frame_duration: <DurationTag>
     // </code>
     // -->
 
@@ -39,9 +39,9 @@ public class ItemElement implements GuiScriptContainer.GuiElementParser {
             return null;
         }
         WItem item = new WItem(items.stream().map(ItemTag::getStack).toList());
-        DurationTag duration = getTaggedObject(DurationTag.class, config, "duration", context);
-        if (duration != null) {
-            item.setDuration(duration.getTicksAsInt());
+        DurationTag frameDuration = getTaggedObject(DurationTag.class, config, "frame_duration", context);
+        if (frameDuration != null) {
+            item.setDuration(frameDuration.getTicksAsInt());
         }
         return item;
     }
