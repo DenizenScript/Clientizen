@@ -22,7 +22,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     //
     // @Context
     // <context.screen_type> returns an ElementTag of the screen type that opened/closed.
-    // <context.previous_screen_type> returns an ElementTag of the screen this screen was opened from, if any.
+    // <context.previous_screen_type> returns an ElementTag of the screen type this screen was opened from, if any.
     //
     // -->
 
@@ -71,8 +71,8 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
         if (!eventData.isEnabled) {
             return;
         }
-        type = ScreenNameMapping.getScreenName(screen.getClass());
-        previousType = previousScreen != null ? ScreenNameMapping.getScreenName(previousScreen.getClass()) : null;
+        type = ScreenNameMapping.getScreenName(screen);
+        previousType = previousScreen != null ? ScreenNameMapping.getScreenName(previousScreen) : null;
         opened = open;
         fire();
     }

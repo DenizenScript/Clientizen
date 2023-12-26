@@ -57,7 +57,7 @@ public class GuiCommand extends AbstractCommand implements Holdable {
             Debug.echoError("GUI script '" + script.debuggable() + "<W>' is invalid.");
             return;
         }
-        GuiScriptScreen screen = new GuiScriptScreen(new GuiScriptGuiDescription(rootPanel));
+        GuiScriptScreen screen = new GuiScriptScreen(new GuiScriptGuiDescription(rootPanel), guiScriptContainer);
         MinecraftClient client = MinecraftClient.getInstance();
         client.send(() -> client.setScreen(screen));
     }
