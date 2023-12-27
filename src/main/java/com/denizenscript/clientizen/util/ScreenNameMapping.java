@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.util;
 
+import com.denizenscript.clientizen.scripts.containers.gui.GuiScriptScreen;
 import net.minecraft.client.gui.screen.*;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
 import net.minecraft.client.gui.screen.ingame.*;
@@ -126,8 +127,11 @@ public class ScreenNameMapping {
         TYPE_MAP.put(screenType, name);
     }
 
-    public static String getScreenName(Class<? extends Screen> screenType) {
-        return TYPE_MAP.computeIfAbsent(screenType, clazz -> {
+    public static String getScreenName(Screen screen) {
+        if (screen instanceof GuiScriptScreen guiScriptScreen) {
+            return guiScriptScreen.getScript().getName();
+        }
+        return TYPE_MAP.computeIfAbsent(screen.getClass(), clazz -> {
             // Try dynamically generating the name - currently only for modded screens, as vanilla screens have remapped class names
             String className = clazz.getSimpleName();
             if (className.endsWith("Screen")) {
