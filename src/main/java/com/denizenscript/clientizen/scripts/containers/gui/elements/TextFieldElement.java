@@ -117,11 +117,11 @@ public class TextFieldElement implements GuiScriptContainer.GuiElementParser {
         }
         final List<ScriptEntry> onChange = container.getEntries(new ClientizenScriptEntryData(), getSubPath(pathToElement, "on_change"));
         if (onChange != null) {
-            final ContextSource.SimpleMap mapContextSource = new ContextSource.SimpleMap();
+            final ContextSource.SimpleMap contextSource = new ContextSource.SimpleMap();
             final String queueName = getWidgetId(pathToElement) + "_changed";
             textField.setChangedListener(newText -> {
-                mapContextSource.contexts = Map.of("new_text", new ElementTag(newText, true));
-                ScriptUtilities.createAndStartQueueArbitrary(queueName, onChange, null, mapContextSource, null);
+                contextSource.contexts = Map.of("new_text", new ElementTag(newText, true));
+                ScriptUtilities.createAndStartQueueArbitrary(queueName, onChange, null, contextSource, null);
                 // TODO: proper id system - events
             });
         }
