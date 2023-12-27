@@ -32,8 +32,8 @@ public class SpriteElement implements GuiScriptContainer.GuiElementParser {
     // # A list of frames to display, optional (must specify either this or a single texture).
     // frames:
     //     <key>: <GUI Texture>
-    // # The time to display each frame for, required when specifying frames.
-    // frame_time: <DurationTag>
+    // # The duration to display each frame for, required when specifying frames.
+    // frame_duration: <DurationTag>
     // # A tint to apply onto each texture shown by the sprite element, optional.
     // tint: <ColorTag>
     // </code>
@@ -46,9 +46,9 @@ public class SpriteElement implements GuiScriptContainer.GuiElementParser {
         if (texture != null) {
             return applyTint(new WSprite(texture), tint);
         }
-        DurationTag frameTime = getTaggedObject(DurationTag.class, config, "frame_time", context);
-        if (frameTime == null) {
-            Debug.echoError("Must specify a frame time.");
+        DurationTag frameDuration = getTaggedObject(DurationTag.class, config, "frame_duration", context);
+        if (frameDuration == null) {
+            Debug.echoError("Must specify a frame duration.");
             return null;
         }
         YamlConfiguration frames = config.getConfigurationSection("frames");
@@ -63,7 +63,7 @@ public class SpriteElement implements GuiScriptContainer.GuiElementParser {
                 frameTextures.add(frame);
             }
         }
-        return applyTint(new WSprite((int) frameTime.getMillis(), frameTextures.toArray(new Texture[0])), tint);
+        return applyTint(new WSprite((int) frameDuration.getMillis(), frameTextures.toArray(new Texture[0])), tint);
     }
 
     private WSprite applyTint(WSprite sprite, ColorTag tint) {
