@@ -17,7 +17,7 @@ public class GuiCommand extends AbstractCommand {
 
     // <--[command]
     // @Name gui
-    // @Syntax gui [open <script>]/[close]
+    // @Syntax gui [open <script>/close]
     // @Required 1
     // @Maximum 2
     // @Short Opens a GUI script into a GUI or closes a currently open one.
@@ -42,7 +42,7 @@ public class GuiCommand extends AbstractCommand {
 
     public GuiCommand() {
         setName("gui");
-        setSyntax("gui [open <script>]/[close]");
+        setSyntax("gui [open <script>/close]");
         setRequiredArguments(1, 2);
         autoCompile();
     }
