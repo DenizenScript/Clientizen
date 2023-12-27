@@ -25,7 +25,7 @@ public class ProgressBarElement implements GuiScriptContainer.GuiElementParser {
     //
     // <code>
     // ui_type: progress_bar
-    // # The direction a bar moves in as its value increases, required.
+    // # The direction the bar moves in as its value increases, required.
     // direction: UP/RIGHT/DOWN/LEFT
     // # The texture used for the bar's background, optional.
     // background: <GUI Texture>
