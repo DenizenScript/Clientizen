@@ -6,7 +6,6 @@ import com.denizenscript.clientizen.scripts.containers.gui.GuiScriptScreen;
 import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException;
 import com.denizenscript.denizencore.objects.core.ScriptTag;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
-import com.denizenscript.denizencore.scripts.commands.Holdable;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgDefaultNull;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgLinear;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
@@ -14,7 +13,7 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import net.minecraft.client.MinecraftClient;
 
-public class GuiCommand extends AbstractCommand implements Holdable {
+public class GuiCommand extends AbstractCommand {
 
     // <--[command]
     // @Name gui
