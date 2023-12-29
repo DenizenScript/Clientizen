@@ -3,6 +3,7 @@ package com.denizenscript.clientizen.util.impl;
 import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.debuggui.DebugConsole;
 import com.denizenscript.clientizen.objects.LocationTag;
+import com.denizenscript.clientizen.tags.ClientTagBase;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.DenizenImplementation;
 import com.denizenscript.denizencore.flags.FlaggableObject;
@@ -140,7 +141,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
     @Override
     public FlaggableObject simpleWordToFlaggable(String word, ScriptEntry scriptEntry) {
-        return null;
+        return CoreUtilities.equalsIgnoreCase(word, "client") ? ClientTagBase.instance : null;
     }
 
     @Override

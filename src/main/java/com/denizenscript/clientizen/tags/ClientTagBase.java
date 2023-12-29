@@ -5,6 +5,8 @@ import com.denizenscript.clientizen.objects.LocationTag;
 import com.denizenscript.clientizen.objects.MaterialTag;
 import com.denizenscript.clientizen.objects.ModTag;
 import com.denizenscript.denizencore.DenizenCore;
+import com.denizenscript.denizencore.flags.AbstractFlagTracker;
+import com.denizenscript.denizencore.flags.FlaggableObject;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.core.ListTag;
@@ -18,7 +20,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 
-public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
+public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements FlaggableObject {
 
     public static ClientTagBase instance;
     public static double climbingSpeed = 0.2; // 0.2 is the vanilla default
@@ -195,4 +197,12 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> {
             }
         });
     }
+
+    @Override
+    public AbstractFlagTracker getFlagTracker() {
+        return DenizenCore.serverFlagMap;
+    }
+
+    @Override
+    public void reapplyTracker(AbstractFlagTracker tracker) {}
 }
