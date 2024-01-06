@@ -7,4 +7,12 @@ public class GuiScriptGuiDescription extends LightweightGuiDescription {
     public GuiScriptGuiDescription(WPanel rootPanel) {
         setRootPanel(rootPanel);
     }
+
+    @Override
+    public void addPainters() {
+        // Don't override a background painter
+        if (rootPanel.getBackgroundPainter() == null) {
+            super.addPainters();
+        }
+    }
 }

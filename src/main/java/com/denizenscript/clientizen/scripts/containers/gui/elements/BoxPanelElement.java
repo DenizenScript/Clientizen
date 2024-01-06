@@ -11,6 +11,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyBackgroundPainter;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyInsets;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
@@ -30,6 +31,8 @@ public class BoxPanelElement implements GuiScriptContainer.GuiElementParser {
     // axis: HORIZONTAL/VERTICAL
     // # The box panel's insets, optional.
     // insets: <GUI Insets>
+    // # The box panel's background, optional.
+    // background: <GUI Background>
     // # The spacing between elements in the box panel, optional.
     // spacing: <number>
     // # The vertical alignment for elements in the box panel, optional.
@@ -51,6 +54,7 @@ public class BoxPanelElement implements GuiScriptContainer.GuiElementParser {
         }
         WBox box = new WBox(axis);
         applyInsets(config, box::setInsets, context);
+        applyBackgroundPainter(box, config, context);
         Integer spacing = getTaggedInt(config, "spacing", context);
         if (spacing != null) {
             box.setSpacing(spacing);

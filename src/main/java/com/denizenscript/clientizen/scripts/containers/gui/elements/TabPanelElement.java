@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyBackgroundPainter;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedStringList;
@@ -27,7 +28,9 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
     //
     // <code>
     // ui_type: tab_panel
-    // # A tab panel's tabs, optional.
+    // # The tab panel's background, optional.
+    // background: <GUI Background>
+    // # The tab panel's tabs, optional.
     // tabs:
     //     <tab id>:
     //         # A tab's content, required.
@@ -44,6 +47,7 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
     @Override
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WTabPanel tabPanel = new WTabPanel();
+        applyBackgroundPainter(tabPanel, config, context);
         YamlConfiguration tabsConfig = config.getConfigurationSection("tabs");
         if (tabsConfig == null) {
             return tabPanel;

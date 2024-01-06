@@ -7,6 +7,7 @@ import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyBackgroundPainter;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyInsets;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
 
@@ -24,6 +25,8 @@ public class PlainPanelElement implements GuiScriptContainer.GuiElementParser {
     // ui_type: plain_panel
     // # The plain panel's insets, optional.
     // insets: <GUI Insets>
+    // # The plain panel's background, optional.
+    // background: <GUI Background>
     // # The plain panel's contained elements, optional.
     // content:
     //     <key>: <GUI Element>
@@ -34,6 +37,7 @@ public class PlainPanelElement implements GuiScriptContainer.GuiElementParser {
     public WWidget parse(GuiScriptContainer container, YamlConfiguration config, String pathToElement, TagContext context) {
         WPlainPanel plainPanel = new WPlainPanel();
         applyInsets(config, plainPanel::setInsets, context);
+        applyBackgroundPainter(plainPanel, config, context);
         YamlConfiguration content = config.getConfigurationSection("content");
         if (content == null) {
             return plainPanel;

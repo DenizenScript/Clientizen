@@ -5,6 +5,7 @@ import com.denizenscript.clientizen.scripts.containers.gui.elements.*;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException;
 import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.ColorTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.core.ListTag;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
@@ -15,6 +16,7 @@ import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
@@ -328,7 +330,7 @@ public class GuiScriptContainer extends ScriptContainer {
     // left: <number>
     // bottom: <number>
     // right: <number>
-    // Optionally replace all 4 of these with this single key, which sets a single inset for all edges.
+    // # Optionally replace all 4 of these with this single key, which sets a single inset for all edges.
     // all: <number>
     // </code>
     // -->
@@ -435,5 +437,58 @@ public class GuiScriptContainer extends ScriptContainer {
             return null;
         }
         return new TextureIcon(texture);
+    }
+
+    public static void applyBackgroundPainter(WPanel panel, YamlConfiguration config, TagContext context) {
+        BackgroundPainter painter = parseBackgroundPainter(config, "background", context);
+        if (painter != null) {
+            panel.setBackgroundPainter(painter);
+        }
+    }
+
+    // <--[language]
+    // @name GUI Backgrounds
+    // @group GUI System
+    // @description
+    // Backgrounds can take in a single <@link ObjectType ColorTag>, or a config for a color with a custom contrast between the bright/dark edges:
+    // <code>
+    // # The color to use for the background, required.
+    // color: <ColorTag>
+    // # The contrast between the color and the bright/dark edges of the background, required.
+    // contrast: <decimal>
+    // </code>
+    // Alternatively, specify a texture path within the GUI sprite texture atlas, e.g. "minecraft:widget/button" for "minecraft/textures/gui/sprites/widget/button.png".
+    // You can also use custom textures added by resource packs, see <@link https://minecraft.wiki/w/Resource_pack#GUI> for more information.
+    // -->
+
+    public static BackgroundPainter parseBackgroundPainter(YamlConfiguration config, String path, TagContext context) {
+        ObjectTag rawObject = getTaggedObject(ObjectTag.class, config, path, context);
+        if (rawObject == null) { // The config doesn't have that key
+            return null;
+        }
+        ColorTag color = rawObject.asType(ColorTag.class, CoreUtilities.noDebugContext);
+        if (color != null) {
+            return BackgroundPainter.createColorful(color.asARGB());
+        }
+        Identifier guiSprite = Identifier.tryParse(rawObject.toString());
+        if (guiSprite != null) {
+            return BackgroundPainter.createGuiSprite(guiSprite);
+        }
+        YamlConfiguration painterConfig = config.getConfigurationSection(path);
+        if (painterConfig == null) {
+            Debug.echoError("Invalid background: must specify a valid single color/texture or a config.");
+            return null;
+        }
+        ColorTag baseColor = getTaggedObject(ColorTag.class, painterConfig, "color", context);
+        if (baseColor == null) {
+            Debug.echoError("Invalid background: must specify a color.");
+            return null;
+        }
+        Float contrast = getTaggedFloat(painterConfig, "contrast", context);
+        if (contrast == null) {
+            Debug.echoError("Invalid background: must specify a contrast or use the single color format.");
+            return null;
+        }
+        return BackgroundPainter.createColorful(baseColor.asARGB(), contrast);
     }
 }

@@ -8,6 +8,7 @@ import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyBackgroundPainter;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyInsets;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getSubPath;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
@@ -28,6 +29,8 @@ public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
     // grid_size: <number>
     // # The grid panel's insets, optional.
     // insets: <GUI Insets>
+    // # The grid panel's background, optional.
+    // background: <GUI Background>
     // # The horizontal spacing between grid cells, optional.
     // horizontal_spacing: <number>
     // # The vertical spacing between grid cells, optional.
@@ -47,6 +50,7 @@ public class GridPanelElement implements GuiScriptContainer.GuiElementParser {
         }
         WGridPanel gridPanel = new WGridPanel(gridSize);
         applyInsets(config, gridPanel::setInsets, context);
+        applyBackgroundPainter(gridPanel, config, context);
         Integer horizontalSpacing = getTaggedInt(config, "horizontal_spacing", context);
         Integer verticalSpacing = getTaggedInt(config, "vertical_spacing", context);
         gridPanel.setGaps(horizontalSpacing != null ? horizontalSpacing : 0, verticalSpacing != null ? verticalSpacing : 0);

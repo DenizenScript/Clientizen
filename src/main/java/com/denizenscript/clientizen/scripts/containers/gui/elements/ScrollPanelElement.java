@@ -8,6 +8,7 @@ import io.github.cottonmc.cotton.gui.widget.WScrollPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.fabricmc.fabric.api.util.TriState;
 
+import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyBackgroundPainter;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.applyInsets;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
@@ -25,6 +26,8 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
     // content: <GUI Element>
     // # The scroll panel's insets, optional.
     // insets: <GUI Insets>
+    // # The scroll panel's background, optional.
+    // background: <GUI Background>
     // # Whether the scroll panel should have a vertical scroll bar, optional (defaults to DEFAULT).
     // vertical_scroll: FALSE/DEFAULT (automatically add/remove based on the content's size)/TRUE
     // # Whether the scroll panel should have a horizontal scroll bar, optional (defaults to DEFAULT).
@@ -45,6 +48,7 @@ public class ScrollPanelElement implements GuiScriptContainer.GuiElementParser {
         }
         WScrollPanel scrollPanel = new WScrollPanel(content);
         applyInsets(config, scrollPanel::setInsets, context);
+        applyBackgroundPainter(scrollPanel, config, context);
         TriState verticalScroll = getTaggedEnum(TriState.class, config, "vertical_scroll", context);
         if (verticalScroll != null) {
             scrollPanel.setScrollingVertically(verticalScroll);
