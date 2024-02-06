@@ -7,7 +7,6 @@ import com.denizenscript.denizencore.scripts.commands.generator.ArgLinear;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -65,7 +64,7 @@ public class NarrateCommand extends AbstractCommand {
         sendCenteredLine(Text.literal(text), hudWidth);
     }
 
-    private static void sendCenteredLine(MutableText line, int hudWidth) {
+    private static void sendCenteredLine(Text line, int hudWidth) {
         MinecraftClient client = MinecraftClient.getInstance();
         int lineWidth = client.textRenderer.getWidth(line);
         if (lineWidth > hudWidth) {
