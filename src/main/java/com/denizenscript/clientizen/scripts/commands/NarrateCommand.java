@@ -73,8 +73,8 @@ public class NarrateCommand extends AbstractCommand {
             }
             return;
         }
-        String spacing = " ".repeat((int) ((hudWidth - lineWidth) / 2f / 0.5f));
-        Text space = Text.literal(spacing).setStyle(SPACING_FONT);
-        client.inGameHud.getChatHud().addMessage(Text.empty().append(space).append(line).append(space), null, null);
+        String spacingStr = " ".repeat((int) ((hudWidth - lineWidth) / 2f / 0.5f));
+        Text spacing = Text.literal(spacingStr).setStyle(SPACING_FONT);
+        client.inGameHud.getChatHud().addMessage(Text.empty().append(spacing).append(line).append(spacing), null, null);
     }
 }
