@@ -58,19 +58,19 @@ public class NarrateCommand extends AbstractCommand {
         int hudWidth = MathHelper.floor((double) client.inGameHud.getChatHud().getWidth() / client.inGameHud.getChatHud().getChatScale());
         if (CoreUtilities.contains(text, '\n')) {
             for (String rawLine : CoreUtilities.split(text, '\n')) {
-                sendSpacedLine(Text.literal(rawLine), hudWidth);
+                sendCenteredLine(Text.literal(rawLine), hudWidth);
             }
             return;
         }
-        sendSpacedLine(Text.literal(text), hudWidth);
+        sendCenteredLine(Text.literal(text), hudWidth);
     }
 
-    private static void sendSpacedLine(MutableText line, int hudWidth) {
+    private static void sendCenteredLine(MutableText line, int hudWidth) {
         MinecraftClient client = MinecraftClient.getInstance();
         int lineWidth = client.textRenderer.getWidth(line);
         if (lineWidth > hudWidth) {
             for (OrderedText wrappedLine : client.textRenderer.wrapLines(line, hudWidth)) {
-                sendSpacedLine(Text.literal(Utilities.orderedTextToString(wrappedLine)), hudWidth);
+                sendCenteredLine(Text.literal(Utilities.orderedTextToString(wrappedLine)), hudWidth);
             }
             return;
         }
