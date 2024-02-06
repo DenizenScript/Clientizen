@@ -23,8 +23,7 @@ public class NarrateCommand extends AbstractCommand {
     //
     // @Description
     // Prints some text into the client's chat area, optionally centering it.
-    // When centering text, new lines will be split with each line being centered,
-    // and if the text is wider than the chat HUD it will be wrapped into multiple centered lines.
+    // When centering text, new lines will be split with each line being centered, and text wider than the chat HUD will be wrapped into multiple centered lines.
     //
     // @Tags
     // None
