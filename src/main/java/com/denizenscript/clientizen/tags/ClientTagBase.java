@@ -189,6 +189,35 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
             }
         });
 
+        // <--[tag]
+        // @attribute <client.chat_width>
+        // @returns ElementTag(Number)
+        // @description
+        // Returns the width of the client's chat HUD, in pixels.
+        // @example
+        // # Use to check if a line of text can fit in the chat HUD without splitting into multiple lines.
+        // - if <[text].text_width.mul[<client.chat_scale>]> <= <client.chat_width>:
+        //   - narrate <[text]>
+        // - else:
+        //   - narrate "Too long!"
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "chat_width", (attribute, object) -> {
+            return new ElementTag(MinecraftClient.getInstance().inGameHud.getChatHud().getWidth());
+        });
+
+        // <--[tag]
+        // @attribute <client.chat_scale>
+        // @returns ElementTag(Number)
+        // @description
+        // Returns the client's chat scale, which is a multiplier for text's size.
+        // @example
+        // # Use to get the width text would have if displayed in the chat HUD.
+        // - narrate "The text would be <[text].text_width.mul[<client.chat_scale>]> pixels wide."
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "chat_scale", (attribute, object) -> {
+            return new ElementTag(MinecraftClient.getInstance().inGameHud.getChatHud().getChatScale());
+        });
+
         // TODO this is temporary and is meant for testing only, should be replaced by a proper modifyblock command
         tagProcessor.registerMechanism("modifyblock", false, MaterialTag.class, (object, mechanism, input) -> {
             MinecraftClient client = MinecraftClient.getInstance();

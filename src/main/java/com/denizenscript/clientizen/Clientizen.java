@@ -4,6 +4,7 @@ import com.denizenscript.clientizen.debuggui.ClientizenDebugScreen;
 import com.denizenscript.clientizen.events.ClientizenScriptEventRegistry;
 import com.denizenscript.clientizen.network.NetworkManager;
 import com.denizenscript.clientizen.objects.ClientizenObjectRegistry;
+import com.denizenscript.clientizen.objects.extensions.ClientizenExtensionRegistry;
 import com.denizenscript.clientizen.objects.properties.PropertyRegistry;
 import com.denizenscript.clientizen.scripts.commands.ClientizenCommandRegistry;
 import com.denizenscript.clientizen.scripts.containers.ClientizenContainerRegistry;
@@ -75,12 +76,13 @@ public class Clientizen implements ClientModInitializer {
         CoreConfiguration.allowStrangeFileSaves = false;
         CoreConfiguration.allowWebget = false;
 
-        // Register commands, script containers, events, objects, and tag handlers
+        // Register Clientizen script features
         ClientizenCommandRegistry.registerCommands();
         ClientizenContainerRegistry.registerContainers();
         ClientizenScriptEventRegistry.registerEvents();
         ClientizenObjectRegistry.registerObjects();
         ClientizenTagRegistry.registerTagHandlers();
+        ClientizenExtensionRegistry.registerExtensions();
         PropertyRegistry.register();
 
         // Initialize Clientizen systems
