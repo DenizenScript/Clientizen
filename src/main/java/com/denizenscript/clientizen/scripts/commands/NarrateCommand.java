@@ -33,6 +33,10 @@ public class NarrateCommand extends AbstractCommand {
     // - narrate "Hello World!"
     //
     // @Usage
+    // Use to narrate some text in the center of the chat area.
+    // - narrate "This is in the center!" center
+    //
+    // @Usage
     // Use to narrate 2 centered lines.
     // - narrate "Hello!<n>This is centered!" center
     // -->
