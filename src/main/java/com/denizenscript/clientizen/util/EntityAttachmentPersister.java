@@ -13,6 +13,19 @@ import java.util.*;
 @SuppressWarnings("UnstableApiUsage")
 public class EntityAttachmentPersister {
 
+    // <--[language]
+    // @name Client-side entity data
+    // @group Client Information
+    // @description
+    // Entity data controlled by Clientizen can be separated into 2 categories: server data, and Clientizen data.
+    // Server data is anything about an entity that is provided by the server, such as weather a sheep is sheared, the block an enderman is holding, etc.
+    // While controllable client-side, the value on the server doesn't actually change, so any time the entity is reloaded (unloaded and then loaded again),
+    // the client receives the entity's actual data from the server, and any changes made client-side do not persist.
+    //
+    // Clientizen data is any data that's added by Clientizen, and thus the server isn't aware of.
+    // This means that the data is only ever present client-side, and while it persists when an entity is reloaded, it will be cleared when the client disconnects/closes.
+    // -->
+
     private static final Map<UUID, List<Pair<AttachmentType<Object>, Object>>> persistedData = new HashMap<>();
     private static final List<AttachmentType<Object>> persistedAttachments = new ArrayList<>();
 
