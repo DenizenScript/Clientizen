@@ -15,6 +15,7 @@
     "MinecraftClientMixin",
     "SneakingKeyBindingMixin",
     "StickyKeyBindingAccessor",
+    "WorldRendererMixin",
     "gui.WScrollPanelAccessor",
     "gui.WTextAccessor"
   ],

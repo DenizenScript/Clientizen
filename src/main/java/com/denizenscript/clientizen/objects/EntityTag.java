@@ -1,15 +1,18 @@
 package com.denizenscript.clientizen.objects;
 
 import com.denizenscript.clientizen.mixin.ClientWorldAccessor;
+import com.denizenscript.clientizen.util.EntityAttachmentPersister;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.*;
+import com.denizenscript.denizencore.objects.core.ColorTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -63,6 +66,8 @@ public class EntityTag implements ObjectTag, Adjustable {
     // -->
 
     private static final Set<UUID> renderedEntities = new HashSet<>();
+
+    public static final AttachmentType<Integer> GLOW_COLOR_OVERRIDE = EntityAttachmentPersister.createAttachment("glow_color_override");
 
     public final UUID uuid;
     public Entity entity;
@@ -211,6 +216,39 @@ public class EntityTag implements ObjectTag, Adjustable {
         // -->
         tagProcessor.registerTag(ElementTag.class, "is_rendering", (attribute, object) -> {
             return new ElementTag(renderedEntities.contains(object.getEntity().getUuid()));
+        });
+
+        // <--[tag]
+        // @attribute <EntityTag.glow_color_override>
+        // @returns ColorTag
+        // @mechanism EntityTag.glow_color_override
+        // @description
+        // Returns the entity's glow color override, if any.
+        // Note that this is Clientizen data, see <@link language Client-side entity data> for more information.
+        // -->
+        tagProcessor.registerTag(ColorTag.class, "glow_color_override", (attribute, object) -> {
+            Integer glowColor = object.getEntity().getAttached(GLOW_COLOR_OVERRIDE);
+            return glowColor != null ? ColorTag.fromRGB(glowColor) : null;
+        });
+
+        // <--[mechanism]
+        // @object EntityTag
+        // @name glow_color_override
+        // @input ColorTag
+        // @description
+        // Sets the entity's glow color override.
+        // Provide no input to unset.
+        // Note that this is Clientizen data, see <@link language Client-side entity data> for more information.
+        // @tags
+        // <EntityTag.glow_color_override>
+        // -->
+        tagProcessor.registerMechanism("glow_color_override", false, (object, mechanism) -> {
+            if (!mechanism.hasValue()) {
+                object.getEntity().removeAttached(GLOW_COLOR_OVERRIDE);
+            }
+            else if (mechanism.requireObject(ColorTag.class)) {
+                object.getEntity().setAttached(GLOW_COLOR_OVERRIDE, mechanism.valueAsType(ColorTag.class).asRGB());
+            }
         });
     }
 
