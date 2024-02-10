@@ -18,7 +18,7 @@ public class EntityAttachmentPersister {
     // @group Client Information
     // @description
     // Entity data controlled by Clientizen can be separated into 2 categories: server data, and Clientizen data.
-    // Server data is anything about an entity that is provided by the server, such as weather a sheep is sheared, the block an enderman is holding, etc.
+    // Server data is anything about an entity that is provided by the server, such as whether a sheep is sheared, the block an enderman is holding, etc.
     // While controllable client-side, the value on the server doesn't actually change, so any time the entity is reloaded (unloaded and then loaded again),
     // the client receives the entity's actual data from the server, and any changes made client-side do not persist.
     //

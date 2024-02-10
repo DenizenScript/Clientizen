@@ -6,6 +6,7 @@ import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.Person;
+import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,5 +67,14 @@ public class Utilities {
             }
         }
         return snakeCaseBuilder.toString();
+    }
+
+    public static String orderedTextToString(OrderedText text) {
+        StringBuilder converted = new StringBuilder();
+        text.accept((index, style, codePoint) -> {
+            converted.append(Character.toChars(codePoint));
+            return true;
+        });
+        return converted.toString();
     }
 }

@@ -1,0 +1,10 @@
+{
+  "providers": [
+    {
+      "type": "space",
+      "advances": {
+        " ": 0.5
+      }
+    }
+  ]
+}
