@@ -26,16 +26,16 @@ public class ClientizenElementExtensions {
         });
 
         // <--[tag]
-        // @attribute <ElementTag.wrap_lines[<width>]>
+        // @attribute <ElementTag.split_lines_by_width[<#>]>
         // @returns ListTag
         // @description
-        // Returns the element split into multiple lines, with each line being less (or just as) wide as the specified width.
+        // Returns the element split into multiple lines, with each line being less (or just as) wide as the specified pixel width.
         // @example
-        // # Use to split text into lines, with each line's width being no more than 30.
-        // - foreach <[text].wrap_lines[30]> as:line:
+        // # Use to split text into lines, with each line's width being no more than 30 pixels.
+        // - foreach <[text].split_lines_by_width[30]> as:line:
         //   - narrate <[line]>
         // -->
-        ElementTag.tagProcessor.registerTag(ListTag.class, ElementTag.class, "wrap_lines", (attribute, object, param) -> {
+        ElementTag.tagProcessor.registerTag(ListTag.class, ElementTag.class, "split_lines_by_width", (attribute, object, param) -> {
             if (!param.isInt()) {
                 attribute.echoError("Invalid width specified: " + param + '.');
                 return null;
