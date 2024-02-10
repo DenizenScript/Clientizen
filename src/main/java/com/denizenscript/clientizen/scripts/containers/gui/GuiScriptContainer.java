@@ -458,7 +458,7 @@ public class GuiScriptContainer extends ScriptContainer {
     // contrast: <decimal>
     // </code>
     // Alternatively, specify a texture path within the GUI sprite texture atlas, e.g. "minecraft:widget/button" for "minecraft/textures/gui/sprites/widget/button.png".
-    // You can also use custom textures added by resource packs, see <@link https://minecraft.wiki/w/Resource_pack#GUI> for more information.
+    // You can also use custom textures added by resource packs, see <@link url https://minecraft.wiki/w/Resource_pack#GUI> for more information.
     // -->
 
     public static BackgroundPainter parseBackgroundPainter(YamlConfiguration config, String path, TagContext context) {
