@@ -45,16 +45,16 @@ public class ParticleCommand extends AbstractCommand {
     // @Group world
     //
     // @Description
-    // Spawns a particle of the specified type in the world, optionally changing its properties.
-    // The particle can be any particle type, including ones added by other mods - see <@link url https://minecraft.wiki/w/Particles_(Java_Edition)#Types_of_particles> for all vanilla particle types.
+    // Spawns a particle of the specified type in the world.
+    // The type can be any particle type, including ones added by other mods - see <@link url https://minecraft.wiki/w/Particles_(Java_Edition)#Types_of_particles> for all vanilla particle types.
     // The location can be any location to play the particle at.
-    // The velocity is a vector location for the particles movement, which overrides the particles default movement (if any).
+    // The velocity is a vector location for the particle's movement, which overrides its default movement (if any).
     // The color will override the particle's color or color its texture (depending on the particle), and can be any color.
     // Alpha is supported by some particles, and will change their transparency.
-    // The duration is the amount of time the particle should exist for before disappearing.
+    // The duration is the amount of time the particle will exist for before disappearing.
     // The scale multiplier is a multiplier for the particle's size, which applies on top of any scaling the particle might already have (so particles with varying sizes will still have varying sizes, for example).
     // The data is a <@link ObjectType MapTag> of custom data for the particle (see below).
-    // The raw data is an alternative data input that takes in text in the same format as the "/particle" command and parses it into the particle's data, should generally prefer the "data:" argument.
+    // Raw data is an alternative data input that takes in text in the same format as the "/particle" command and parses it into the particle's data. Should generally prefer the "data:" argument.
     //
     // "block", "block_marker", and "falling_dust" take:
     // - <@link ObjectType MaterialTag> "material" key, for the particle's block type.
