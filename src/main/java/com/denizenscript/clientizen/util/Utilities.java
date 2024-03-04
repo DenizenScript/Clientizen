@@ -6,11 +6,13 @@ import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.Person;
+import net.minecraft.registry.Registry;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,6 +21,10 @@ public class Utilities {
     @NotNull
     public static String idToString(Identifier identifier) {
         return identifier.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? identifier.getPath() : identifier.toString();
+    }
+
+    public static List<String> listRegistryKeys(Registry<?> registry) {
+        return registry.getIds().stream().map(Utilities::idToString).toList();
     }
 
     @Nullable

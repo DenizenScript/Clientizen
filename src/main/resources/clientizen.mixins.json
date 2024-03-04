@@ -16,6 +16,8 @@
     "SneakingKeyBindingMixin",
     "StickyKeyBindingAccessor",
     "WorldRendererMixin",
+    "WorldRendererAccessor",
+    "ParticleAccessor",
     "gui.WScrollPanelAccessor",
     "gui.WTextAccessor"
   ],

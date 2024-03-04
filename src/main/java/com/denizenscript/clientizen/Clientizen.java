@@ -77,10 +77,10 @@ public class Clientizen implements ClientModInitializer {
         CoreConfiguration.allowWebget = false;
 
         // Register Clientizen script features
+        ClientizenObjectRegistry.registerObjects();
         ClientizenCommandRegistry.registerCommands();
         ClientizenContainerRegistry.registerContainers();
         ClientizenScriptEventRegistry.registerEvents();
-        ClientizenObjectRegistry.registerObjects();
         ClientizenTagRegistry.registerTagHandlers();
         ClientizenExtensionRegistry.registerExtensions();
         PropertyRegistry.register();
