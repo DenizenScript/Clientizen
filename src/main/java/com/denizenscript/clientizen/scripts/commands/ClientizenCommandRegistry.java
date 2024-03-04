@@ -6,8 +6,9 @@ import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 public class ClientizenCommandRegistry {
 
     public static void registerCommands() {
-        registerCommand(NarrateCommand.class);
         registerCommand(GuiCommand.class);
+        registerCommand(NarrateCommand.class);
+        registerCommand(ParticleCommand.class);
         registerCommand(ServerEventCommand.class);
     }
 
