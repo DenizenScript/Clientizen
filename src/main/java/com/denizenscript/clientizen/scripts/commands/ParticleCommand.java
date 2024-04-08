@@ -82,7 +82,16 @@ public class ParticleCommand extends AbstractCommand {
     // None
     //
     // @Usage
+    // Use to spawn a large flame particle above the player.
+    // - particle type:flame at:<client.self_entity.location.above[2.5]> scale_multiplier:4
     //
+    // @Usage
+    // Use to spawn a dust color transition particle that changes color from red to blue.
+    // - particle type:dust_color_transition at:<[location]> data:[from=red;to=blue;scale=2]
+    //
+    // @Usage
+    // Use to spawn a block marker particle of a stone block that slowly moves upwards.
+    // - particle type:block_marker at:<[location]> data:[material=stone] velocity:0,0.1,0
     //
     // -->
 
