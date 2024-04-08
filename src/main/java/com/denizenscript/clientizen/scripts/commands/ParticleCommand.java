@@ -38,7 +38,7 @@ public class ParticleCommand extends AbstractCommand {
 
     // <--[command]
     // @Name Particle
-    // @Syntax particle [type:<particle>] [at:<location>] (velocity:<velocity>) (color:<color>) (duration:<duration>) (scale_multiplier:<#.#>) (data:<data>/raw_data:<data>)
+    // @Syntax particle [type:<particle>] [at:<location>] (velocity:<velocity>) (color:<color>) (duration:<duration>) (scale_multiplier:<#.#>) (data:<map>/raw_data:<data>)
     // @Required 2
     // @Maximum 7
     // @Short Spawns a particle in the world.
@@ -53,7 +53,7 @@ public class ParticleCommand extends AbstractCommand {
     // Alpha is supported by some particles, and will change their transparency.
     // The duration is the amount of time the particle will exist for before disappearing.
     // The scale multiplier is a multiplier for the particle's size, which applies on top of any scaling the particle might already have (so particles with varying sizes will still have varying sizes, for example).
-    // The data is a <@link ObjectType MapTag> of custom data for the particle (see below).
+    // The data is a map of custom data for the particle (see below).
     // Raw data is an alternative data input that takes in text in the same format as the "/particle" command and parses it into the particle's data. Should generally prefer the "data:" argument.
     //
     // "block", "block_marker", and "falling_dust" take:
@@ -97,7 +97,7 @@ public class ParticleCommand extends AbstractCommand {
 
     public ParticleCommand() {
         setName("particle");
-        setSyntax("particle [type:<particle>] [at:<location>] (velocity:<velocity>) (color:<color>) (duration:<duration>) (scale_multiplier:<#.#>) (data:<data>/raw_data:<data>)");
+        setSyntax("particle [type:<particle>] [at:<location>] (velocity:<velocity>) (color:<color>) (duration:<duration>) (scale_multiplier:<#.#>) (data:<map>/raw_data:<data>)");
         setRequiredArguments(2, 7);
         autoCompile();
     }
