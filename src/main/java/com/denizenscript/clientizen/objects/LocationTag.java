@@ -186,10 +186,10 @@ public class LocationTag implements ObjectTag, VectorObject {
         // @returns ElementTag
         // @group identity
         // @description
-        // Returns the name of the world that the location is in, if any.
+        // Returns the name of the world the location is in, if any.
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "world", (attribute, object) -> {
-            return object.world != null ? new ElementTag(object.world) : null;
+            return object.world != null ? new ElementTag(object.world, true) : null;
         });
 
         // <--[tag]
@@ -220,6 +220,111 @@ public class LocationTag implements ObjectTag, VectorObject {
         tagProcessor.registerTag(LocationTag.class, "round_down", (attribute, object) -> {
             return new LocationTag(Math.floor(object.x), Math.floor(object.y), Math.floor(object.z), Math.floor(object.yaw), Math.floor(object.pitch), object.world);
         });
+
+        // <--[tag]
+        // @attribute <LocationTag.above[(<#.#>)]>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location above this location. Optionally specify a number of blocks to go up.
+        // This just moves straight along the Y axis, equivalent to <@link tag VectorObject.add> with input 0,1,0 (or the input value instead of '1').
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "above", (attribute, object) -> {
+            return object.duplicate().add(0, attribute.hasParam() ? attribute.getDoubleParam() : 1, 0);
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.below[(<#.#>)]>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location below this location. Optionally specify a number of blocks to go down.
+        // This just moves straight along the Y axis, equivalent to <@link tag VectorObject.sub> with input 0,1,0 (or the input value instead of '1').
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "below", (attribute, object) -> {
+            return object.duplicate().subtract(0, attribute.hasParam() ? attribute.getDoubleParam() : 1, 0);
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.forward[(<#.#>)]>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location in front of this location based on yaw and pitch. Optionally specify a number of blocks to go forward.
+        // This is equivalent to <@link tag LocationTag.backward> in the opposite direction.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "forward", (attribute, object) -> {
+            Vec3d vector = object.getDirection().multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            return object.duplicate().add(vector);
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.backward[(<#.#>)]>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location behind this location based on yaw and pitch. Optionally specify a number of blocks to go backward.
+        // This is equivalent to <@link tag LocationTag.forward> in the opposite direction.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "backward", (attribute, object) -> {
+            Vec3d vector = object.getDirection().multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            return object.duplicate().subtract(vector);
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.left[(<#.#>)]>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location to the left of this location based on pitch and yaw. Optionally specify a number of blocks to go left.
+        // This is equivalent to <@link tag LocationTag.forward> with a +90 degree rotation to the yaw and the pitch set to 0.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "left", (attribute, object) -> {
+            Vec3d vector = Vec3d.fromPolar(0, object.yaw).rotateY((float) (Math.PI / 2)).multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            return object.duplicate().add(vector);
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.right[(<#.#>)]>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location to the right of this location based on pitch and yaw. Optionally specify a number of blocks to go right.
+        // This is equivalent to <@link tag LocationTag.forward> with a -90 degree rotation to the yaw and the pitch set to 0.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "right", (attribute, object) -> {
+            Vec3d vector = Vec3d.fromPolar(0, object.yaw).rotateY((float) (Math.PI / 2)).multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            return object.duplicate().subtract(vector);
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.up[(<#.#>)]>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location above this location based on pitch and yaw. Optionally specify a number of blocks to go up.
+        // This is equivalent to <@link tag LocationTag.forward> with a +90 degree rotation to the pitch.
+        // To just get the location above this location, use <@link tag LocationTag.above> instead.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "up", (attribute, object) -> {
+            Vec3d vector = Vec3d.fromPolar(object.pitch - 90, object.yaw).multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            return object.duplicate().add(vector);
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.down[(<#.#>)]>
+        // @returns LocationTag
+        // @group math
+        // @description
+        // Returns the location below this location based on pitch and yaw. Optionally specify a number of blocks to go down.
+        // This is equivalent to <@link tag LocationTag.forward> with a -90 degree rotation to the pitch.
+        // To just get the location above this location, use <@link tag LocationTag.below> instead.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "down", (attribute, object) -> {
+            Vec3d vector = Vec3d.fromPolar(object.pitch - 90, object.yaw).multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            return object.duplicate().subtract(vector);
+        });
+
 
         // <--[tag]
         // @attribute <LocationTag.material>
@@ -285,9 +390,9 @@ public class LocationTag implements ObjectTag, VectorObject {
     }
 
     public static float normalizeYaw(float yaw) {
-        yaw = yaw % 360;
+        yaw %= 360;
         if (yaw < 0) {
-            yaw += 360.0;
+            yaw += 360;
         }
         return yaw;
     }
@@ -327,6 +432,28 @@ public class LocationTag implements ObjectTag, VectorObject {
         this.z = z;
     }
 
+    public LocationTag add(double x, double y, double z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return this;
+    }
+
+    public LocationTag add(Vec3d toAdd) {
+        return add(toAdd.getX(), toAdd.getY(), toAdd.getZ());
+    }
+
+    public LocationTag subtract(double x, double y, double z) {
+        this.x -= x;
+        this.y -= y;
+        this.z -= z;
+        return this;
+    }
+
+    public LocationTag subtract(Vec3d toSub) {
+        return subtract(toSub.getX(), toSub.getY(), toSub.getZ());
+    }
+
     public int getBlockX() {
         return MathHelper.floor(getX());
     }
@@ -340,6 +467,10 @@ public class LocationTag implements ObjectTag, VectorObject {
 
     public BlockPos getBlockPos() {
         return BlockPos.ofFloored(getX(), getY(), getZ());
+    }
+
+    public Vec3d getDirection() {
+        return Vec3d.fromPolar(pitch, yaw);
     }
 
     private String prefix = "Location";
