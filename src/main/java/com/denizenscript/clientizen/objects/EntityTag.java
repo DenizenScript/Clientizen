@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -181,6 +182,14 @@ public class EntityTag implements ObjectTag, Adjustable {
         return getEntity().getType().getUntranslatedName();
     }
 
+    public float getSpigotYaw() {
+        Entity entity = getEntity();
+        if (entity instanceof LivingEntity && !(entity instanceof ArmorStandEntity)) {
+            return entity.getHeadYaw();
+        }
+        return entity.getYaw();
+    }
+
     public boolean isSpawned() {
         return uuid != null && getEntity() != null && entity.isAlive();
     }
@@ -205,6 +214,28 @@ public class EntityTag implements ObjectTag, Adjustable {
         // -->
         tagProcessor.registerTag(ElementTag.class, "entity_type", (attribute, object) -> {
             return new ElementTag(object.getTypeName(), true);
+        });
+
+        // <--[tag]
+        // @attribute <EntityTag.location>
+        // @returns LocationTag
+        // @group location
+        // @description
+        // Returns an entity's location.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "location", (attribute, object) -> {
+            return new LocationTag(object.getEntity().getPos(), object.getSpigotYaw(), object.getEntity().getPitch());
+        });
+
+        // <--[tag]
+        // @attribute <EntityTag.eye_location>
+        // @returns LocationTag
+        // @group location
+        // @description
+        // Returns the entity's eye location.
+        // -->
+        tagProcessor.registerTag(LocationTag.class, "eye_location", (attribute, object) -> {
+            return new LocationTag(object.getEntity().getEyePos(), object.getSpigotYaw(), object.getEntity().getPitch());
         });
 
         // <--[tag]
