@@ -1,3 +1,4 @@
 accessWidener v2 named
 
 accessible class net/minecraft/client/gui/screen/pack/ExperimentalWarningScreen$DetailsScreen
+accessible class net/minecraft/client/particle/ParticleManager$SimpleSpriteProvider
