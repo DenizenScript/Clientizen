@@ -1,6 +1,6 @@
 package com.denizenscript.clientizen.scripts.commands;
 
-import com.denizenscript.clientizen.mixin.ParticleAccessor;
+import com.denizenscript.clientizen.mixin.particle.ParticleAccessor;
 import com.denizenscript.clientizen.mixin.WorldRendererAccessor;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.clientizen.objects.ItemTag;

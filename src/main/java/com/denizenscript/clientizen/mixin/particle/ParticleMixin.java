@@ -1,8 +1,9 @@
-package com.denizenscript.clientizen.mixin;
+package com.denizenscript.clientizen.mixin.particle;
 
 import com.denizenscript.clientizen.access.ParticleMixinAccess;
 import com.denizenscript.clientizen.objects.ParticleTag;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.particle.ParticleType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +16,10 @@ import java.util.UUID;
 public abstract class ParticleMixin implements ParticleMixinAccess {
 
     @Unique
-    private final UUID clientizen$id = UUID.randomUUID();
+    final UUID clientizen$id = UUID.randomUUID();
+
+    @Unique
+    ParticleType<?> clientizen$particleType;
 
     @Inject(method = "<init>(Lnet/minecraft/client/world/ClientWorld;DDD)V", at = @At("TAIL"))
     private void clientizen$onParticleCreated(CallbackInfo ci) {
@@ -30,5 +34,15 @@ public abstract class ParticleMixin implements ParticleMixinAccess {
     @Override
     public UUID clientizen$getUUID() {
         return clientizen$id;
+    }
+
+    @Override
+    public ParticleType<?> clientizen$getType() {
+        return clientizen$particleType;
+    }
+
+    @Override
+    public void clientizen$setType(ParticleType<?> type) {
+        clientizen$particleType = type;
     }
 }

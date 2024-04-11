@@ -1,4 +1,4 @@
-package com.denizenscript.clientizen.mixin;
+package com.denizenscript.clientizen.mixin.particle;
 
 import net.minecraft.client.particle.Particle;
 import org.spongepowered.asm.mixin.Mixin;

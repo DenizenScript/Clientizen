@@ -2,14 +2,9 @@ package com.denizenscript.clientizen.scripts.containers;
 
 import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.access.RegistryMixinAccess;
-import com.denizenscript.clientizen.mixin.ParticleManagerAccessor;
-import com.denizenscript.clientizen.objects.LocationTag;
+import com.denizenscript.clientizen.mixin.particle.ParticleManagerAccessor;
 import com.denizenscript.clientizen.objects.ParticleTag;
 import com.denizenscript.denizencore.DenizenCore;
-import com.denizenscript.denizencore.objects.ObjectTag;
-import com.denizenscript.denizencore.objects.core.ColorTag;
-import com.denizenscript.denizencore.objects.core.DurationTag;
-import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
 import com.denizenscript.denizencore.scripts.queues.ContextSource;
@@ -29,7 +24,6 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +46,7 @@ public class ParticleScriptContainer extends ScriptContainer {
             ClientLifecycleEvents.CLIENT_STARTED.register(client -> ParticleScriptContainer.registerCustomParticles());
             return;
         }
-        Map<Identifier, ParticleManager.SimpleSpriteProvider> spritesMap = ((ParticleManagerAccessor) MinecraftClient.getInstance().particleManager).getSpritesMap();
+        Map<Identifier, ParticleManager.SimpleSpriteProvider> spritesMap = ParticleTag.getSpriteProviders();
         for (ParticleScriptContainer particleScript : customParticles) {
             DefaultParticleType type = FabricParticleTypes.simple();
             Identifier particleId = particleScript.getId();
@@ -68,7 +62,7 @@ public class ParticleScriptContainer extends ScriptContainer {
 
     public ParticleScriptContainer(YamlConfiguration configurationSection, String scriptContainerName) {
         super(configurationSection, scriptContainerName);
-        SpriteAtlasTexture particlesAtlas = (SpriteAtlasTexture) MinecraftClient.getInstance().getTextureManager().getTexture(SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE);
+        SpriteAtlasTexture particlesAtlas = ParticleTag.getParticleAtlas();
         List<String> textureInput = getStringList("textures", true);
         textures = new ArrayList<>(textureInput.size());
         for (String texture : textureInput) {
@@ -117,6 +111,7 @@ public class ParticleScriptContainer extends ScriptContainer {
                 markDead();
                 return;
             }
+            move(this.velocityX, this.velocityY, this.velocityZ);
             ScriptUtilities.createAndStartQueueArbitrary(particleScript.getName() + "_TICK", particleScript.tick, DenizenCore.implementation.getEmptyScriptEntryData(), scriptContext, null);
         }
 

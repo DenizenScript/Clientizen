@@ -1,17 +1,27 @@
 package com.denizenscript.clientizen.objects;
 
 import com.denizenscript.clientizen.access.ParticleMixinAccess;
-import com.denizenscript.clientizen.mixin.ParticleAccessor;
+import com.denizenscript.clientizen.mixin.particle.ParticleAccessor;
+import com.denizenscript.clientizen.mixin.particle.ParticleManagerAccessor;
+import com.denizenscript.clientizen.mixin.particle.SpriteBillboardParticleAccessor;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.particle.SpriteBillboardParticle;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +30,14 @@ import java.util.UUID;
 public class ParticleTag implements Adjustable {
 
     public static final Map<UUID, Particle> particles = new HashMap<>();
+
+    public static SpriteAtlasTexture getParticleAtlas() {
+        return (SpriteAtlasTexture) MinecraftClient.getInstance().getTextureManager().getTexture(SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE);
+    }
+
+    public static Map<Identifier, ParticleManager.SimpleSpriteProvider> getSpriteProviders() {
+        return ((ParticleManagerAccessor) MinecraftClient.getInstance().particleManager).getSpriteProviderMap();
+    }
 
     @Fetchable("particle")
     public static ParticleTag valueOf(String text, TagContext context) {
@@ -56,7 +74,23 @@ public class ParticleTag implements Adjustable {
         return (ParticleAccessor) particle;
     }
 
+    public ParticleMixinAccess getMixinAccess() {
+        return (ParticleMixinAccess) particle;
+    }
+
+    public Identifier getTypeId() {
+        return Registries.PARTICLE_TYPE.getId(getMixinAccess().clientizen$getType());
+    }
+
+    public String getTypeString() {
+        return Utilities.idToString(getTypeId());
+    }
+
     public static void register() {
+        tagProcessor.registerTag(ElementTag.class, "type", (attribute, object) -> {
+            return new ElementTag(object.getTypeString(), true);
+        });
+
         tagProcessor.registerTag(LocationTag.class, "location", (attribute, object) -> {
             ParticleAccessor particle = object.getAccessor();
             return new LocationTag(particle.getX(), particle.getY(), particle.getZ());
@@ -73,6 +107,49 @@ public class ParticleTag implements Adjustable {
 
         tagProcessor.registerMechanism("velocity", false, LocationTag.class, (object, mechanism, input) -> {
             object.particle.setVelocity(input.getX(), input.getY(), input.getZ());
+        });
+
+        tagProcessor.registerTag(ElementTag.class, "texture", (attribute, object) -> {
+            if (object.particle instanceof SpriteBillboardParticleAccessor spriteParticle) {
+                return new ElementTag(Utilities.idToString(spriteParticle.getSprite().getContents().getId()), true);
+            }
+            return null;
+        });
+
+        tagProcessor.registerMechanism("texture", false, ElementTag.class, (object, mechanism, input) -> {
+            if (!(object.particle instanceof SpriteBillboardParticleAccessor spriteParticle)) {
+                mechanism.echoError("Cannot set texture: particles of type '" + object.getTypeString() + "' don't support textures.");
+                return;
+            }
+            Identifier texture = Identifier.tryParse(input.asString());
+            if (texture == null) {
+                mechanism.echoError("Invalid texture id specified: " + input + '.');
+                return;
+            }
+            Sprite sprite = getParticleAtlas().getSprite(texture);
+            if (sprite == null) {
+                mechanism.echoError("Texture id '" + input + "' is valid, but doesn't match any texture.");
+                return;
+            }
+            spriteParticle.invokeSetSprite(sprite);
+        });
+
+        tagProcessor.registerMechanism("randomize_texture", false, (object, mechanism) -> {
+            if (!(object.particle instanceof SpriteBillboardParticle spriteParticle)) {
+                mechanism.echoError("Cannot randomize texture: particles of type '" + object.getTypeString() + "' don't have textures.");
+                return;
+            }
+            ParticleManager.SimpleSpriteProvider spriteProvider = getSpriteProviders().get(object.getTypeId());
+            spriteParticle.setSprite(spriteProvider);
+        });
+
+        tagProcessor.registerMechanism("update_age_texture", false, (object, mechanism) -> {
+            if (!(object.particle instanceof SpriteBillboardParticle spriteParticle)) {
+                mechanism.echoError("Cannot update texture for age: particles of type '" + object.getTypeString() + "' don't have textures.");
+                return;
+            }
+            ParticleManager.SimpleSpriteProvider spriteProvider = getSpriteProviders().get(object.getTypeId());
+            spriteParticle.setSpriteForAge(spriteProvider);
         });
     }
 
@@ -100,7 +177,7 @@ public class ParticleTag implements Adjustable {
 
     @Override
     public String identify() {
-        return "particle@" + ((ParticleMixinAccess) particle).clientizen$getUUID();
+        return "particle@" + getMixinAccess().clientizen$getUUID();
     }
 
     @Override
@@ -110,7 +187,7 @@ public class ParticleTag implements Adjustable {
 
     @Override
     public String debuggable() {
-        return "<LG>particle@<Y>" + ((ParticleMixinAccess) particle).clientizen$getUUID();
+        return "<LG>particle@<Y>" + getMixinAccess().clientizen$getUUID() + " <GR>(<Y>" + getTypeString() + "<GR>)";
     }
 
     @Override

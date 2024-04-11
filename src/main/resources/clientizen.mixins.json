@@ -13,16 +13,18 @@
     "IntPropertyAccessor",
     "LivingEntityMixin",
     "MinecraftClientMixin",
-    "ParticleAccessor",
-    "ParticleManagerAccessor",
-    "ParticleMixin",
     "RegistryMixin",
     "SneakingKeyBindingMixin",
     "StickyKeyBindingAccessor",
     "WorldRendererAccessor",
     "WorldRendererMixin",
     "gui.WScrollPanelAccessor",
-    "gui.WTextAccessor"
+    "gui.WTextAccessor",
+    "particle.ParticleAccessor",
+    "particle.ParticleManagerAccessor",
+    "particle.ParticleManagerMixin",
+    "particle.ParticleMixin",
+    "particle.SpriteBillboardParticleAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
