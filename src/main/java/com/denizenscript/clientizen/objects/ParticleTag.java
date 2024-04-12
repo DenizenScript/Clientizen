@@ -9,6 +9,8 @@ import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.ColorTag;
+import com.denizenscript.denizencore.objects.core.DurationTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
@@ -134,6 +136,46 @@ public class ParticleTag implements Adjustable {
             spriteParticle.invokeSetSprite(sprite);
         });
 
+        tagProcessor.registerTag(ColorTag.class, "color", (attribute, object) -> {
+            ParticleAccessor particle = object.getAccessor();
+            return new ColorTag((int) (particle.getRed() * 255f), (int) (particle.getGreen() * 255f), (int) (particle.getBlue() * 255f), (int) (particle.getAlpha() * 255f));
+        });
+
+        tagProcessor.registerMechanism("color", false, ColorTag.class, (object, mechanism, input) -> {
+            object.particle.setColor(input.red / 255f, input.green / 255f, input.blue / 255f);
+            object.getAccessor().invokeSetAlpha(input.alpha / 255f);
+        });
+
+        tagProcessor.registerTag(ElementTag.class, "world_collision", (attribute, object) -> {
+            return new ElementTag(object.getAccessor().collidesWithWorld());
+        });
+
+        tagProcessor.registerMechanism("world_collision", false, ElementTag.class, (object, mechanism, input) -> {
+            if (mechanism.requireBoolean()) {
+                object.getAccessor().setCollidesWithWorld(input.asBoolean());
+            }
+        });
+
+        tagProcessor.registerTag(DurationTag.class, "time_lived", (attribute, object) -> {
+            return new DurationTag((long) object.getAccessor().getAge());
+        });
+
+        tagProcessor.registerMechanism("time_lived", false, DurationTag.class, (object, mechanism, input) -> {
+            object.getAccessor().setAge(input.getTicksAsInt());
+        });
+
+        tagProcessor.registerTag(DurationTag.class, "time_to_live", (attribute, object) -> {
+            return new DurationTag((long) object.particle.getMaxAge());
+        });
+
+        tagProcessor.registerMechanism("time_to_live", false, DurationTag.class, (object, mechanism, input) -> {
+            object.particle.setMaxAge(input.getTicksAsInt());
+        });
+
+        tagProcessor.registerTag(ElementTag.class, "on_ground", (attribute, object) -> {
+            return new ElementTag(object.getAccessor().isOnGround());
+        });
+
         tagProcessor.registerMechanism("randomize_texture", false, (object, mechanism) -> {
             if (!(object.particle instanceof SpriteBillboardParticle spriteParticle)) {
                 mechanism.echoError("Cannot randomize texture: particles of type '" + object.getTypeString() + "' don't have textures.");
@@ -150,6 +192,16 @@ public class ParticleTag implements Adjustable {
             }
             ParticleManager.SimpleSpriteProvider spriteProvider = getSpriteProviders().get(object.getTypeId());
             spriteParticle.setSpriteForAge(spriteProvider);
+        });
+
+        tagProcessor.registerMechanism("multiply_scale", false, ElementTag.class, (object, mechanism, input) -> {
+            if (mechanism.requireFloat()) {
+                object.particle.scale(input.asFloat());
+            }
+        });
+
+        tagProcessor.registerMechanism("remove", false, (object, mechanism) -> {
+            object.particle.markDead();
         });
     }
 

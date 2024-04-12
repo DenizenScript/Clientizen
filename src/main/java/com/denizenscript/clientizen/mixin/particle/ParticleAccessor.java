@@ -8,9 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Particle.class)
 public interface ParticleAccessor {
 
-    @Invoker
-    void invokeSetAlpha(float alpha);
-
     // MCDev plugin bug, need to specify the name in the annotation to avoid IDE errors
     @Accessor("x")
     double getX();
@@ -29,4 +26,34 @@ public interface ParticleAccessor {
 
     @Accessor
     double getVelocityZ();
+
+    @Accessor
+    float getRed();
+
+    @Accessor
+    float getGreen();
+
+    @Accessor
+    float getBlue();
+
+    @Accessor
+    float getAlpha();
+
+    @Invoker
+    void invokeSetAlpha(float alpha);
+
+    @Accessor
+    boolean isOnGround();
+
+    @Accessor("collidesWithWorld")
+    boolean collidesWithWorld();
+
+    @Accessor
+    void setCollidesWithWorld(boolean collidesWithWorld);
+
+    @Accessor
+    int getAge();
+
+    @Accessor
+    void setAge(int age);
 }
