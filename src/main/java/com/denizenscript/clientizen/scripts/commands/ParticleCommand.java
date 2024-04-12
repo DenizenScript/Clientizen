@@ -3,10 +3,7 @@ package com.denizenscript.clientizen.scripts.commands;
 import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.mixin.WorldRendererAccessor;
 import com.denizenscript.clientizen.mixin.particle.ParticleAccessor;
-import com.denizenscript.clientizen.objects.EntityTag;
-import com.denizenscript.clientizen.objects.ItemTag;
-import com.denizenscript.clientizen.objects.LocationTag;
-import com.denizenscript.clientizen.objects.MaterialTag;
+import com.denizenscript.clientizen.objects.*;
 import com.denizenscript.clientizen.scripts.containers.ParticleScriptContainer;
 import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException;
 import com.denizenscript.denizencore.objects.ObjectTag;
@@ -213,6 +210,7 @@ public class ParticleCommand extends AbstractCommand {
             }
             createdParticle.scale(scaleMultiplier.asFloat());
         }
+        scriptEntry.saveObject("created_particle", new ParticleTag(createdParticle));
     }
 
     private static Vector3f colorToVector(ColorTag color) {
