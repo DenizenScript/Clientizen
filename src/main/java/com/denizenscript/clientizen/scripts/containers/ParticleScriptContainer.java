@@ -2,9 +2,10 @@ package com.denizenscript.clientizen.scripts.containers;
 
 import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.access.RegistryMixinAccess;
-import com.denizenscript.clientizen.mixin.particle.ParticleManagerAccessor;
 import com.denizenscript.clientizen.objects.ParticleTag;
+import com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer;
 import com.denizenscript.denizencore.DenizenCore;
+import com.denizenscript.denizencore.objects.core.DurationTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
 import com.denizenscript.denizencore.scripts.queues.ContextSource;
@@ -57,11 +58,13 @@ public class ParticleScriptContainer extends ScriptContainer {
         Registries.PARTICLE_TYPE.freeze();
     }
 
-    public List<Sprite> textures;
-    public List<ScriptEntry> tick;
+    public final List<Sprite> textures;
+    public final List<ScriptEntry> updateScript;
+    public long updateRate;
 
     public ParticleScriptContainer(YamlConfiguration configurationSection, String scriptContainerName) {
         super(configurationSection, scriptContainerName);
+        Debug.pushErrorContext(this);
         SpriteAtlasTexture particlesAtlas = ParticleTag.getParticleAtlas();
         List<String> textureInput = getStringList("textures", true);
         textures = new ArrayList<>(textureInput.size());
@@ -78,8 +81,13 @@ public class ParticleScriptContainer extends ScriptContainer {
             }
             textures.add(sprite);
         }
-        tick = getEntries(DenizenCore.implementation.getEmptyScriptEntryData(), "tick");
+        updateScript = getEntries(DenizenCore.implementation.getEmptyScriptEntryData(), "update");
+        DurationTag rateDuration = GuiScriptContainer.getTaggedObject(DurationTag.class, configurationSection, "update_rate", DenizenCore.implementation.getTagContext(this));
+        if (rateDuration != null) {
+            updateRate = rateDuration.getMillis();
+        }
         customParticles.add(this);
+        Debug.popErrorContext();
     }
 
     public Identifier getId() {
@@ -91,6 +99,7 @@ public class ParticleScriptContainer extends ScriptContainer {
         SpriteProvider spriteProvider;
         ParticleScriptContainer particleScript;
         ContextSource.SimpleMap scriptContext;
+        long lastUpdateTime;
 
         protected ClientizenParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteProvider spriteProvider, ParticleScriptContainer particleScript) {
             super(world, x, y, z, velocityX, velocityY, velocityZ);
@@ -103,16 +112,24 @@ public class ParticleScriptContainer extends ScriptContainer {
 
         @Override
         public void tick() {
-            prevPosX = x;
-            prevPosY = y;
-            prevPosZ = z;
-            prevAngle = angle;
             if (age++ >= maxAge) {
                 markDead();
                 return;
             }
+            prevPosX = x;
+            prevPosY = y;
+            prevPosZ = z;
+            prevAngle = angle;
             move(this.velocityX, this.velocityY, this.velocityZ);
-            ScriptUtilities.createAndStartQueueArbitrary(particleScript.getName() + "_TICK", particleScript.tick, DenizenCore.implementation.getEmptyScriptEntryData(), scriptContext, null);
+            if (particleScript.updateScript == null) {
+                return;
+            }
+            long currentTime = DenizenCore.currentTimeMillis;
+            if (currentTime - lastUpdateTime < particleScript.updateRate) {
+                return;
+            }
+            lastUpdateTime = currentTime;
+            ScriptUtilities.createAndStartQueueArbitrary(particleScript.getName() + "_UPDATE", particleScript.updateScript, null, scriptContext, null);
         }
 
         @Override
