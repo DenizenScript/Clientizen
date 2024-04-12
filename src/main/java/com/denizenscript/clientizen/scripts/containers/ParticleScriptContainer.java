@@ -63,7 +63,7 @@ public class ParticleScriptContainer extends ScriptContainer {
         Registries.PARTICLE_TYPE.freeze();
     }
 
-    public final List<Sprite> textures;
+    public List<Sprite> textures;
     public final List<ScriptEntry> updateScript;
     public List<Mechanism> mechanisms;
     public long updateRate;
@@ -73,6 +73,12 @@ public class ParticleScriptContainer extends ScriptContainer {
         Debug.pushErrorContext(this);
         SpriteAtlasTexture particlesAtlas = ParticleTag.getParticleAtlas();
         List<String> textureInput = getStringList("textures", true);
+        if (textureInput == null) {
+            Debug.echoError("Missing required 'textures' key.");
+            Debug.popErrorContext();
+            updateScript = null;
+            return;
+        }
         textures = new ArrayList<>(textureInput.size());
         for (String texture : textureInput) {
             Identifier textureId = Identifier.tryParse(texture);
