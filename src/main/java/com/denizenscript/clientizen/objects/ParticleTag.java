@@ -4,6 +4,7 @@ import com.denizenscript.clientizen.access.ParticleMixinAccess;
 import com.denizenscript.clientizen.mixin.particle.ParticleAccessor;
 import com.denizenscript.clientizen.mixin.particle.ParticleManagerAccessor;
 import com.denizenscript.clientizen.mixin.particle.SpriteBillboardParticleAccessor;
+import com.denizenscript.clientizen.scripts.containers.ParticleScriptContainer;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
@@ -12,6 +13,7 @@ import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ColorTag;
 import com.denizenscript.denizencore.objects.core.DurationTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.core.ScriptTag;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
@@ -91,6 +93,13 @@ public class ParticleTag implements Adjustable {
     public static void register() {
         tagProcessor.registerTag(ElementTag.class, "type", (attribute, object) -> {
             return new ElementTag(object.getTypeString(), true);
+        });
+
+        tagProcessor.registerTag(ScriptTag.class, "script", (attribute, object) -> {
+            if (object.particle instanceof ParticleScriptContainer.ClientizenParticle clientizenParticle) {
+                return new ScriptTag(clientizenParticle.particleScript);
+            }
+            return null;
         });
 
         tagProcessor.registerTag(LocationTag.class, "location", (attribute, object) -> {
@@ -239,7 +248,7 @@ public class ParticleTag implements Adjustable {
 
     @Override
     public String debuggable() {
-        return "<LG>particle@<Y>" + getMixinAccess().clientizen$getUUID() + " <GR>(<Y>" + getTypeString() + "<GR>)";
+        return "<LG>particle@<Y>" + getMixinAccess().clientizen$getUUID() + " <GR>(" + getTypeString() + ")";
     }
 
     @Override

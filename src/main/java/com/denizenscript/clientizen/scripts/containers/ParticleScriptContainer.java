@@ -118,7 +118,7 @@ public class ParticleScriptContainer extends ScriptContainer {
     public static class ClientizenParticle extends SpriteBillboardParticle {
 
         SpriteProvider spriteProvider;
-        ParticleScriptContainer particleScript;
+        public ParticleScriptContainer particleScript;
         ContextSource.SimpleMap scriptContext;
         long lastUpdateTime;
 
