@@ -5,14 +5,18 @@ import com.denizenscript.clientizen.access.RegistryMixinAccess;
 import com.denizenscript.clientizen.objects.ParticleTag;
 import com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer;
 import com.denizenscript.denizencore.DenizenCore;
+import com.denizenscript.denizencore.objects.Mechanism;
+import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.DurationTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
 import com.denizenscript.denizencore.scripts.queues.ContextSource;
+import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.ScriptUtilities;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import com.denizenscript.denizencore.utilities.text.StringHolder;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -22,6 +26,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -60,6 +65,7 @@ public class ParticleScriptContainer extends ScriptContainer {
 
     public final List<Sprite> textures;
     public final List<ScriptEntry> updateScript;
+    public List<Mechanism> mechanisms;
     public long updateRate;
 
     public ParticleScriptContainer(YamlConfiguration configurationSection, String scriptContainerName) {
@@ -82,9 +88,18 @@ public class ParticleScriptContainer extends ScriptContainer {
             textures.add(sprite);
         }
         updateScript = getEntries(DenizenCore.implementation.getEmptyScriptEntryData(), "update");
-        DurationTag rateDuration = GuiScriptContainer.getTaggedObject(DurationTag.class, configurationSection, "update_rate", DenizenCore.implementation.getTagContext(this));
+        TagContext scriptContext = DenizenCore.implementation.getTagContext(this);
+        DurationTag rateDuration = GuiScriptContainer.getTaggedObject(DurationTag.class, configurationSection, "update_rate", scriptContext);
         if (rateDuration != null) {
             updateRate = rateDuration.getMillis();
+        }
+        YamlConfiguration mechanismsSection = getConfigurationSection("mechanisms");
+        if (mechanismsSection != null) {
+            mechanisms = new ArrayList<>(mechanismsSection.contents.size());
+            for (Map.Entry<StringHolder, Object> entry : mechanismsSection.contents.entrySet()) {
+                ObjectTag value = CoreUtilities.objectToTagForm(entry.getValue(), scriptContext, true, true, true);
+                mechanisms.add(new Mechanism(entry.getKey().low, value, scriptContext));
+            }
         }
         customParticles.add(this);
         Debug.popErrorContext();
@@ -101,13 +116,20 @@ public class ParticleScriptContainer extends ScriptContainer {
         ContextSource.SimpleMap scriptContext;
         long lastUpdateTime;
 
-        protected ClientizenParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteProvider spriteProvider, ParticleScriptContainer particleScript) {
+        protected ClientizenParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ,
+                                     SpriteProvider spriteProvider, ParticleScriptContainer particleScript, ParticleType<?> particleType) {
             super(world, x, y, z, velocityX, velocityY, velocityZ);
             this.spriteProvider = spriteProvider;
             this.particleScript = particleScript;
             this.scriptContext = new ContextSource.SimpleMap();
-            scriptContext.contexts = Map.of("particle", new ParticleTag(this));
             setSprite(spriteProvider);
+            ParticleTag particleTag = new ParticleTag(this);
+            // Specifically set the type early, as we apply mechanisms
+            particleTag.getMixinAccess().clientizen$setType(particleType);
+            scriptContext.contexts = Map.of("particle", particleTag);
+            if (particleScript.mechanisms != null) {
+                particleScript.mechanisms.forEach(particleTag::safeAdjust);
+            }
         }
 
         @Override
@@ -141,7 +163,7 @@ public class ParticleScriptContainer extends ScriptContainer {
 
             @Override
             public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-                return new ClientizenParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider, particleScript);
+                return new ClientizenParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider, particleScript, parameters);
             }
         }
     }
