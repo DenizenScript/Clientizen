@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.objects;
 
+import com.denizenscript.clientizen.access.BillboardParticleMixinAccess;
 import com.denizenscript.clientizen.access.ParticleMixinAccess;
 import com.denizenscript.clientizen.mixin.particle.ParticleAccessor;
 import com.denizenscript.clientizen.mixin.particle.ParticleManagerAccessor;
@@ -179,6 +180,31 @@ public class ParticleTag implements Adjustable {
 
         tagProcessor.registerMechanism("time_to_live", false, DurationTag.class, (object, mechanism, input) -> {
             object.particle.setMaxAge(input.getTicksAsInt());
+        });
+
+        tagProcessor.registerTag(ElementTag.class, "scale", (attribute, object) -> {
+            if (object.particle instanceof BillboardParticleMixinAccess billboardParticle) {
+                return new ElementTag(billboardParticle.clientizen$getScale());
+            }
+            return null;
+        });
+
+        tagProcessor.registerMechanism("scale", false, ElementTag.class, (object, mechanism, input) -> {
+            if (!(object.particle instanceof BillboardParticleMixinAccess billboardParticle)) {
+                mechanism.echoError("Cannot set scale: particles of type '" + object.getTypeString() + "' don't support scaling.");
+                return;
+            }
+            if (mechanism.requireFloat()) {
+                billboardParticle.clientizen$setScale(mechanism.getValue().asFloat());
+            }
+        });
+
+        tagProcessor.registerMechanism("reset_scale", false, (object, mechanism) -> {
+            if (!(object.particle instanceof BillboardParticleMixinAccess billboardParticle)) {
+                mechanism.echoError("Cannot reset scale: particles of type '" + object.getTypeString() + "' don't support scaling.");
+                return;
+            }
+            billboardParticle.clientizen$setScale(null);
         });
 
         tagProcessor.registerTag(ElementTag.class, "on_ground", (attribute, object) -> {

@@ -20,6 +20,7 @@
     "WorldRendererMixin",
     "gui.WScrollPanelAccessor",
     "gui.WTextAccessor",
+    "particle.BillboardParticleMixin",
     "particle.ParticleAccessor",
     "particle.ParticleManagerAccessor",
     "particle.ParticleManagerMixin",

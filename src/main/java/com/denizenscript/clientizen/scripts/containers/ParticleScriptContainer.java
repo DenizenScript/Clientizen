@@ -125,6 +125,11 @@ public class ParticleScriptContainer extends ScriptContainer {
         protected ClientizenParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ,
                                      SpriteProvider spriteProvider, ParticleScriptContainer particleScript, ParticleType<?> particleType) {
             super(world, x, y, z, velocityX, velocityY, velocityZ);
+            // Minecraft randomizes some values, don't want that for Clientizen particles
+            this.velocityX = velocityX;
+            this.velocityY = velocityY;
+            this.velocityZ = velocityZ;
+            this.scale = 1;
             this.spriteProvider = spriteProvider;
             this.particleScript = particleScript;
             this.scriptContext = new ContextSource.SimpleMap();
