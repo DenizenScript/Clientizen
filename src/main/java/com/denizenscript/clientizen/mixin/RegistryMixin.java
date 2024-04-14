@@ -31,47 +31,30 @@ public abstract class RegistryMixin<T> implements RegistryMixinAccess {
 
     @Shadow
     private boolean frozen;
-
-    @Shadow
-    private @Nullable Map<T, RegistryEntry.Reference<T>> intrusiveValueToEntry;
-
     @Shadow
     public abstract RegistryKey<? extends Registry<T>> getKey();
-
     @Shadow
-    public abstract @Nullable T get(@Nullable Identifier id);
-
+    private @Nullable Map<T, RegistryEntry.Reference<T>> intrusiveValueToEntry;
     @Shadow
     @Final
     private ObjectList<RegistryEntry.Reference<T>> rawIdToEntry;
-
     @Shadow
     @Final
     private Map<Identifier, RegistryEntry.Reference<T>> idToEntry;
-
     @Shadow
     @Final
     private Reference2IntMap<T> entryToRawId;
-
     @Shadow
     @Final
     private Map<RegistryKey<T>, RegistryEntry.Reference<T>> keyToEntry;
-
     @Shadow
     @Final
     private Map<T, RegistryEntry.Reference<T>> valueToEntry;
-
     @Shadow
     @Final
     private Map<T, Lifecycle> entryToLifecycle;
-
     @Shadow
     private @Nullable List<RegistryEntry.Reference<T>> cachedEntries;
-
-    @Inject(method = "<init>(Lnet/minecraft/registry/RegistryKey;Lcom/mojang/serialization/Lifecycle;Z)V", at = @At("TAIL"))
-    private void clientizen$saveIsIntrusive(RegistryKey<?> key, Lifecycle lifecycle, boolean intrusive, CallbackInfo ci) {
-        clientizen$isIntrusive = intrusive;
-    }
 
     @Override
     public void clientizen$unfreeze() {
@@ -98,5 +81,10 @@ public abstract class RegistryMixin<T> implements RegistryMixinAccess {
         entryToRawId.removeInt(value.value());
         entryToLifecycle.remove(value.value());
         cachedEntries = null;
+    }
+
+    @Inject(method = "<init>(Lnet/minecraft/registry/RegistryKey;Lcom/mojang/serialization/Lifecycle;Z)V", at = @At("TAIL"))
+    private void clientizen$saveIsIntrusive(RegistryKey<?> key, Lifecycle lifecycle, boolean intrusive, CallbackInfo ci) {
+        clientizen$isIntrusive = intrusive;
     }
 }
