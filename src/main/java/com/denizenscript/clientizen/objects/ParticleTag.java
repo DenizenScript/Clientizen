@@ -7,6 +7,7 @@ import com.denizenscript.clientizen.mixin.particle.ParticleManagerAccessor;
 import com.denizenscript.clientizen.mixin.particle.SpriteBillboardParticleAccessor;
 import com.denizenscript.clientizen.scripts.containers.ParticleScriptContainer;
 import com.denizenscript.clientizen.util.Utilities;
+import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.Mechanism;
@@ -46,6 +47,13 @@ public class ParticleTag implements Adjustable {
     // @description
     // A ParticleTag represents a particle that currently exists in the world.
     // Either a normal vanilla particle, one from a <@link language Particle Script Container>, or one from another mod.
+    //
+    // @Matchable
+    // ParticleTag matchers, sometimes identified as <particle>:
+    // "particle" plaintext: always matches.
+    // "script" plaintext: matches if the particle is from a <@link language Particle Script Container>.
+    // Any particle type (see <@link tag ParticleTag.type> for formats): matches if the particle is of the given type, using advanced matchers.
+    // Any particle script name: matches if the particle is from the given script, using advanced matchers.
     //
     // -->
 
@@ -545,6 +553,19 @@ public class ParticleTag implements Adjustable {
     @Override
     public String toString() {
         return identify();
+    }
+
+    @Override
+    public boolean advancedMatches(String matcher) {
+        return ScriptEvent.createMatcher(matcher).doesMatch(
+                particle instanceof ParticleScriptContainer.ClientizenParticle clientizenParticle ? clientizenParticle.particleScript.getName() : getTypeString(), text -> {
+                    return switch (text) {
+                        case "particle" -> true;
+                        case "script" -> particle instanceof ParticleScriptContainer.ClientizenParticle;
+                        default -> false;
+                    };
+                }
+        );
     }
 
     String prefix;
