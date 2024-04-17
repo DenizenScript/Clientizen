@@ -8,6 +8,8 @@ import com.denizenscript.clientizen.mixin.particle.SpriteBillboardParticleAccess
 import com.denizenscript.clientizen.scripts.containers.ParticleScriptContainer;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.events.ScriptEvent;
+import com.denizenscript.denizencore.flags.AbstractFlagTracker;
+import com.denizenscript.denizencore.flags.FlaggableObject;
 import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.Mechanism;
@@ -33,12 +35,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ParticleTag implements Adjustable {
+public class ParticleTag implements Adjustable, FlaggableObject {
 
     // <--[ObjectType]
     // @name ParticleTag
     // @prefix particle
     // @ExampleTagBase [particle]
+    // @implements FlaggableObject
     // @base ElementTag
     // @format
     // The identity format for particles is the particle's UUID.
@@ -47,6 +50,9 @@ public class ParticleTag implements Adjustable {
     // @description
     // A ParticleTag represents a particle that currently exists in the world.
     // Either a normal vanilla particle, one from a <@link language Particle Script Container>, or one from another mod.
+    //
+    // This object type is flaggable.
+    // Flags on this object type will be stored on the particle.
     //
     // @Matchable
     // ParticleTag matchers, sometimes identified as <particle>:
@@ -115,6 +121,7 @@ public class ParticleTag implements Adjustable {
     }
 
     public static void register() {
+        AbstractFlagTracker.registerFlagHandlers(tagProcessor);
 
         // <--[tag]
         // @attribute <ParticleTag.type>
@@ -529,6 +536,14 @@ public class ParticleTag implements Adjustable {
     public void applyProperty(Mechanism mechanism) {
         mechanism.echoError("Cannot apply properties to a ParticleTag.");
     }
+
+    @Override
+    public AbstractFlagTracker getFlagTracker() {
+        return getMixinAccess().clientizen$getFlagTracker();
+    }
+
+    @Override
+    public void reapplyTracker(AbstractFlagTracker tracker) {}
 
     @Override
     public boolean isUnique() {

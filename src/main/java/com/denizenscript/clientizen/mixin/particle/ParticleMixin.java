@@ -2,6 +2,7 @@ package com.denizenscript.clientizen.mixin.particle;
 
 import com.denizenscript.clientizen.access.ParticleMixinAccess;
 import com.denizenscript.clientizen.objects.ParticleTag;
+import com.denizenscript.denizencore.flags.MapTagFlagTracker;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.particle.ParticleType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,9 +18,10 @@ public abstract class ParticleMixin implements ParticleMixinAccess {
 
     @Unique
     final UUID clientizen$id = UUID.randomUUID();
-
     @Unique
     ParticleType<?> clientizen$particleType;
+    @Unique
+    MapTagFlagTracker clientizen$flagMap;
 
     @Inject(method = "<init>(Lnet/minecraft/client/world/ClientWorld;DDD)V", at = @At("TAIL"))
     private void clientizen$onParticleCreated(CallbackInfo ci) {
@@ -44,5 +46,13 @@ public abstract class ParticleMixin implements ParticleMixinAccess {
     @Override
     public void clientizen$setType(ParticleType<?> type) {
         clientizen$particleType = type;
+    }
+
+    @Override
+    public MapTagFlagTracker clientizen$getFlagTracker() {
+        if (clientizen$flagMap == null) {
+            clientizen$flagMap = new MapTagFlagTracker();
+        }
+        return clientizen$flagMap;
     }
 }
