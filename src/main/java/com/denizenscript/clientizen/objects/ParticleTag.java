@@ -49,7 +49,7 @@ public class ParticleTag implements Adjustable, FlaggableObject {
     //
     // @description
     // A ParticleTag represents a particle that currently exists in the world.
-    // Either a normal vanilla particle, one from a <@link language Particle Script Container>, or one from another mod.
+    // Either a normal vanilla particle, one from a <@link language Particle Script Containers>, or one from another mod.
     //
     // This object type is flaggable.
     // Flags on this object type will be stored on the particle.
@@ -57,7 +57,7 @@ public class ParticleTag implements Adjustable, FlaggableObject {
     // @Matchable
     // ParticleTag matchers, sometimes identified as <particle>:
     // "particle" plaintext: always matches.
-    // "script" plaintext: matches if the particle is from a <@link language Particle Script Container>.
+    // "script" plaintext: matches if the particle is from a <@link language Particle Script Containers>.
     // Any particle type (see <@link tag ParticleTag.type> for formats): matches if the particle is of the given type, using advanced matchers.
     // Any particle script name: matches if the particle is from the given script, using advanced matchers.
     //
@@ -222,8 +222,7 @@ public class ParticleTag implements Adjustable, FlaggableObject {
         // @mechanism ParticleTag.texture
         // @description
         // Returns the particle's current texture as a namespaced key, if it's of a type that has textures.
-        // Note that the texture id is within the particle texture atlas,
-        // "assets/<namespace>/textures/particle/<name>.png" within the resource pack, and referenced as "<namespace>:<name>".
+        // Note that the texture id is within the particle texture atlas, see <@link Texture Atlases> for more information.
         // -->
         tagProcessor.registerTag(ElementTag.class, "texture", (attribute, object) -> {
             if (object.particle instanceof SpriteBillboardParticleAccessor spriteParticle) {
@@ -238,8 +237,7 @@ public class ParticleTag implements Adjustable, FlaggableObject {
         // @input ElementTag
         // @description
         // Sets the particle's texture, if it's of a type that allows them.
-        // The input is a namespaced key of the texture, within the particle texture atlas -
-        // "assets/<namespace>/textures/particle/<name>.png" within the resource pack, and referenced as "<namespace>:<name>".
+        // The input is a namespaced key of the texture within the particle texture atlas, see <@link Texture Atlases> for more information.
         // @tags
         // <ParticleTag.texture>
         // -->

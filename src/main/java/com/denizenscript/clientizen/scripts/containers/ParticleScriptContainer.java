@@ -37,6 +37,61 @@ import java.util.Map;
 
 public class ParticleScriptContainer extends ScriptContainer {
 
+    // <--[language]
+    // @name Texture Atlases
+    // @group Client Information
+    // @description
+    // A texture atlas is a group of textures for a specific use case.
+    // They are usually a folder under "assets/<namespace>/textures/<atlas>" (see <@link url https://minecraft.wiki/w/Resource_pack#Folder_structure>), and contain textures.
+    // As each atlas is for a specific purpose and the client knows what a texture is for (E.g. when setting a texture on a particle it knows to look within the particle atlas),
+    // they can be referenced in code using just the namespace and texture name.
+    // So for example, "assets/my_server_pack/textures/particle/water_drop.png" can be referenced in a particle script as "my_server_pack:water_drop".
+    // -->
+
+    // <--[language]
+    // @name Particle Script Containers
+    // @group Script Container System
+    // @description
+    // Particle script containers allow you to add your own custom particles, optionally setting their behaviour.
+    // They can be played using the <@link command particle> command by specifying the script name, see it's usage examples.
+    //
+    // <code>
+    // Particle_Script_Name:
+    //    type: particle
+
+    //    # The particle's texture list.
+    //    # Can be a single texture to use, or a list of textures which will be picked from randomly when the particle is spawned in.
+    //    # This is the texture list used for features like <@link mechanism ParticleTag.randomize_texture> and <@link mechanism ParticleTag.update_age_texture>.
+    //    # Note that the textures must be within the particle texture atlas, see <@link language Texture Atlases> for more information.
+    //    # | All particle scripts MUST have this key!
+    //    textures:
+    //    - <namespace>:<texture>
+    //
+    //    # Mechanisms to apply to the particle when it's spawned in.
+    //    # | Some particle scripts should have this key.
+    //    mechanisms:
+    //        # Examples of mechanisms being used, any valid ParticleTag mechanism can be specified.
+    //
+    //        # | Do not copy this line, it is only an example.
+    //        color: red/blue/green/...
+    //
+    //        # | Do not copy this line, it is only an example.
+    //        velocity: 1,0.5,1
+    //
+    //    # The rate at which the particle's update code should run, as a <@link ObjectType DurationTag> - defaults to running every tick.
+    //    # | Some particle scripts should have this key.
+    //    update_rate: 1s
+    //
+    //    # The particle's update code; runs every tick by default, or based on the update rate if specified.
+    //    # Provides <context.particle>: a <@link ObjectType ParticleTag> of the particle from this particle script that's being updated.
+    //    # | Some particle scripts should have this key.
+    //    update:
+    //    # Use to make a particle red once it hits the ground
+    //    - if <context.particle.on_ground>:
+    //      - adjust <context.particle> color:red
+    // </code>
+    // -->
+
     public static final List<ParticleScriptContainer> customParticles = new ArrayList<>();
 
     public static void clearCustomParticles() {
