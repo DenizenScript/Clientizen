@@ -53,7 +53,7 @@ public class ParticleScriptContainer extends ScriptContainer {
     // @group Script Container System
     // @description
     // Particle script containers allow you to add your own custom particles, optionally setting their behaviour.
-    // They can be played using the <@link command particle> command by specifying the script name, see it's usage examples.
+    // They can be played using the <@link command particle> command by specifying the script name, see it's usage examples/meta.
     //
     // <code>
     // Particle_Script_Name:
@@ -126,7 +126,6 @@ public class ParticleScriptContainer extends ScriptContainer {
     public ParticleScriptContainer(YamlConfiguration configurationSection, String scriptContainerName) {
         super(configurationSection, scriptContainerName);
         Debug.pushErrorContext(this);
-        SpriteAtlasTexture particlesAtlas = ParticleTag.getParticleAtlas();
         List<String> textureInput = getStringList("textures", true);
         if (textureInput == null) {
             Debug.echoError("Missing required 'textures' key.");
@@ -134,6 +133,7 @@ public class ParticleScriptContainer extends ScriptContainer {
             updateScript = null;
             return;
         }
+        SpriteAtlasTexture particlesAtlas = ParticleTag.getParticleAtlas();
         textures = new ArrayList<>(textureInput.size());
         for (String texture : textureInput) {
             Identifier textureId = Identifier.tryParse(texture);
@@ -184,7 +184,7 @@ public class ParticleScriptContainer extends ScriptContainer {
             this.velocityX = velocityX;
             this.velocityY = velocityY;
             this.velocityZ = velocityZ;
-            this.scale = 1;
+            this.scale = 0.5f;
             this.spriteProvider = spriteProvider;
             this.particleScript = particleScript;
             this.scriptContext = new ContextSource.SimpleMap();

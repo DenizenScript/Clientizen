@@ -49,7 +49,7 @@ public class ParticleTag implements Adjustable, FlaggableObject {
     //
     // @description
     // A ParticleTag represents a particle that currently exists in the world.
-    // Either a normal vanilla particle, one from a <@link language Particle Script Containers>, or one from another mod.
+    // Can be either a normal vanilla particle, one from a <@link language Particle Script Containers>, or one from another mod.
     //
     // This object type is flaggable.
     // Flags on this object type will be stored on the particle.
@@ -282,9 +282,6 @@ public class ParticleTag implements Adjustable, FlaggableObject {
         // Note that alpha values can be set, but only visually apply to some particles.
         // @tags
         // <ParticleTag.color>
-        // @example
-        // # Use to set a particle's color to a random color.
-        // - adjust <[particle]> color:random
         // -->
         tagProcessor.registerMechanism("color", false, ColorTag.class, (object, mechanism, input) -> {
             object.particle.setColor(input.red / 255f, input.green / 255f, input.blue / 255f);
@@ -356,6 +353,7 @@ public class ParticleTag implements Adjustable, FlaggableObject {
         // @mechanism ParticleTag.time_to_live
         // @description
         // Returns the amount of time the particle should exist for.
+        // Note that this is the total amount of time it should exist for after spawning, the return value doesn't change with time passing.
         // See <@link tag ParticleTag.time_lived> for the amount of time the particle's existed.
         // @example
         // # Use to check how much time is left before the particle despawns.
@@ -371,6 +369,7 @@ public class ParticleTag implements Adjustable, FlaggableObject {
         // @input DurationTag
         // @description
         // Sets the amount of time the particle should exist for.
+        // Note that this is the total amount of time it should exist for after spawning, not relative to the amount of time it's already existed for.
         // @tags
         // <ParticleTag.time_to_live>
         // @example

@@ -14,6 +14,7 @@ public abstract class BillboardParticleMixin implements BillboardParticleMixinAc
 
     @Shadow
     protected float scale;
+
     @Unique
     Float clientizen$scale;
 
@@ -31,7 +32,7 @@ public abstract class BillboardParticleMixin implements BillboardParticleMixinAc
             method = "buildGeometry",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/BillboardParticle;getSize(F)F")
     )
-    private float clientizen$overrideSize(BillboardParticle particle, float tickDelta, Operation<Float> original) {
+    private float clientizen$overrideScale(BillboardParticle particle, float tickDelta, Operation<Float> original) {
         return clientizen$scale != null ? clientizen$scale : original.call(particle, tickDelta);
     }
 }
