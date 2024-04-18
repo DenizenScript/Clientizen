@@ -45,7 +45,7 @@ public class ParticleCommand extends AbstractCommand {
     //
     // @Description
     // Spawns a particle of the specified type in the world.
-    // The type can be any particle type/script, including ones added by other mods - see <@link url https://minecraft.wiki/w/Particles_(Java_Edition)#Types_of_particles> for all vanilla particle types.
+    // The type can be any particle type/particle script, including ones added by other mods - see <@link url https://minecraft.wiki/w/Particles_(Java_Edition)#Types_of_particles> for all vanilla particle types.
     // The location can be any location to play the particle at.
     // The velocity is a vector location for the particle's movement, which overrides its default movement (if any).
     // The color will override the particle's color or color its texture (depending on the particle), and can be any color.
@@ -78,7 +78,7 @@ public class ParticleCommand extends AbstractCommand {
     // - <@link ObjectType DurationTag> "delay" key, for the amount of time the particle should wait before spawning.
     //
     // @Tags
-    // None
+    // <entry[saveName].created_particle> returns a <@link ObjectType ParticleTag> of the particle that was spawned in.
     //
     // @Usage
     // Use to spawn a large flame particle above the player.
@@ -91,6 +91,10 @@ public class ParticleCommand extends AbstractCommand {
     // @Usage
     // Use to spawn a block marker particle of a stone block that slowly moves upwards.
     // - particle type:block_marker at:<[location]> data:[material=stone] velocity:0,0.1,0
+    //
+    // @Usage
+    // Use to spawn a particle from a particle script at the player's location.
+    // - particle type:my_particle_script at:<client.self_entity.location>
     //
     // -->
 
