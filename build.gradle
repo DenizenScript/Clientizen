@@ -1,14 +1,14 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
 version = project.version + '-' + project.build_number
 group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
 
 repositories {
     mavenCentral()
@@ -53,38 +53,34 @@ loom {
     accessWidenerPath = file("src/main/resources/clientizen.accesswidener")
 }
 
-
 processResources {
-    inputs.property "version", version
+    inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand "version": version
+        expand "version": project.version
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    it.options.release = 17
+    it.options.release = 21
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${archivesBaseName}" }
+        rename { "${it}_${project.base.archivesName.get()}"}
     }
 }
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
             from components.java
         }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
     }
 }
