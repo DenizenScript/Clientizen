@@ -1,28 +1,20 @@
 package com.denizenscript.clientizen.network.packets;
 
+import com.denizenscript.clientizen.Clientizen;
+import com.denizenscript.clientizen.network.Codecs;
 import com.denizenscript.clientizen.network.PacketOut;
-import io.netty.buffer.ByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 
 import java.util.Map;
 
-public class FireEventPacketOut extends PacketOut {
+public record FireEventPacketOut(String id, Map<String, String> data) implements PacketOut {
 
-    public FireEventPacketOut(String id, Map<String, String> data) {
-        this.id = id;
-        this.data = data;
-    }
-
-    String id;
-    Map<String, String> data;
+    public static final Id<FireEventPacketOut> ID = new Id<>(Clientizen.id("fire_event"));
+    public static final PacketCodec<RegistryByteBuf, FireEventPacketOut> CODEC = Codecs.writeOnly(Codecs.STRING, FireEventPacketOut::id, Codecs.STRING_MAP, FireEventPacketOut::data);
 
     @Override
-    public void writeTo(ByteBuf buf) {
-        writeString(buf, id);
-        writeStringMap(buf, data);
-    }
-
-    @Override
-    public String getName() {
-        return "fire_event";
+    public Id<FireEventPacketOut> getId() {
+        return ID;
     }
 }

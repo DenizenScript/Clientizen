@@ -1,22 +1,25 @@
 package com.denizenscript.clientizen.network;
 
-import com.denizenscript.clientizen.Clientizen;
+import com.denizenscript.clientizen.network.packets.FireEventPacketOut;
 import com.denizenscript.clientizen.network.packets.ReceiveScriptsPacketIn;
 import com.denizenscript.clientizen.network.packets.RunScriptPacketIn;
 import com.denizenscript.clientizen.network.packets.SendConfirmationPacketOut;
 import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
 
 public class NetworkManager {
 
     public static void init() {
         Debug.log("Initializing NetworkManager...");
-        registerInPacket(new ReceiveScriptsPacketIn());
-        registerInPacket(new RunScriptPacketIn());
+        registerInPacket(ReceiveScriptsPacketIn.ID, ReceiveScriptsPacketIn.CODEC);
+        registerInPacket(RunScriptPacketIn.ID, RunScriptPacketIn.CODEC);
+        registerOutPacket(FireEventPacketOut.ID, FireEventPacketOut.CODEC);
+        registerOutPacket(SendConfirmationPacketOut.ID, SendConfirmationPacketOut.CODEC);
     }
 
     public static void onConnect() {
@@ -24,14 +27,18 @@ public class NetworkManager {
         send(new SendConfirmationPacketOut());
     }
 
-    public static void registerInPacket(PacketIn packet) {
-        final Identifier channel = Clientizen.id(packet.getName());
-        if (!ClientPlayNetworking.registerGlobalReceiver(channel, (client, handler, buf, responseSender) -> {
-            debugNetwork("Received plugin message on channel " + channel);
-            packet.process(buf);
+    public static <T extends PacketIn> void registerInPacket(CustomPayload.Id<T> packetId, PacketCodec<RegistryByteBuf, T> codec) {
+        PayloadTypeRegistry.playS2C().register(packetId, codec);
+        if (!ClientPlayNetworking.registerGlobalReceiver(packetId, (packet, context) -> {
+            debugNetwork("Received plugin message on channel " + packetId.id());
+            packet.process();
         })) {
-            Debug.echoError("Tried registering in packet on channel '" + channel + "', but a packet is already registered for that channel!");
+            Debug.echoError("Tried registering in packet on channel '" + packetId.id() + "', but a packet is already registered for that channel!");
         }
+    }
+
+    public static <T extends PacketOut> void registerOutPacket(CustomPayload.Id<T> packetId, PacketCodec<RegistryByteBuf, T> codec) {
+        PayloadTypeRegistry.playC2S().register(packetId, codec);
     }
 
     public static void send(PacketOut packet) {
@@ -40,10 +47,8 @@ public class NetworkManager {
 //            Debug.echoError("Cannot send to channel " + channel);
 //            return;
 //        }
-        debugNetwork("Sending message on channel " + packet.channel);
-        PacketByteBuf buf = PacketByteBufs.create();
-        packet.writeTo(buf);
-        ClientPlayNetworking.send(packet.channel, buf);
+        debugNetwork("Sending message on channel " + packet.getId().id());
+        ClientPlayNetworking.send(packet);
     }
 
     public static void debugNetwork(String debug) {
