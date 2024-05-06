@@ -116,7 +116,6 @@ public class ScreenNameMapping {
         registerScreenName(OutOfMemoryScreen.class, "out_of_memory");
         registerScreenName(PresetsScreen.class, "presets");
         registerScreenName(ProgressScreen.class, "progress");
-        registerScreenName(Realms32BitWarningScreen.class, "realms_32_bit_warning");
         registerScreenName(SleepingChatScreen.class, "sleeping_chat");
         registerScreenName(StatsScreen.class, "stats");
         registerScreenName(TaskScreen.class, "task");
