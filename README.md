@@ -3,7 +3,7 @@ Clientizen
 
 Denizen, on your Minecraft client! Operates as a Fabric mod, and integrates with Denizen on the server directly.
 
-Currently targeting Minecraft 1.20.4.
+Currently targeting Minecraft 1.20.6.
 
 ### Status
 
@@ -11,7 +11,7 @@ DEV ONLY. Not quite ready for real use. Contributors welcome! (Chat with us on [
 
 ### Building
 
-Built against JDK 17 using gradle and [Fabric-Loom](https://github.com/FabricMC/fabric-loom).
+Built against JDK 21 using gradle and [Fabric-Loom](https://github.com/FabricMC/fabric-loom).
 
 Run `./gradlew clean build` (for Windows it's `.\gradlew.bat`) to build the project. The built jar will be in `build/libs`.
 
@@ -36,7 +36,7 @@ You can do basically whatever you want, except you may not hold any developer li
 
 The MIT License (MIT)
 
-Copyright (c) 2022-2023 The Denizen Script Team
+Copyright (c) 2022-2024 The Denizen Script Team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

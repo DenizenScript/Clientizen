@@ -19,10 +19,13 @@ import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgPrefixed;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.command.argument.ParticleEffectArgumentType;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.particle.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -131,9 +134,9 @@ public class ParticleCommand extends AbstractCommand {
         }
         ParticleEffect particle;
         if (rawData != null) {
-            ParticleType<ParticleEffect> castType = (ParticleType<ParticleEffect>) type;
             try {
-                particle = castType.getParametersFactory().read(castType, new StringReader(rawData));
+                NbtCompound particleData = StringNbtReader.parse(rawData);
+                particle = type.getCodec().codec().parse(NbtOps.INSTANCE, particleData).getOrThrow(ParticleEffectArgumentType.INVALID_OPTIONS_EXCEPTION::create);
             }
             catch (CommandSyntaxException syntaxException) {
                 Debug.echoError("Invalid raw particle data '" + rawData + "' for particle of type '" + particleName + "': " + syntaxException.getMessage());
@@ -185,7 +188,7 @@ public class ParticleCommand extends AbstractCommand {
             particle = new ShriekParticleEffect(delay.getTicksAsInt());
         }
         else {
-            particle = (DefaultParticleType) type;
+            particle = (SimpleParticleType) type;
         }
         Particle createdParticle;
         try {

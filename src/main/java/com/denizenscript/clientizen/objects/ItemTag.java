@@ -8,12 +8,13 @@ import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 
 public class ItemTag implements ObjectTag, Adjustable {
@@ -158,13 +159,14 @@ public class ItemTag implements ObjectTag, Adjustable {
                 String value = text.substring(colonIndex + 1);
                 switch (prefix) {
                     case "item_enchanted" -> {
-                        NbtList enchantments = getStack().getEnchantments();
+                        ItemEnchantmentsComponent enchantments = getStack().getEnchantments();
                         if (enchantments.isEmpty()) {
                             return false;
                         }
                         ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(value);
-                        for (Enchantment enchantment : EnchantmentHelper.fromNbt(enchantments).keySet()) {
-                            if (matchHelper.doesMatch(Utilities.idToString(Registries.ENCHANTMENT.getId(enchantment)))) {
+                        for (RegistryEntry<Enchantment> enchantment : enchantments.getEnchantments()) {
+                            RegistryKey<Enchantment> key = enchantment.getKey().orElse(null);
+                            if (key != null && matchHelper.doesMatch(Utilities.idToString(key.getValue()))) {
                                 return true;
                             }
                         }
