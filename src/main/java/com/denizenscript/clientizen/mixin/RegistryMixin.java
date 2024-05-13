@@ -9,6 +9,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryInfo;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -20,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
 
 @Mixin(SimpleRegistry.class)
@@ -52,9 +52,7 @@ public abstract class RegistryMixin<T> implements RegistryMixinAccess {
     private Map<T, RegistryEntry.Reference<T>> valueToEntry;
     @Shadow
     @Final
-    private Map<T, Lifecycle> entryToLifecycle;
-    @Shadow
-    private @Nullable List<RegistryEntry.Reference<T>> cachedEntries;
+    private Map<RegistryKey<T>, RegistryEntryInfo> keyToEntryInfo;
 
     @Override
     public void clientizen$unfreeze() {
@@ -79,8 +77,7 @@ public abstract class RegistryMixin<T> implements RegistryMixinAccess {
         valueToEntry.remove(value.value());
         rawIdToEntry.remove(value);
         entryToRawId.removeInt(value.value());
-        entryToLifecycle.remove(value.value());
-        cachedEntries = null;
+        keyToEntryInfo.remove(key);
     }
 
     @Inject(method = "<init>(Lnet/minecraft/registry/RegistryKey;Lcom/mojang/serialization/Lifecycle;Z)V", at = @At("TAIL"))

@@ -25,8 +25,8 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleType;
+import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -109,7 +109,7 @@ public class ParticleScriptContainer extends ScriptContainer {
         }
         Map<Identifier, ParticleManager.SimpleSpriteProvider> spritesMap = ParticleTag.getSpriteProviders();
         for (ParticleScriptContainer particleScript : customParticles) {
-            DefaultParticleType type = FabricParticleTypes.simple();
+            SimpleParticleType type = FabricParticleTypes.simple();
             Identifier particleId = particleScript.getId();
             Registry.register(Registries.PARTICLE_TYPE, particleId, type);
             ParticleFactoryRegistry.getInstance().register(type, spriteProvider -> new ClientizenParticle.Factory(spriteProvider, particleScript));
@@ -225,10 +225,10 @@ public class ParticleScriptContainer extends ScriptContainer {
             return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
         }
 
-        public record Factory(SpriteProvider spriteProvider, ParticleScriptContainer particleScript) implements ParticleFactory<DefaultParticleType> {
+        public record Factory(SpriteProvider spriteProvider, ParticleScriptContainer particleScript) implements ParticleFactory<SimpleParticleType> {
 
             @Override
-            public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+            public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
                 return new ClientizenParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider, particleScript, parameters);
             }
         }
