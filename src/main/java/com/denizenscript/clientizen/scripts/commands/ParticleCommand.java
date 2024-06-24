@@ -1,12 +1,10 @@
 package com.denizenscript.clientizen.scripts.commands;
 
-import com.denizenscript.clientizen.mixin.ParticleAccessor;
+import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.mixin.WorldRendererAccessor;
-import com.denizenscript.clientizen.objects.EntityTag;
-import com.denizenscript.clientizen.objects.ItemTag;
-import com.denizenscript.clientizen.objects.LocationTag;
-import com.denizenscript.clientizen.objects.MaterialTag;
-import com.denizenscript.clientizen.util.Utilities;
+import com.denizenscript.clientizen.mixin.particle.ParticleAccessor;
+import com.denizenscript.clientizen.objects.*;
+import com.denizenscript.clientizen.scripts.containers.ParticleScriptContainer;
 import com.denizenscript.denizencore.exceptions.InvalidArgumentsRuntimeException;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ColorTag;
@@ -14,6 +12,7 @@ import com.denizenscript.denizencore.objects.core.DurationTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.core.MapTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
+import com.denizenscript.denizencore.scripts.ScriptRegistry;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgDefaultNull;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
@@ -49,7 +48,7 @@ public class ParticleCommand extends AbstractCommand {
     //
     // @Description
     // Spawns a particle of the specified type in the world.
-    // The type can be any particle type, including ones added by other mods - see <@link url https://minecraft.wiki/w/Particles_(Java_Edition)#Types_of_particles> for all vanilla particle types.
+    // The type can be any particle type/particle script, including ones added by other mods - see <@link url https://minecraft.wiki/w/Particles_(Java_Edition)#Types_of_particles> for all vanilla particle types.
     // The location can be any location to play the particle at.
     // The velocity is a vector location for the particle's movement, which overrides its default movement (if any).
     // The color will override the particle's color or color its texture (depending on the particle), and can be any color.
@@ -82,7 +81,7 @@ public class ParticleCommand extends AbstractCommand {
     // - <@link ObjectType DurationTag> "delay" key, for the amount of time the particle should wait before spawning.
     //
     // @Tags
-    // None
+    // <entry[saveName].created_particle> returns a <@link ObjectType ParticleTag> of the particle that was spawned in.
     //
     // @Usage
     // Use to spawn a large flame particle above the player.
@@ -96,6 +95,10 @@ public class ParticleCommand extends AbstractCommand {
     // Use to spawn a block marker particle of a stone block that slowly moves upwards.
     // - particle type:block_marker at:<[location]> data:[material=stone] velocity:0,0.1,0
     //
+    // @Usage
+    // Use to spawn a particle from a particle script at the player's location.
+    // - particle type:my_particle_script at:<client.self_entity.location>
+    //
     // -->
 
     public ParticleCommand() {
@@ -107,7 +110,8 @@ public class ParticleCommand extends AbstractCommand {
 
     @Override
     public void addCustomTabCompletions(TabCompletionsBuilder tab) {
-        tab.addWithPrefix("type:", Utilities.listRegistryKeys(Registries.PARTICLE_TYPE));
+        tab.addWithPrefix("type:", Registries.PARTICLE_TYPE.getIds().stream()
+                .map(id -> id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) || id.getNamespace().equals(Clientizen.ID) ? id.getPath() : id.toString()).toList());
     }
 
     public static void autoExecute(ScriptEntry scriptEntry,
@@ -121,8 +125,12 @@ public class ParticleCommand extends AbstractCommand {
                                    @ArgName("raw_data") @ArgPrefixed @ArgDefaultNull String rawData) {
         ParticleType<?> type = Registries.PARTICLE_TYPE.get(Identifier.tryParse(particleName));
         if (type == null) {
-            Debug.echoError("Invalid particle type specified: " + particleName + '.');
-            return;
+            ParticleScriptContainer particleScript = ScriptRegistry.getScriptContainerAs(particleName, ParticleScriptContainer.class);
+            if (particleScript == null) {
+                Debug.echoError("Invalid particle type specified: " + particleName + '.');
+                return;
+            }
+            type = Registries.PARTICLE_TYPE.get(particleScript.getId());
         }
         ParticleEffect particle;
         if (rawData != null) {
@@ -209,6 +217,7 @@ public class ParticleCommand extends AbstractCommand {
             }
             createdParticle.scale(scaleMultiplier.asFloat());
         }
+        scriptEntry.saveObject("created_particle", new ParticleTag(createdParticle));
     }
 
     private static Vector3f colorToVector(ColorTag color) {

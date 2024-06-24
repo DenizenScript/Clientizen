@@ -3,6 +3,7 @@ package com.denizenscript.clientizen.util.impl;
 import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.debuggui.DebugConsole;
 import com.denizenscript.clientizen.objects.LocationTag;
+import com.denizenscript.clientizen.scripts.containers.ParticleScriptContainer;
 import com.denizenscript.clientizen.tags.ClientTagBase;
 import com.denizenscript.clientizen.tags.ClientizenTagContext;
 import com.denizenscript.denizencore.DenizenImplementation;
@@ -40,10 +41,14 @@ public class DenizenCoreImpl implements DenizenImplementation {
     }
 
     @Override
-    public void preScriptReload() {}
+    public void preScriptReload() {
+        ParticleScriptContainer.clearCustomParticles();
+    }
 
     @Override
-    public void onScriptReload() {}
+    public void onScriptReload() {
+        ParticleScriptContainer.registerCustomParticles();
+    }
 
     @Override
     public String queueHeaderInfo(ScriptEntry scriptEntry) {
@@ -61,7 +66,9 @@ public class DenizenCoreImpl implements DenizenImplementation {
     }
 
     @Override
-    public void refreshScriptContainers() {}
+    public void refreshScriptContainers() {
+        ParticleScriptContainer.customParticles.clear();
+    }
 
     @Override
     public TagContext getTagContext(ScriptContainer scriptContainer) {

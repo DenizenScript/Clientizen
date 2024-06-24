@@ -7,19 +7,25 @@
   "client": [
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldAccessor",
-    "EntityRenderedMixin",
     "ClientWorldMixin",
+    "EntityRenderedMixin",
     "EventKeyBindingMixin",
     "IntPropertyAccessor",
     "LivingEntityMixin",
     "MinecraftClientMixin",
+    "RegistryMixin",
     "SneakingKeyBindingMixin",
     "StickyKeyBindingAccessor",
-    "WorldRendererMixin",
     "WorldRendererAccessor",
-    "ParticleAccessor",
+    "WorldRendererMixin",
     "gui.WScrollPanelAccessor",
-    "gui.WTextAccessor"
+    "gui.WTextAccessor",
+    "particle.BillboardParticleMixin",
+    "particle.ParticleAccessor",
+    "particle.ParticleManagerAccessor",
+    "particle.ParticleManagerMixin",
+    "particle.ParticleMixin",
+    "particle.SpriteBillboardParticleAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
