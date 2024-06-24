@@ -37,7 +37,7 @@ public class Clientizen implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(ID);
 
     public static Identifier id(String path) {
-        return new Identifier(ID, path);
+        return Identifier.of(ID, path);
     }
 
     public static final Event<Runnable> SYNC_DISCONNECT = EventFactory.createArrayBacked(Runnable.class, listeners -> () -> {
