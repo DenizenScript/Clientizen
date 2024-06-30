@@ -27,6 +27,7 @@ public class ClientizenScriptEventRegistry {
 
         ScriptEvent.registerScriptEvent(EntityStartsStopsRenderingScriptEvent.class);
         ScriptEvent.registerScriptEvent(KeyPressReleaseScriptEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerSprintScriptEvent.class);
         ScriptEvent.registerScriptEvent(ScreenOpenCloseEvent.class);
     }
 

@@ -83,9 +83,9 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
         fire();
     }
 
-    enum InputDevice { KEYBOARD, MOUSE }
+    public enum InputDevice { KEYBOARD, MOUSE }
 
-    enum Key {
+    public enum Key {
         UNKNOWN(GLFW.GLFW_KEY_UNKNOWN),
         // Keyboard keys
         SPACE(GLFW.GLFW_KEY_SPACE),
