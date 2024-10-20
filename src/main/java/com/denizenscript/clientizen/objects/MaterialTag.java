@@ -168,7 +168,7 @@ public class MaterialTag implements ObjectTag, Adjustable {
     }
 
     @Override
-    public boolean advancedMatches(String matcher) {
+    public boolean advancedMatches(String matcher, TagContext context) {
         return ScriptEvent.createMatcher(matcher).doesMatch(getName(), text ->
                 switch (text) {
                     case "material" -> true;

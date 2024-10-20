@@ -148,7 +148,7 @@ public class ItemTag implements ObjectTag, Adjustable {
     }
 
     @Override
-    public boolean advancedMatches(String matcher) {
+    public boolean advancedMatches(String matcher, TagContext context) {
         return ScriptEvent.createMatcher(matcher).doesMatch(getName(), text -> {
             if (text.equals("item")) {
                 return true;

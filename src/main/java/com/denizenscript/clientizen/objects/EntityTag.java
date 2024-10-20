@@ -347,7 +347,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     }
 
     @Override
-    public boolean advancedMatches(String matcher) {
+    public boolean advancedMatches(String matcher, TagContext context) {
         return ScriptEvent.createMatcher(matcher).doesMatch(getTypeName(), text ->
                 switch (text) {
                     case "entity" -> true;

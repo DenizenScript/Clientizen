@@ -226,7 +226,7 @@ public class ModTag implements ObjectTag {
     }
 
     @Override
-    public boolean advancedMatches(String matcher) {
+    public boolean advancedMatches(String matcher, TagContext context) {
         String matcherLower = CoreUtilities.toLowerCase(matcher);
         if (matcherLower.equals("mod")) {
             return true;
