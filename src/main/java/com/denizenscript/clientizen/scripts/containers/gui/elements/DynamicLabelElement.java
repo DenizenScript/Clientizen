@@ -10,6 +10,7 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 import io.github.cottonmc.cotton.gui.widget.WDynamicLabel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getDebugPath;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
@@ -27,6 +28,8 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
     // ui_type: dynamic_label
     // # The dynamically updating text for the label, required.
     // text: <text>
+    // # The vertical alignment for the label's text, optional.
+    // vertical_alignment: TOP/CENTER/BOTTOM
     // # The horizontal alignment for the label's text, optional.
     // horizontal_alignment: LEFT/CENTER/RIGHT
     // # The color for the label's text, optional.
@@ -58,6 +61,10 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
         HorizontalAlignment horizontalAlignment = getTaggedEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
             dynamicLabel.setHorizontalAlignment(horizontalAlignment);
+        }
+        VerticalAlignment verticalAlignment = getTaggedEnum(VerticalAlignment.class, config, "vertical_alignment", context);
+        if (verticalAlignment != null) {
+            dynamicLabel.setVerticalAlignment(verticalAlignment);
         }
         ColorTag color = getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
