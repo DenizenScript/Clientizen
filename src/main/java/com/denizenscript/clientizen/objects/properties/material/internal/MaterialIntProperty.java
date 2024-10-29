@@ -8,7 +8,7 @@ import net.minecraft.state.property.IntProperty;
 public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
 
     public IntPropertyAccessor getAccessor() {
-        return (IntPropertyAccessor) internalProperty;
+        return (IntPropertyAccessor) (Object) internalProperty;
     }
 
     @Override

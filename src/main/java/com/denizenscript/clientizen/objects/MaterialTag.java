@@ -82,8 +82,8 @@ public class MaterialTag implements ObjectTag, Adjustable {
             }
             return null;
         }
-        MaterialTag material = Registries.BLOCK.getOrEmpty(identifier).map(MaterialTag::new)
-                .orElseGet(() -> Registries.ITEM.getOrEmpty(identifier).map(MaterialTag::new).orElse(null));
+        MaterialTag material = Registries.BLOCK.getOptionalValue(identifier).map(MaterialTag::new)
+                .orElseGet(() -> Registries.ITEM.getOptionalValue(identifier).map(MaterialTag::new).orElse(null));
         if (material != null) {
             return material;
         }

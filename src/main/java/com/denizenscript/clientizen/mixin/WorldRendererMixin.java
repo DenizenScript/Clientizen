@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
 
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getTeamColorValue()I"))
+    @WrapOperation(method = "renderEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getTeamColorValue()I"))
     private int clientizen$modifyGlowColor(Entity instance, Operation<Integer> original) {
         Integer glowColor = instance.getAttached(EntityTag.GLOW_COLOR_OVERRIDE);
         return glowColor != null ? glowColor : original.call(instance);

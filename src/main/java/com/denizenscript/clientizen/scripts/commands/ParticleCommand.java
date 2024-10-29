@@ -33,7 +33,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.event.BlockPositionSource;
 import net.minecraft.world.event.EntityPositionSource;
 import net.minecraft.world.event.PositionSource;
-import org.joml.Vector3f;
 
 import java.util.function.Predicate;
 
@@ -142,13 +141,13 @@ public class ParticleCommand extends AbstractCommand {
         else if (type == ParticleTypes.DUST) {
             ColorTag dustColor = requireData(data, "color", ColorTag.class, particleName, scriptEntry);
             ElementTag dustScale = requireData(data, "scale", ElementTag.class, ElementTag::isFloat, particleName, scriptEntry);
-            particle = new DustParticleEffect(colorToVector(dustColor), dustScale.asFloat());
+            particle = new DustParticleEffect(dustColor.asRGB(), dustScale.asFloat());
         }
         else if (type == ParticleTypes.DUST_COLOR_TRANSITION) {
             ColorTag fromColor = requireData(data, "from", ColorTag.class, particleName, scriptEntry);
             ColorTag toColor = requireData(data, "to", ColorTag.class, particleName, scriptEntry);
             ElementTag dustScale = requireData(data, "scale", ElementTag.class, ElementTag::isFloat, particleName, scriptEntry);
-            particle = new DustColorTransitionParticleEffect(colorToVector(fromColor), colorToVector(toColor), dustScale.asFloat());
+            particle = new DustColorTransitionParticleEffect(fromColor.asRGB(), toColor.asRGB(), dustScale.asFloat());
         }
         else if (type == ParticleTypes.SCULK_CHARGE) {
             ElementTag roll = requireData(data, "roll", ElementTag.class, ElementTag::isFloat, particleName, scriptEntry);
@@ -209,10 +208,6 @@ public class ParticleCommand extends AbstractCommand {
             }
             createdParticle.scale(scaleMultiplier.asFloat());
         }
-    }
-
-    private static Vector3f colorToVector(ColorTag color) {
-        return new Vector3f(color.red / 255f, color.green / 255f, color.blue / 255f);
     }
 
     private static <T extends ObjectTag> T requireData(MapTag data, String key, Class<T> objectType, String particleType, ScriptEntry scriptEntry) {

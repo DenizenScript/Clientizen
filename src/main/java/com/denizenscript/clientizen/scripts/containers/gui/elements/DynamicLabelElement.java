@@ -57,7 +57,7 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
         });
         HorizontalAlignment horizontalAlignment = getTaggedEnum(HorizontalAlignment.class, config, "horizontal_alignment", context);
         if (horizontalAlignment != null) {
-            dynamicLabel.setAlignment(horizontalAlignment);
+            dynamicLabel.setHorizontalAlignment(horizontalAlignment);
         }
         ColorTag color = getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {

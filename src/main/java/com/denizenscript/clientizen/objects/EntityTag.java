@@ -17,6 +17,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -85,7 +86,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     }
 
     public EntityTag(EntityType<?> entityType) {
-        this.entity = entityType.create(MinecraftClient.getInstance().world);
+        this.entity = entityType.create(MinecraftClient.getInstance().world, SpawnReason.COMMAND);
         this.uuid = null;
         this.isFake = false;
     }
