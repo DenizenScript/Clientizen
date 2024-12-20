@@ -22,7 +22,7 @@ public class ServerEventCommand extends AbstractCommand {
     // @Required 1
     // @Maximum 2
     // @Short Sends the server an event.
-    // @Group client
+    // @Group networking
     //
     // @Description
     // Sends the server the client is currently connected to an event, potentially including extra data.

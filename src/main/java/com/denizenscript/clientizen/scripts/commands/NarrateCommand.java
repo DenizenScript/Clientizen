@@ -20,6 +20,7 @@ public class NarrateCommand extends AbstractCommand {
     // @Required 1
     // @Maximum 2
     // @Short Prints some text into the client's chat area.
+    // @Group interface
     //
     // @Description
     // Prints some text into the client's chat area, optionally centering it.
