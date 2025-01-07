@@ -8,6 +8,7 @@ import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -41,6 +42,10 @@ public class NetworkManager {
     }
 
     public static void send(PacketOut packet) {
+        if (MinecraftClient.getInstance().isInSingleplayer()) {
+            debugNetwork("Running in single player, not sending {} packet.", packet);
+            return;
+        }
 //        TODO: re-add this check? doesn't work on ClientPlayConnectionEvents.JOIN, might be too early
 //        if (!ClientPlayNetworking.canSend(identifier)) {
 //            Debug.echoError("Cannot send to channel " + channel);
