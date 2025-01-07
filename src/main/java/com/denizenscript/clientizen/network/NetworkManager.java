@@ -23,14 +23,13 @@ public class NetworkManager {
     }
 
     public static void onConnect() {
-        debugNetwork("Sending join confirmation packet...");
         send(new SendConfirmationPacketOut());
     }
 
     public static <T extends PacketIn> void registerInPacket(CustomPayload.Id<T> packetId, PacketCodec<RegistryByteBuf, T> codec) {
         PayloadTypeRegistry.playS2C().register(packetId, codec);
         if (!ClientPlayNetworking.registerGlobalReceiver(packetId, (packet, context) -> {
-            debugNetwork("Received plugin message on channel " + packetId.id());
+            debugNetwork("Received {} packet.", packet);
             packet.process();
         })) {
             Debug.echoError("Tried registering in packet on channel '" + packetId.id() + "', but a packet is already registered for that channel!");
@@ -47,13 +46,19 @@ public class NetworkManager {
 //            Debug.echoError("Cannot send to channel " + channel);
 //            return;
 //        }
-        debugNetwork("Sending message on channel " + packet.getId().id());
+        debugNetwork("Sending {} packet.", packet);
         ClientPlayNetworking.send(packet);
     }
 
     public static void debugNetwork(String debug) {
         if (CoreConfiguration.debugExtraInfo) {
             Debug.log(debug);
+        }
+    }
+
+    public static void debugNetwork(String debug, CustomPayload packet) {
+        if (CoreConfiguration.debugExtraInfo) {
+            Debug.log(debug.replace("{}", "'<LG>" + packet.getId().id() + "<W>'"));
         }
     }
 }
