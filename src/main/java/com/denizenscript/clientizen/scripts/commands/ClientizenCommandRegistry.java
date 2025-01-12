@@ -10,6 +10,7 @@ public class ClientizenCommandRegistry {
         registerCommand(NarrateCommand.class);
         registerCommand(ParticleCommand.class);
         registerCommand(ServerEventCommand.class);
+        registerCommand(Render2DCommand.class);
     }
 
     private static void registerCommand(Class<? extends AbstractCommand> command) {

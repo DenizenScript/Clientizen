@@ -20,7 +20,8 @@
     "WorldRendererAccessor",
     "WorldRendererMixin",
     "gui.WScrollPanelAccessor",
-    "gui.WTextAccessor"
+    "gui.WTextAccessor",
+    "hud.HudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

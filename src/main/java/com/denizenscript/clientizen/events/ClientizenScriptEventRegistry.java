@@ -29,6 +29,7 @@ public class ClientizenScriptEventRegistry {
         ScriptEvent.registerScriptEvent(KeyPressReleaseScriptEvent.class);
         ScriptEvent.registerScriptEvent(PlayerSprintScriptEvent.class);
         ScriptEvent.registerScriptEvent(ScreenOpenCloseEvent.class);
+        ScriptEvent.registerScriptEvent(RenderScriptEvent.class);
     }
 
     public static final Set<String> ENTITY_PLAINTEXT_MATCHERS = new HashSet<>(Arrays.asList(
