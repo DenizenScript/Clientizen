@@ -108,7 +108,7 @@ public class ScreenNameMapping {
         registerScreenName(DownloadingTerrainScreen.class, "downloading_terrain");
         registerScreenName(FatalErrorScreen.class, "fatal_error");
         registerScreenName(GameMenuScreen.class, "game_menu");
-        registerScreenName(GameModeSelectionScreen.class, "game_mode_selection");
+        registerScreenName(GameModeSwitcherScreen.class, "game_mode_selection");
         registerScreenName(LevelLoadingScreen.class, "level_loading");
         registerScreenName(MessageScreen.class, "message");
         registerScreenName(NoticeScreen.class, "notice_screen");

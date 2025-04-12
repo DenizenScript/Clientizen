@@ -126,8 +126,8 @@ public class ParticleCommand extends AbstractCommand {
         ParticleEffect particle;
         if (rawData != null) {
             try {
-                NbtCompound particleData = StringNbtReader.parse(rawData);
-                particle = type.getCodec().codec().parse(NbtOps.INSTANCE, particleData).getOrThrow(ParticleEffectArgumentType.INVALID_OPTIONS_EXCEPTION::create);
+                NbtCompound particleData = StringNbtReader.readCompound(rawData);
+                particle = type.getCodec().codec().parse(Utilities.registryOps(NbtOps.INSTANCE), particleData).getOrThrow(ParticleEffectArgumentType.INVALID_OPTIONS_EXCEPTION::create);
             }
             catch (CommandSyntaxException syntaxException) {
                 Debug.echoError("Invalid raw particle data '" + rawData + "' for particle of type '" + particleName + "': " + syntaxException.getMessage());

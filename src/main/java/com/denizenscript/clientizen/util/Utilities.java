@@ -4,9 +4,12 @@ import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.core.MapTag;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import com.mojang.serialization.DynamicOps;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.Person;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -82,5 +85,9 @@ public class Utilities {
             return true;
         });
         return converted.toString();
+    }
+
+    public static <T> RegistryOps<T> registryOps(DynamicOps<T> delegate) {
+        return MinecraftClient.getInstance().world.getRegistryManager().getOps(delegate);
     }
 }
