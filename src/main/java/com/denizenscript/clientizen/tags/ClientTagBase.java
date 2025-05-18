@@ -35,15 +35,20 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
     public void register() {
 
         // <--[tag]
-        // @attribute <client.loaded_entities>
+        // @attribute <client.loaded_entities[(<matcher>)]>
         // @returns ListTag(EntityTag)
         // @description
         // Returns a list of all entities currently loaded by the client.
+        // Optionally specify an EntityTag matcher to filter by.
         // -->
         tagProcessor.registerTag(ListTag.class, "loaded_entities", (attribute, object) -> {
+            String matcher = attribute.hasParam() ? attribute.getParam() : null;
             ListTag entities = new ListTag();
-            for (Entity entity : MinecraftClient.getInstance().world.getEntities()) {
-                entities.addObject(new EntityTag(entity));
+            for (Entity entity : LocationTag.getWorld().getEntities()) {
+                EntityTag entityTag = new EntityTag(entity);
+                if (matcher == null || entityTag.advancedMatches(matcher, attribute.context)) {
+                    entities.addObject(entityTag);
+                }
             }
             return entities;
         });
