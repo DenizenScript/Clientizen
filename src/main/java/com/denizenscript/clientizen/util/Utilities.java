@@ -8,10 +8,14 @@ import com.mojang.serialization.DynamicOps;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,5 +93,21 @@ public class Utilities {
 
     public static <T> RegistryOps<T> registryOps(DynamicOps<T> delegate) {
         return MinecraftClient.getInstance().world.getRegistryManager().getOps(delegate);
+    }
+
+    public static boolean checkLocationWithBoundingBox(Vec3d basePos, Entity entity, double theLeeway) {
+        if (basePos.squaredDistanceTo(entity.getPos()) >= MathHelper.square(theLeeway + 16)) {
+            return false;
+        }
+        Box box = entity.getBoundingBox();
+        Vec3d minPos = box.getMinPos();
+        Vec3d maxPos = box.getMaxPos();
+        double x = Math.max(minPos.getX(), Math.min(basePos.getX(), maxPos.getX()));
+        double y = Math.max(minPos.getY(), Math.min(basePos.getY(), maxPos.getY()));
+        double z = Math.max(minPos.getZ(), Math.min(basePos.getZ(), maxPos.getZ()));
+        double xOff = x - basePos.getX();
+        double yOff = y - basePos.getY();
+        double zOff = z - basePos.getZ();
+        return xOff * xOff + yOff * yOff + zOff * zOff < theLeeway * theLeeway;
     }
 }

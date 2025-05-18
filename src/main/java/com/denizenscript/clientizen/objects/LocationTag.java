@@ -1,8 +1,12 @@
 package com.denizenscript.clientizen.objects;
 
+import com.denizenscript.clientizen.mixin.ClientWorldAccessor;
+import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.core.ListTag;
+import com.denizenscript.denizencore.objects.core.MapTag;
 import com.denizenscript.denizencore.objects.core.VectorObject;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
@@ -10,11 +14,13 @@ import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.joml.Math;
 
 import java.util.List;
+import java.util.Objects;
 
 public class LocationTag implements ObjectTag, VectorObject {
 
@@ -143,6 +149,10 @@ public class LocationTag implements ObjectTag, VectorObject {
             return true;
         }
         return valueOf(string, CoreUtilities.noDebugContext) != null;
+    }
+
+    public static ClientWorld getWorld() {
+        return Objects.requireNonNull(MinecraftClient.getInstance().world, "Missing world! this should never happen, please report to developers.");
     }
 
     public static void register() {
@@ -334,7 +344,46 @@ public class LocationTag implements ObjectTag, VectorObject {
         // Returns the material of the block at the location.
         // -->
         tagProcessor.registerTag(MaterialTag.class, "material", (attribute, object) ->  {
-            return object.isChunkLoaded() ? new MaterialTag(MinecraftClient.getInstance().world.getBlockState(object.getBlockPos())) : null;
+            return object.isChunkLoaded() ? new MaterialTag(getWorld().getBlockState(object.getBlockPos())) : null;
+        });
+
+        // <--[tag]
+        // @attribute <LocationTag.find_entities[within=<#>;(match=<matcher>)]>
+        // @returns ListTag(EntityTag)
+        // @description
+        // Returns a list of all entities within range, sorted by closeness (first entity is the closest, last entity is the farthest).
+        // Optionally specify an EntityTag matcher to filter by.
+        // -->
+        tagProcessor.registerTag(ListTag.class, MapTag.class, "find_entities", (attribute, object, param) -> {
+            ElementTag rangeElement = param.getRequiredObjectAs("within", ElementTag.class, attribute);
+            if (rangeElement == null) {
+                return null;
+            }
+            if (!rangeElement.isInt()) {
+                attribute.echoError("Invalid 'within' value '" + rangeElement + "' specified: must be a number.");
+                return null;
+            }
+            int range = rangeElement.asInt();
+            if (range < 0) {
+                attribute.echoError("Invalid 'within' value '" + rangeElement + "': cannot be lower than 0.");
+                return null;
+            }
+            ElementTag matcherElement = param.getElement("match");
+            String matcher = matcherElement != null ? matcherElement.asString() : null;
+            Vec3d originPos = object.getPosVector();
+            ListTag entities = new ListTag();
+            int doubleRange = range * 2;
+            ((ClientWorldAccessor) getWorld()).invokeGetEntityLookup().forEachIntersects(Box.of(originPos, doubleRange, doubleRange, doubleRange), entity -> {
+                if (!Utilities.checkLocationWithBoundingBox(originPos, entity, range)) {
+                    return;
+                }
+                EntityTag entityTag = new EntityTag(entity);
+                if (matcher == null || entityTag.advancedMatches(matcher, attribute.context)) {
+                    entities.addObject(entityTag);
+                }
+            });
+            entities.objectForms.sort((firstEnt, secondEnt) -> object.compare(((EntityTag) firstEnt).getEntity().getPos(), ((EntityTag) secondEnt).getEntity().getPos()));
+            return entities;
         });
     }
 
@@ -471,6 +520,26 @@ public class LocationTag implements ObjectTag, VectorObject {
 
     public Vec3d getDirection() {
         return Vec3d.fromPolar(pitch, yaw);
+    }
+
+    public Vec3d getPosVector() {
+        return new Vec3d(getX(), getY(), getZ());
+    }
+
+    public int compare(Vec3d pos1, Vec3d pos2) {
+        if (pos1 == pos2) {
+            return 0;
+        }
+        if (pos1 == null) {
+            return 1;
+        }
+        if (pos2 == null) {
+            return -1;
+        }
+        if (pos1.equals(pos2)) {
+            return 0;
+        }
+        return Double.compare(pos1.squaredDistanceTo(getX(), getY(), getZ()), pos2.squaredDistanceTo(getX(), getY(), getZ()));
     }
 
     private String prefix = "Location";
