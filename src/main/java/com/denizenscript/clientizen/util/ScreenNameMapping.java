@@ -102,7 +102,7 @@ public class ScreenNameMapping {
         registerScreenName(DataPackFailureScreen.class, "datapack_failure");
         registerScreenName(DeathScreen.class, "death");
         registerScreenName(DemoScreen.class, "demo");
-        registerScreenName(DialogScreen.class, "dialog");
+        registerScreenName(GraphicsWarningScreen.class, "dialog");
         registerScreenName(DirectConnectScreen.class, "direct_connect");
         registerScreenName(DisconnectedScreen.class, "disconnected");
         registerScreenName(DownloadingTerrainScreen.class, "downloading_terrain");
