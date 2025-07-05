@@ -68,7 +68,7 @@ public class DynamicLabelElement implements GuiScriptContainer.GuiElementParser 
         }
         ColorTag color = getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
-            dynamicLabel.setColor(color.asRGB(), WDynamicLabel.DEFAULT_DARKMODE_TEXT_COLOR);
+            dynamicLabel.setColor(color.asARGB(), WDynamicLabel.DEFAULT_DARKMODE_TEXT_COLOR);
         }
         return dynamicLabel;
     }

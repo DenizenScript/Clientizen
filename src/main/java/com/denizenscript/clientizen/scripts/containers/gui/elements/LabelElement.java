@@ -56,7 +56,7 @@ public class LabelElement implements GuiScriptContainer.GuiElementParser {
         }
         ColorTag color = getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
-            label.setColor(color.asRGB());
+            label.setColor(color.asARGB());
         }
         return label;
     }

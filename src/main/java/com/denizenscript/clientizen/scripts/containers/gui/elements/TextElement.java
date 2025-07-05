@@ -40,7 +40,7 @@ public class TextElement implements GuiScriptContainer.GuiElementParser {
         WText text = new WText(Text.literal(textContent));
         ColorTag color = getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
-            text.setColor(color.asRGB());
+            text.setColor(color.asARGB());
         }
         return text;
     }
