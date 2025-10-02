@@ -225,7 +225,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // Returns an entity's location.
         // -->
         tagProcessor.registerTag(LocationTag.class, "location", (attribute, object) -> {
-            return new LocationTag(object.getEntity().getPos(), object.getSpigotYaw(), object.getEntity().getPitch());
+            return new LocationTag(object.getEntity().getEntityPos(), object.getSpigotYaw(), object.getEntity().getPitch());
         });
 
         // <--[tag]

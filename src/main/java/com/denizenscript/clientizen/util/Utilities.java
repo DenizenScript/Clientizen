@@ -96,7 +96,7 @@ public class Utilities {
     }
 
     public static boolean checkLocationWithBoundingBox(Vec3d basePos, Entity entity, double theLeeway) {
-        if (basePos.squaredDistanceTo(entity.getPos()) >= MathHelper.square(theLeeway + 16)) {
+        if (basePos.squaredDistanceTo(entity.getEntityPos()) >= MathHelper.square(theLeeway + 16)) {
             return false;
         }
         Box box = entity.getBoundingBox();

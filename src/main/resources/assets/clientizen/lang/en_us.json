@@ -1,6 +1,6 @@
 {
   "key.clientizen.open_debug_screen": "Debug Screen",
-  "category.clientizen.keys": "Clientizen Keybindings",
+  "key.category.clientizen.keys": "Clientizen Keybindings",
   "clientizen.debug.options.verbose": "Verbose",
   "clientizen.debug.options.ultra_verbose": "Ultra Verbose",
   "clientizen.debug.options.override": "Override",

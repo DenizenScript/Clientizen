@@ -382,7 +382,7 @@ public class LocationTag implements ObjectTag, VectorObject {
                     entities.addObject(entityTag);
                 }
             });
-            entities.objectForms.sort((firstEnt, secondEnt) -> object.compare(((EntityTag) firstEnt).getEntity().getPos(), ((EntityTag) secondEnt).getEntity().getPos()));
+            entities.objectForms.sort((firstEnt, secondEnt) -> object.compare(((EntityTag) firstEnt).getEntity().getEntityPos(), ((EntityTag) secondEnt).getEntity().getEntityPos()));
             return entities;
         });
     }

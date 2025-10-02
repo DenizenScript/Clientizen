@@ -3,7 +3,7 @@ package com.denizenscript.clientizen.mixin;
 import com.denizenscript.clientizen.events.EntityStartsStopsRenderingScriptEvent;
 import com.denizenscript.clientizen.objects.EntityTag;
 import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRenderManager;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Set;
 import java.util.UUID;
 
-@Mixin(EntityRenderDispatcher.class)
+@Mixin(EntityRenderManager.class)
 public class EntityRenderedMixin {
 
     @Inject(method = "shouldRender", at = @At("RETURN"))

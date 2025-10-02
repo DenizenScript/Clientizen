@@ -9,6 +9,7 @@ import com.denizenscript.denizencore.utilities.CoreUtilities;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
+import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -42,7 +43,7 @@ public class NarrateCommand extends AbstractCommand {
     // - narrate "Hello!<n>This is centered!" center
     // -->
 
-    public static final Style SPACING_FONT = Style.EMPTY.withFont(Clientizen.id("spacing"));
+    public static final Style SPACING_FONT = Style.EMPTY.withFont(new StyleSpriteSource.Font(Clientizen.id("spacing")));
 
     public NarrateCommand() {
         setName("narrate");

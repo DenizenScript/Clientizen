@@ -1,7 +1,6 @@
 package com.denizenscript.clientizen.scripts.commands;
 
-import com.denizenscript.clientizen.mixin.ParticleAccessor;
-import com.denizenscript.clientizen.mixin.WorldRendererAccessor;
+import com.denizenscript.clientizen.mixin.BillboardParticleAccessor;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.clientizen.objects.ItemTag;
 import com.denizenscript.clientizen.objects.LocationTag;
@@ -22,6 +21,7 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.particle.BillboardParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.command.argument.ParticleEffectArgumentType;
 import net.minecraft.nbt.NbtCompound;
@@ -183,9 +183,7 @@ public class ParticleCommand extends AbstractCommand {
         }
         Particle createdParticle;
         try {
-            createdParticle = ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).invokeSpawnParticle(
-                    particle, type.shouldAlwaysSpawn(), false, location.getX(), location.getY(), location.getZ(), 0, 0, 0
-            );
+            createdParticle = MinecraftClient.getInstance().particleManager.addParticle(particle, location.getX(), location.getY(), location.getZ(), 0, 0, 0);
         }
         catch (Throwable throwable) {
             Debug.echoError("Internal error when spawning particle, see stacktrace below:");
@@ -195,9 +193,9 @@ public class ParticleCommand extends AbstractCommand {
         if (velocity != null) {
             createdParticle.setVelocity(velocity.getX(), velocity.getY(), velocity.getZ());
         }
-        if (color != null) {
-            createdParticle.setColor(color.red / 255f, color.green / 255f, color.blue / 255f);
-            ((ParticleAccessor) createdParticle).invokeSetAlpha(color.alpha / 255f);
+        if (color != null && createdParticle instanceof BillboardParticle billboardParticle) {
+            billboardParticle.setColor(color.red / 255f, color.green / 255f, color.blue / 255f);
+            ((BillboardParticleAccessor) billboardParticle).invokeSetAlpha(color.alpha / 255f);
         }
         if (duration != null) {
             createdParticle.setMaxAge(duration.getTicksAsInt());

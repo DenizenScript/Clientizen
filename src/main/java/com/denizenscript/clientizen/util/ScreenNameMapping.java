@@ -105,7 +105,6 @@ public class ScreenNameMapping {
         registerScreenName(GraphicsWarningScreen.class, "dialog");
         registerScreenName(DirectConnectScreen.class, "direct_connect");
         registerScreenName(DisconnectedScreen.class, "disconnected");
-        registerScreenName(DownloadingTerrainScreen.class, "downloading_terrain");
         registerScreenName(FatalErrorScreen.class, "fatal_error");
         registerScreenName(GameMenuScreen.class, "game_menu");
         registerScreenName(GameModeSwitcherScreen.class, "game_mode_selection");

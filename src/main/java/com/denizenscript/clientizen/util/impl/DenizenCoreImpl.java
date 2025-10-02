@@ -16,6 +16,7 @@ import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
 import com.denizenscript.denizencore.scripts.queues.ScriptQueue;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
+import com.denizenscript.denizencore.utilities.DefinitionProvider;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Formatting;
 
@@ -181,6 +182,9 @@ public class DenizenCoreImpl implements DenizenImplementation {
         Clientizen.LOGGER.info(Formatting.strip(text));
         DebugConsole.addDebug(text);
     }
+
+    @Override
+    public void addFormatScriptDefinitions(DefinitionProvider definitionProvider, TagContext tagContext) {}
 
     @Override
     public String stripColor(String text) {
