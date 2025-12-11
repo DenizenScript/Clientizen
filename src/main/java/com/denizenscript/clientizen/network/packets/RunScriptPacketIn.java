@@ -25,7 +25,7 @@ public record RunScriptPacketIn(String scriptName, String scriptPath, Map<String
         ScriptTag script = ScriptTag.valueOf(scriptName, CoreUtilities.noDebugContext);
         if (script == null) {
             if (CoreConfiguration.debugExtraInfo) {
-                Debug.echoError("Invalid script name to run received from server: " + scriptName + ".");
+                Debug.echoError("Invalid script name to run received from server: " + scriptName + '.');
             }
             return;
         }

@@ -29,22 +29,25 @@ public class Codecs {
         }, buf -> buf.readBoolean() ? codec.decode(buf) : null);
     }
 
-    private static <T, R> Function<T, R> noWriteFunction() {
-        return param -> {
-            throw new UnsupportedOperationException("Trying to write read-only codec.");
-        };
+    private static final Function<?, ?> NO_WRITE = param -> {
+        throw new UnsupportedOperationException("Trying to write read-only codec.");
+    };
+
+    @SuppressWarnings("unchecked")
+    private static <T, R> Function<T, R> noWrite() {
+        return (Function<T, R>) NO_WRITE;
     }
 
     public static <P extends PacketIn, CT> PacketCodec<RegistryByteBuf, P> readOnly(PacketCodec<RegistryByteBuf, CT> codec, Function<CT, P> constructor) {
-        return codec.xmap(constructor, noWriteFunction());
+        return codec.xmap(constructor, noWrite());
     }
 
     public static <P extends PacketIn, CT1, CT2> PacketCodec<RegistryByteBuf, P> readOnly(PacketCodec<RegistryByteBuf, CT1> codec1, PacketCodec<RegistryByteBuf, CT2> codec2, BiFunction<CT1, CT2, P> constructor) {
-        return PacketCodec.tuple(codec1, noWriteFunction(), codec2, noWriteFunction(), constructor);
+        return PacketCodec.tuple(codec1, noWrite(), codec2, noWrite(), constructor);
     }
 
     public static <P extends PacketIn, CT1, CT2, CT3> PacketCodec<RegistryByteBuf, P> readOnly(PacketCodec<RegistryByteBuf, CT1> codec1, PacketCodec<RegistryByteBuf, CT2> codec2, PacketCodec<RegistryByteBuf, CT3> codec3, Function3<CT1, CT2, CT3, P> constructor) {
-        return PacketCodec.tuple(codec1, noWriteFunction(), codec2, noWriteFunction(), codec3, noWriteFunction(), constructor);
+        return PacketCodec.tuple(codec1, noWrite(), codec2, noWrite(), codec3, noWrite(), constructor);
     }
 
     private static <T> T noRead() {
