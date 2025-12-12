@@ -1,27 +1,27 @@
 package com.denizenscript.clientizen.debuggui;
 
+import com.mojang.blaze3d.platform.Window;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.WTabPanel;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Window;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class ClientizenDebugGUI extends LightweightGuiDescription {
 
     public static final int TAB_HEIGHT = 30; // WTabPanel.TAB_HEIGHT
-    public static final Text CONSOLE_TITLE = Text.translatable("clientizen.debug.tab.console").formatted(Formatting.BOLD);
-    public static final Text OPTIONS_TITLE = Text.translatable("clientizen.debug.tab.options").formatted(Formatting.BOLD);
+    public static final Component CONSOLE_TITLE = Component.translatable("clientizen.debug.tab.console").withStyle(ChatFormatting.BOLD);
+    public static final Component OPTIONS_TITLE = Component.translatable("clientizen.debug.tab.options").withStyle(ChatFormatting.BOLD);
 
     public DebugConsole console = new DebugConsole();
 
     public ClientizenDebugGUI() {
-        Window window = MinecraftClient.getInstance().getWindow();
+        Window window = Minecraft.getInstance().getWindow();
         WTabPanel mainPanel = new WTabPanel();
-        mainPanel.setSize(window.getScaledWidth(), window.getScaledHeight());
+        mainPanel.setSize(window.getGuiScaledWidth(), window.getGuiScaledHeight());
         setRootPanel(mainPanel);
         mainPanel.add(console, tab -> tab.title(CONSOLE_TITLE));
         mainPanel.add(new DebugOptionsMenu(), tab -> tab.title(OPTIONS_TITLE));

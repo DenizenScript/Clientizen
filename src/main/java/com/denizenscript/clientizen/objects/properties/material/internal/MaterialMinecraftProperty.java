@@ -7,7 +7,7 @@ import com.denizenscript.denizencore.objects.properties.ObjectProperty;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
-import net.minecraft.state.property.Property;
+import net.minecraft.world.level.block.state.properties.Property;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -24,12 +24,12 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
 
     @Override
     public ElementTag getPropertyValue() {
-        return rawValueToElement(processPropertyValue(object.state.get(internalProperty)));
+        return rawValueToElement(processPropertyValue(object.state.getValue(internalProperty)));
     }
 
     @Override
     public ElementTag getPropertyValueNoDefault() {
-        V value = object.state.get(internalProperty);
+        V value = object.state.getValue(internalProperty);
         if (isDefaultValue(value)) {
             return null;
         }
@@ -37,7 +37,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     }
 
     public boolean isDefaultValue(V value) {
-        return value == object.state.getBlock().getDefaultState().get(internalProperty);
+        return value == object.state.getBlock().defaultBlockState().getValue(internalProperty);
     }
 
     @Override
@@ -51,27 +51,27 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
     }
 
     public V parsePropertyValue(ElementTag input, Mechanism mechanism) {
-        return internalProperty.parse(input.asLowerString()).orElse(null);
+        return internalProperty.getValue(input.asLowerString()).orElse(null);
     }
 
     @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
         V parsedValue = parsePropertyValue(value, mechanism);
         if (parsedValue == null) {
-            mechanism.echoError("Invalid " + DebugInternals.getClassNameOpti(internalProperty.getType()) + " specified, must be one of: "
-                    + internalProperty.getValues().stream().map(this::processPropertyValue).filter(Objects::nonNull).map(internalProperty::name).collect(Collectors.joining(", ")) + '.');
+            mechanism.echoError("Invalid " + DebugInternals.getClassNameOpti(internalProperty.getValueClass()) + " specified, must be one of: "
+                    + internalProperty.getPossibleValues().stream().map(this::processPropertyValue).filter(Objects::nonNull).map(internalProperty::getName).collect(Collectors.joining(", ")) + '.');
             return;
         }
-        object.state = object.state.with(internalProperty, parsedValue);
+        object.state = object.state.setValue(internalProperty, parsedValue);
     }
 
     @Override
     public String getPropertyId() {
         return propertyID;
     }
-    
+
     private ElementTag rawValueToElement(V value) {
-        return value == null ? null : new ElementTag(internalProperty.name(value), true);
+        return value == null ? null : new ElementTag(internalProperty.getName(value), true);
     }
 
     @SafeVarargs
@@ -111,7 +111,7 @@ public abstract class MaterialMinecraftProperty<T extends Property<V>, V extends
                 return null;
             }
             for (T internalProperty : internalProperties) {
-                if (material.state.contains(internalProperty)) {
+                if (material.state.hasProperty(internalProperty)) {
                     try {
                         //noinspection unchecked
                         MaterialMinecraftProperty<T, ?> property = (MaterialMinecraftProperty<T, ?>) constructor.invoke();

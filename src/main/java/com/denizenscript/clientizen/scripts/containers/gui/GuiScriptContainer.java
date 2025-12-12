@@ -24,9 +24,12 @@ import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -389,7 +392,7 @@ public class GuiScriptContainer extends ScriptContainer {
             }
             return null;
         }
-        Identifier texturePath = Identifier.tryParse(pathStr);
+        ResourceLocation texturePath = ResourceLocation.tryParse(pathStr);
         if (texturePath == null) {
             Debug.echoError("Invalid texture: invalid texture path '" + pathStr + "' specified.");
             return null;
@@ -470,7 +473,7 @@ public class GuiScriptContainer extends ScriptContainer {
         if (color != null) {
             return BackgroundPainter.createColorful(color.asARGB());
         }
-        Identifier guiSprite = Identifier.tryParse(rawObject.toString());
+        ResourceLocation guiSprite = ResourceLocation.tryParse(rawObject.toString());
         if (guiSprite != null) {
             return BackgroundPainter.createGuiSprite(guiSprite);
         }

@@ -10,7 +10,7 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class ButtonElement implements GuiScriptContainer.GuiElementParser {
         WButton button = new WButton(icon);
         String label = getTaggedString(config, "label", context);
         if (label != null) {
-            button.setLabel(Text.literal(label));
+            button.setLabel(Component.literal(label));
         }
         Integer iconSize = getTaggedInt(config, "icon_size", context);
         if (iconSize != null) {

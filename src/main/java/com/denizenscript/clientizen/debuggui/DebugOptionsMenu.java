@@ -2,15 +2,15 @@ package com.denizenscript.clientizen.debuggui;
 
 import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
+import com.mojang.blaze3d.platform.Window;
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Window;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.BooleanSupplier;
 
@@ -20,9 +20,9 @@ public class DebugOptionsMenu extends WPlainPanel {
     public static final int OFFSET = 18;
 
     public DebugOptionsMenu() {
-        Window window = MinecraftClient.getInstance().getWindow();
-        int width = window.getScaledWidth();
-        int height = window.getScaledHeight() - ClientizenDebugGUI.TAB_HEIGHT;
+        Window window = Minecraft.getInstance().getWindow();
+        int width = window.getGuiScaledWidth();
+        int height = window.getGuiScaledHeight() - ClientizenDebugGUI.TAB_HEIGHT;
         setSize(width, height);
         BooleanOptionButton verboseButton = addButton("verbose", () -> CoreConfiguration.debugVerbose, bool -> CoreConfiguration.debugVerbose = bool);
         addButton("ultra_verbose", () -> CoreConfiguration.debugUltraVerbose, bool -> {
@@ -61,18 +61,18 @@ public class DebugOptionsMenu extends WPlainPanel {
 
     public static class BooleanOptionButton extends WButton {
 
-        public static final Text ON = Text.translatable("options.on").formatted(Formatting.GREEN);
-        public static final Text OFF = Text.translatable("options.off").formatted(Formatting.RED);
+        public static final Component ON = Component.translatable("options.on").withStyle(ChatFormatting.GREEN);
+        public static final Component OFF = Component.translatable("options.off").withStyle(ChatFormatting.RED);
 
-        public Text tooltip;
-        public Text prefix;
+        public Component tooltip;
+        public Component prefix;
         public BooleanSupplier getter;
         public BooleanConsumer setter;
 
         public BooleanOptionButton(String id, BooleanSupplier getter, BooleanConsumer setter) {
             String key = "clientizen.debug.options." + id;
-            prefix = Text.translatable(key).append(": ");
-            tooltip = Text.translatable(key + ".description");
+            prefix = Component.translatable(key).append(": ");
+            tooltip = Component.translatable(key + ".description");
             this.getter = getter;
             this.setter = setter;
             updateLabel();
@@ -95,7 +95,7 @@ public class DebugOptionsMenu extends WPlainPanel {
                 return;
             }
             for (String splitLine : CoreUtilities.split(translated, '\n')) {
-                builder.add(Text.literal(splitLine).asOrderedText());
+                builder.add(Component.literal(splitLine).getVisualOrderText());
             }
         }
     }

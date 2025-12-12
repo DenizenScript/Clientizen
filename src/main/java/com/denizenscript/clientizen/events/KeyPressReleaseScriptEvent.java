@@ -3,9 +3,9 @@ package com.denizenscript.clientizen.events;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyPressReleaseScriptEvent extends ScriptEvent {
@@ -76,10 +76,10 @@ public class KeyPressReleaseScriptEvent extends ScriptEvent {
         };
     }
 
-    public void handleKeyPressStateChange(InputUtil.Key key, boolean pressed) {
-        this.key = Key.keysByCode.get(key.getCode());
+    public void handleKeyPressStateChange(InputConstants.Key key, boolean pressed) {
+        this.key = Key.keysByCode.get(key.getValue());
         this.pressed = pressed;
-        this.device = key.getCategory() == InputUtil.Type.KEYSYM ? InputDevice.KEYBOARD : InputDevice.MOUSE;
+        this.device = key.getType() == InputConstants.Type.KEYSYM ? InputDevice.KEYBOARD : InputDevice.MOUSE;
         fire();
     }
 

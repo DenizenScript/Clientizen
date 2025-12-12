@@ -20,19 +20,19 @@ import com.denizenscript.denizencore.scripts.commands.generator.ArgPrefixed;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.debugging.DebugInternals;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.BillboardParticle;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.command.argument.ParticleEffectArgumentType;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.commands.arguments.ParticleArgument;
+import net.minecraft.core.particles.*;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.StringNbtReader;
-import net.minecraft.particle.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.event.BlockPositionSource;
-import net.minecraft.world.event.EntityPositionSource;
-import net.minecraft.world.event.PositionSource;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.gameevent.BlockPositionSource;
+import net.minecraft.world.level.gameevent.EntityPositionSource;
+import net.minecraft.world.level.gameevent.PositionSource;
 
 import java.util.function.Predicate;
 
@@ -106,7 +106,7 @@ public class ParticleCommand extends AbstractCommand {
 
     @Override
     public void addCustomTabCompletions(TabCompletionsBuilder tab) {
-        tab.addWithPrefix("type:", Utilities.listRegistryKeys(Registries.PARTICLE_TYPE));
+        tab.addWithPrefix("type:", Utilities.listRegistryKeys(BuiltInRegistries.PARTICLE_TYPE));
     }
 
     public static void autoExecute(ScriptEntry scriptEntry,
@@ -118,16 +118,16 @@ public class ParticleCommand extends AbstractCommand {
                                    @ArgName("scale_multiplier") @ArgPrefixed @ArgDefaultNull ElementTag scaleMultiplier,
                                    @ArgName("data") @ArgPrefixed @ArgDefaultNull MapTag data,
                                    @ArgName("raw_data") @ArgPrefixed @ArgDefaultNull String rawData) {
-        ParticleType<?> type = Registries.PARTICLE_TYPE.get(Identifier.tryParse(particleName));
+        ParticleType<?> type = BuiltInRegistries.PARTICLE_TYPE.getValue(ResourceLocation.tryParse(particleName));
         if (type == null) {
             Debug.echoError("Invalid particle type specified: " + particleName + '.');
             return;
         }
-        ParticleEffect particle;
+        ParticleOptions particle;
         if (rawData != null) {
             try {
-                NbtCompound particleData = StringNbtReader.readCompound(rawData);
-                particle = type.getCodec().codec().parse(Utilities.registryOps(NbtOps.INSTANCE), particleData).getOrThrow(ParticleEffectArgumentType.INVALID_OPTIONS_EXCEPTION::create);
+                CompoundTag particleData = TagParser.parseCompoundFully(rawData);
+                particle = type.codec().codec().parse(Utilities.registryOps(NbtOps.INSTANCE), particleData).getOrThrow(ParticleArgument.ERROR_INVALID_OPTIONS::create);
             }
             catch (CommandSyntaxException syntaxException) {
                 Debug.echoError("Invalid raw particle data '" + rawData + "' for particle of type '" + particleName + "': " + syntaxException.getMessage());
@@ -136,26 +136,26 @@ public class ParticleCommand extends AbstractCommand {
         }
         else if (type == ParticleTypes.BLOCK || type == ParticleTypes.BLOCK_MARKER || type == ParticleTypes.FALLING_DUST) {
             MaterialTag material = requireData(data, "material", MaterialTag.class, MaterialTag::isBlock, particleName, scriptEntry);
-            particle = new BlockStateParticleEffect((ParticleType<BlockStateParticleEffect>) type, material.state);
+            particle = new BlockParticleOption((ParticleType<BlockParticleOption>) type, material.state);
         }
         else if (type == ParticleTypes.DUST) {
             ColorTag dustColor = requireData(data, "color", ColorTag.class, particleName, scriptEntry);
             ElementTag dustScale = requireData(data, "scale", ElementTag.class, ElementTag::isFloat, particleName, scriptEntry);
-            particle = new DustParticleEffect(dustColor.asRGB(), dustScale.asFloat());
+            particle = new DustParticleOptions(dustColor.asRGB(), dustScale.asFloat());
         }
         else if (type == ParticleTypes.DUST_COLOR_TRANSITION) {
             ColorTag fromColor = requireData(data, "from", ColorTag.class, particleName, scriptEntry);
             ColorTag toColor = requireData(data, "to", ColorTag.class, particleName, scriptEntry);
             ElementTag dustScale = requireData(data, "scale", ElementTag.class, ElementTag::isFloat, particleName, scriptEntry);
-            particle = new DustColorTransitionParticleEffect(fromColor.asRGB(), toColor.asRGB(), dustScale.asFloat());
+            particle = new DustColorTransitionOptions(fromColor.asRGB(), toColor.asRGB(), dustScale.asFloat());
         }
         else if (type == ParticleTypes.SCULK_CHARGE) {
             ElementTag roll = requireData(data, "roll", ElementTag.class, ElementTag::isFloat, particleName, scriptEntry);
-            particle = new SculkChargeParticleEffect(roll.asFloat());
+            particle = new SculkChargeParticleOptions(roll.asFloat());
         }
         else if (type == ParticleTypes.ITEM) {
             ItemTag item = requireData(data, "item", ItemTag.class, particleName, scriptEntry);
-            particle = new ItemStackParticleEffect(ParticleTypes.ITEM, item.getStack());
+            particle = new ItemParticleOption(ParticleTypes.ITEM, item.getStack());
         }
         else if (type == ParticleTypes.VIBRATION) {
             PositionSource destination;
@@ -172,18 +172,18 @@ public class ParticleCommand extends AbstractCommand {
                 throw new InvalidArgumentsRuntimeException("Invalid data '" + data.debuggable() + "<W>' for 'vibration' particle: must have either a block or entity destination.");
             }
             DurationTag travelTime = requireData(data, "arrival_time", DurationTag.class, particleName, scriptEntry);
-            particle = new VibrationParticleEffect(destination, travelTime.getTicksAsInt());
+            particle = new VibrationParticleOption(destination, travelTime.getTicksAsInt());
         }
         else if (type == ParticleTypes.SHRIEK) {
             DurationTag delay = requireData(data, "delay", DurationTag.class, particleName, scriptEntry);
-            particle = new ShriekParticleEffect(delay.getTicksAsInt());
+            particle = new ShriekParticleOption(delay.getTicksAsInt());
         }
         else {
             particle = (SimpleParticleType) type;
         }
         Particle createdParticle;
         try {
-            createdParticle = MinecraftClient.getInstance().particleManager.addParticle(particle, location.getX(), location.getY(), location.getZ(), 0, 0, 0);
+            createdParticle = Minecraft.getInstance().particleEngine.createParticle(particle, location.getX(), location.getY(), location.getZ(), 0, 0, 0);
         }
         catch (Throwable throwable) {
             Debug.echoError("Internal error when spawning particle, see stacktrace below:");
@@ -191,14 +191,14 @@ public class ParticleCommand extends AbstractCommand {
             return;
         }
         if (velocity != null) {
-            createdParticle.setVelocity(velocity.getX(), velocity.getY(), velocity.getZ());
+            createdParticle.setParticleSpeed(velocity.getX(), velocity.getY(), velocity.getZ());
         }
-        if (color != null && createdParticle instanceof BillboardParticle billboardParticle) {
+        if (color != null && createdParticle instanceof SingleQuadParticle billboardParticle) {
             billboardParticle.setColor(color.red / 255f, color.green / 255f, color.blue / 255f);
             ((BillboardParticleAccessor) billboardParticle).invokeSetAlpha(color.alpha / 255f);
         }
         if (duration != null) {
-            createdParticle.setMaxAge(duration.getTicksAsInt());
+            createdParticle.setLifetime(duration.getTicksAsInt());
         }
         if (scaleMultiplier != null) {
             if (!scaleMultiplier.isFloat()) {

@@ -8,7 +8,7 @@ import com.denizenscript.denizencore.utilities.text.StringHolder;
 import io.github.cottonmc.cotton.gui.widget.WTabPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -68,11 +68,11 @@ public class TabPanelElement implements GuiScriptContainer.GuiElementParser {
             WTabPanel.Tab.Builder tabBuilder = new WTabPanel.Tab.Builder(content);
             String title = getTaggedString(tabConfig, "title", context);
             if (title != null) {
-                tabBuilder.title(Text.literal(title));
+                tabBuilder.title(Component.literal(title));
             }
             List<String> tooltip = getTaggedStringList(tabConfig, "tooltip", context);
             if (tooltip != null) {
-                tabBuilder.tooltip(tooltip.stream().map(Text::literal).toArray(Text[]::new));
+                tabBuilder.tooltip(tooltip.stream().map(Component::literal).toArray(Component[]::new));
             }
             Icon icon = parseIcon(tabConfig, "icon", context);
             if (icon != null) {

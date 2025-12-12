@@ -3,7 +3,7 @@ package com.denizenscript.clientizen.objects.properties.entity;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
 
 public class EntitySheared extends EntityProperty<ElementTag> {
 

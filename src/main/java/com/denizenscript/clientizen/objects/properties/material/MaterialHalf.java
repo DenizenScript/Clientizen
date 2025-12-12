@@ -1,9 +1,9 @@
 package com.denizenscript.clientizen.objects.properties.material;
 
 import com.denizenscript.clientizen.objects.properties.material.internal.MaterialEnumProperty;
-import net.minecraft.block.enums.ChestType;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public class MaterialHalf extends MaterialEnumProperty {
 
@@ -18,13 +18,13 @@ public class MaterialHalf extends MaterialEnumProperty {
     // Output for chests is "LEFT" or "RIGHT".
     // -->
 
-    public static final EnumProperty<?>[] handledProperties = {Properties.BED_PART, Properties.CHEST_TYPE, Properties.DOUBLE_BLOCK_HALF};
+    public static final EnumProperty<?>[] handledProperties = {BlockStateProperties.BED_PART, BlockStateProperties.CHEST_TYPE, BlockStateProperties.DOUBLE_BLOCK_HALF};
 
     enum BukkitDoubleBlockHalf implements EnumStringIdentifiable {TOP, BOTTOM}
 
     public static void register() {
-        convertEnum(Properties.DOUBLE_BLOCK_HALF, BukkitDoubleBlockHalf.class);
-        removeValues(Properties.CHEST_TYPE, ChestType.SINGLE);
+        convertEnum(BlockStateProperties.DOUBLE_BLOCK_HALF, BukkitDoubleBlockHalf.class);
+        removeValues(BlockStateProperties.CHEST_TYPE, ChestType.SINGLE);
         autoRegister("half", MaterialHalf.class);
     }
 }

@@ -3,9 +3,9 @@ package com.denizenscript.clientizen.objects.properties.material.internal;
 import com.denizenscript.clientizen.mixin.IntPropertyAccessor;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import net.minecraft.state.property.IntProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
-public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntProperty, Integer> {
+public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntegerProperty, Integer> {
 
     public IntPropertyAccessor getAccessor() {
         return (IntPropertyAccessor) (Object) internalProperty;
@@ -31,6 +31,6 @@ public abstract class MaterialIntProperty extends MaterialMinecraftProperty<IntP
             mechanism.echoError("Invalid input number, cannot be more than " + accessor.getMax() + ".");
             return;
         }
-        object.state = object.state.with(internalProperty, parsedValue);
+        object.state = object.state.setValue(internalProperty, parsedValue);
     }
 }

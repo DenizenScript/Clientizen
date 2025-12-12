@@ -16,9 +16,9 @@ import com.denizenscript.denizencore.scripts.commands.core.AdjustCommand;
 import com.denizenscript.denizencore.tags.PseudoObjectTagBase;
 import com.denizenscript.denizencore.tags.TagManager;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements FlaggableObject {
 
@@ -44,7 +44,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
         tagProcessor.registerTag(ListTag.class, "loaded_entities", (attribute, object) -> {
             String matcher = attribute.hasParam() ? attribute.getParam() : null;
             ListTag entities = new ListTag();
-            for (Entity entity : LocationTag.getWorld().getEntities()) {
+            for (Entity entity : LocationTag.getWorld().entitiesForRendering()) {
                 EntityTag entityTag = new EntityTag(entity);
                 if (matcher == null || entityTag.advancedMatches(matcher, attribute.context)) {
                     entities.addObject(entityTag);
@@ -84,7 +84,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
         // -->
         // TODO: do our own ray tracing to have full control
         tagProcessor.registerTag(EntityTag.class, "target", (attribute, object) -> {
-            Entity target = MinecraftClient.getInstance().targetedEntity;
+            Entity target = Minecraft.getInstance().crosshairPickEntity;
             return target != null ? new EntityTag(target) : null;
         });
 
@@ -95,7 +95,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
         // Returns the location of the block the client is currently looking at, if any.
         // -->
         tagProcessor.registerTag(LocationTag.class, "cursor_on", (attribute, object) -> {
-            return MinecraftClient.getInstance().crosshairTarget instanceof BlockHitResult blockHit ? new LocationTag(blockHit.getBlockPos()) : null;
+            return Minecraft.getInstance().hitResult instanceof BlockHitResult blockHit ? new LocationTag(blockHit.getBlockPos()) : null;
         });
 
         // <--[tag]
@@ -105,7 +105,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
         // Returns the precise location the client is currently looking at, if any.
         // -->
         tagProcessor.registerTag(LocationTag.class, "cursor_on_precise", (attribute, object) -> {
-            return MinecraftClient.getInstance().crosshairTarget instanceof BlockHitResult blockHit ? new LocationTag(blockHit.getPos()) : null;
+            return Minecraft.getInstance().hitResult instanceof BlockHitResult blockHit ? new LocationTag(blockHit.getLocation()) : null;
         });
 
         // <--[tag]
@@ -115,7 +115,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
         // Returns an EntityTag of the client's own player entity.
         // -->
         tagProcessor.registerTag(EntityTag.class, "self_entity", (attribute, object) -> {
-            return new EntityTag(MinecraftClient.getInstance().player);
+            return new EntityTag(Minecraft.getInstance().player);
         });
 
         // <--[tag]
@@ -207,7 +207,7 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
         //   - narrate "Too long!"
         // -->
         tagProcessor.registerTag(ElementTag.class, "chat_width", (attribute, object) -> {
-            return new ElementTag(MinecraftClient.getInstance().inGameHud.getChatHud().getWidth());
+            return new ElementTag(Minecraft.getInstance().gui.getChat().getWidth());
         });
 
         // <--[tag]
@@ -220,14 +220,14 @@ public class ClientTagBase extends PseudoObjectTagBase<ClientTagBase> implements
         // - narrate "The text would be <[text].text_width.mul[<client.chat_scale>]> pixels wide."
         // -->
         tagProcessor.registerTag(ElementTag.class, "chat_scale", (attribute, object) -> {
-            return new ElementTag(MinecraftClient.getInstance().inGameHud.getChatHud().getChatScale());
+            return new ElementTag(Minecraft.getInstance().gui.getChat().getScale());
         });
 
         // TODO this is temporary and is meant for testing only, should be replaced by a proper modifyblock command
         tagProcessor.registerMechanism("modifyblock", false, MaterialTag.class, (object, mechanism, input) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client.crosshairTarget instanceof BlockHitResult blockHitResult) {
-                client.world.setBlockState(blockHitResult.getBlockPos(), input.state);
+            Minecraft client = Minecraft.getInstance();
+            if (client.hitResult instanceof BlockHitResult blockHitResult) {
+                client.level.setBlockAndUpdate(blockHitResult.getBlockPos(), input.state);
             }
         });
     }

@@ -3,10 +3,10 @@ package com.denizenscript.clientizen.events;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.events.ScriptEventCouldMatcher;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,15 +40,15 @@ public class ClientizenScriptEventRegistry {
         }
         if (ScriptEvent.isAdvancedMatchable(matcher)) {
             ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(matcher);
-            for (EntityType<?> entityType : Registries.ENTITY_TYPE) {
-                if (matchHelper.doesMatch(entityType.getUntranslatedName())) {
+            for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
+                if (matchHelper.doesMatch(entityType.toShortString())) {
                     return true;
                 }
             }
             ScriptEvent.addPossibleCouldMatchFailReason("Matcher doesn't match any entity type", matcher);
             return false;
         }
-        if (Registries.ENTITY_TYPE.containsId(Identifier.tryParse(matcher))) {
+        if (BuiltInRegistries.ENTITY_TYPE.containsKey(ResourceLocation.tryParse(matcher))) {
             return true;
         }
         ScriptEvent.addPossibleCouldMatchFailReason("Invalid entity type", matcher);
@@ -62,17 +62,17 @@ public class ClientizenScriptEventRegistry {
             return true;
         }
         if (ScriptEvent.isAdvancedMatchable(matcher)) {
-            if (registryContainsMatch(Registries.ITEM, matcher)) {
+            if (registryContainsMatch(BuiltInRegistries.ITEM, matcher)) {
                 return true;
             }
-            if (registryContainsMatch(Registries.BLOCK, matcher)) {
+            if (registryContainsMatch(BuiltInRegistries.BLOCK, matcher)) {
                 return true;
             }
             ScriptEvent.addPossibleCouldMatchFailReason("Matcher doesn't match any block/item", matcher);
             return false;
         }
-        Identifier id = Identifier.tryParse(matcher);
-        if (Registries.ITEM.containsId(id) || Registries.BLOCK.containsId(id)) {
+        ResourceLocation id = ResourceLocation.tryParse(matcher);
+        if (BuiltInRegistries.ITEM.containsKey(id) || BuiltInRegistries.BLOCK.containsKey(id)) {
             return true;
         }
         ScriptEvent.addPossibleCouldMatchFailReason("Invalid block/item name", matcher);
@@ -91,13 +91,13 @@ public class ClientizenScriptEventRegistry {
             return true;
         }
         if (ScriptEvent.isAdvancedMatchable(matcher)) {
-            if (registryContainsMatch(Registries.ITEM, matcher)) {
+            if (registryContainsMatch(BuiltInRegistries.ITEM, matcher)) {
                 return true;
             }
             ScriptEvent.addPossibleCouldMatchFailReason("Matcher doesn't match any item", matcher);
             return false;
         }
-        if (Registries.ITEM.containsId(Identifier.tryParse(matcher))) {
+        if (BuiltInRegistries.ITEM.containsKey(ResourceLocation.tryParse(matcher))) {
             return true;
         }
         ScriptEvent.addPossibleCouldMatchFailReason("Invalid item name", matcher);
@@ -106,7 +106,7 @@ public class ClientizenScriptEventRegistry {
 
     private static boolean registryContainsMatch(Registry<?> registry, String matcher) {
         ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(matcher);
-        for (Identifier id : registry.getIds()) {
+        for (ResourceLocation id : registry.keySet()) {
             if (matchHelper.doesMatch(Utilities.idToString(id))) {
                 return true;
             }

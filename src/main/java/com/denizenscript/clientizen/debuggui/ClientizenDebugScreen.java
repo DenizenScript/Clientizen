@@ -4,19 +4,19 @@ import com.denizenscript.clientizen.Clientizen;
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
 public class ClientizenDebugScreen extends CottonClientScreen {
 
     public static void register() {
-        KeyBinding openDebugScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        KeyMapping openDebugScreenKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.clientizen.open_debug_screen",
                 GLFW.GLFW_KEY_R,
-                KeyBinding.Category.create(Clientizen.id("keys"))
+                KeyMapping.Category.register(Clientizen.id("keys"))
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (openDebugScreenKey.wasPressed()) {
+            while (openDebugScreenKey.consumeClick()) {
                 client.setScreen(new ClientizenDebugScreen(new ClientizenDebugGUI()));
             }
         });

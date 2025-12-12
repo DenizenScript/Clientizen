@@ -7,15 +7,15 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.mojang.serialization.DynamicOps;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.Person;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.text.OrderedText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,12 +26,12 @@ import java.util.UUID;
 public class Utilities {
 
     @NotNull
-    public static String idToString(Identifier identifier) {
-        return identifier.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? identifier.getPath() : identifier.toString();
+    public static String idToString(ResourceLocation identifier) {
+        return identifier.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? identifier.getPath() : identifier.toString();
     }
 
     public static List<String> listRegistryKeys(Registry<?> registry) {
-        return registry.getIds().stream().map(Utilities::idToString).toList();
+        return registry.keySet().stream().map(Utilities::idToString).toList();
     }
 
     @Nullable
@@ -82,7 +82,7 @@ public class Utilities {
         return snakeCaseBuilder.toString();
     }
 
-    public static String orderedTextToString(OrderedText text) {
+    public static String orderedTextToString(FormattedCharSequence text) {
         StringBuilder converted = new StringBuilder();
         text.accept((index, style, codePoint) -> {
             converted.append(Character.toChars(codePoint));
@@ -92,22 +92,22 @@ public class Utilities {
     }
 
     public static <T> RegistryOps<T> registryOps(DynamicOps<T> delegate) {
-        return MinecraftClient.getInstance().world.getRegistryManager().getOps(delegate);
+        return Minecraft.getInstance().level.registryAccess().createSerializationContext(delegate);
     }
 
-    public static boolean checkLocationWithBoundingBox(Vec3d basePos, Entity entity, double theLeeway) {
-        if (basePos.squaredDistanceTo(entity.getEntityPos()) >= MathHelper.square(theLeeway + 16)) {
+    public static boolean checkLocationWithBoundingBox(Vec3 basePos, Entity entity, double theLeeway) {
+        if (basePos.distanceToSqr(entity.position()) >= Mth.square(theLeeway + 16)) {
             return false;
         }
-        Box box = entity.getBoundingBox();
-        Vec3d minPos = box.getMinPos();
-        Vec3d maxPos = box.getMaxPos();
-        double x = Math.max(minPos.getX(), Math.min(basePos.getX(), maxPos.getX()));
-        double y = Math.max(minPos.getY(), Math.min(basePos.getY(), maxPos.getY()));
-        double z = Math.max(minPos.getZ(), Math.min(basePos.getZ(), maxPos.getZ()));
-        double xOff = x - basePos.getX();
-        double yOff = y - basePos.getY();
-        double zOff = z - basePos.getZ();
+        AABB box = entity.getBoundingBox();
+        Vec3 minPos = box.getMinPosition();
+        Vec3 maxPos = box.getMaxPosition();
+        double x = Math.max(minPos.x(), Math.min(basePos.x(), maxPos.x()));
+        double y = Math.max(minPos.y(), Math.min(basePos.y(), maxPos.y()));
+        double z = Math.max(minPos.z(), Math.min(basePos.z(), maxPos.z()));
+        double xOff = x - basePos.x();
+        double yOff = y - basePos.y();
+        double zOff = z - basePos.z();
         return xOff * xOff + yOff * yOff + zOff * zOff < theLeeway * theLeeway;
     }
 }

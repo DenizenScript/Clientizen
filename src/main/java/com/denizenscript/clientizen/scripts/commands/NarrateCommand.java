@@ -6,12 +6,12 @@ import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgLinear;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-import net.minecraft.text.StyleSpriteSource;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 
 public class NarrateCommand extends AbstractCommand {
 
@@ -43,7 +43,7 @@ public class NarrateCommand extends AbstractCommand {
     // - narrate "Hello!<n>This is centered!" center
     // -->
 
-    public static final Style SPACING_FONT = Style.EMPTY.withFont(new StyleSpriteSource.Font(Clientizen.id("spacing")));
+    public static final Style SPACING_FONT = Style.EMPTY.withFont(new FontDescription.Resource(Clientizen.id("spacing")));
 
     public NarrateCommand() {
         setName("narrate");
@@ -54,32 +54,32 @@ public class NarrateCommand extends AbstractCommand {
 
     public static void autoExecute(@ArgLinear @ArgName("text") String text,
                                    @ArgName("center") boolean center) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         if (!center) {
-            client.inGameHud.getChatHud().addMessage(Text.literal(text), null, null);
+            client.gui.getChat().addMessage(Component.literal(text), null, null);
             return;
         }
-        int hudWidth = MathHelper.floor((double) client.inGameHud.getChatHud().getWidth() / client.inGameHud.getChatHud().getChatScale());
+        int hudWidth = Mth.floor((double) client.gui.getChat().getWidth() / client.gui.getChat().getScale());
         if (CoreUtilities.contains(text, '\n')) {
             for (String rawLine : CoreUtilities.split(text, '\n')) {
-                sendCenteredLine(Text.literal(rawLine), hudWidth);
+                sendCenteredLine(Component.literal(rawLine), hudWidth);
             }
             return;
         }
-        sendCenteredLine(Text.literal(text), hudWidth);
+        sendCenteredLine(Component.literal(text), hudWidth);
     }
 
-    private static void sendCenteredLine(Text line, int hudWidth) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        int lineWidth = client.textRenderer.getWidth(line);
+    private static void sendCenteredLine(Component line, int hudWidth) {
+        Minecraft client = Minecraft.getInstance();
+        int lineWidth = client.font.width(line);
         if (lineWidth > hudWidth) {
-            for (OrderedText wrappedLine : client.textRenderer.wrapLines(line, hudWidth)) {
-                sendCenteredLine(Text.literal(Utilities.orderedTextToString(wrappedLine)), hudWidth);
+            for (FormattedCharSequence wrappedLine : client.font.split(line, hudWidth)) {
+                sendCenteredLine(Component.literal(Utilities.orderedTextToString(wrappedLine)), hudWidth);
             }
             return;
         }
         String spacingStr = " ".repeat((int) ((hudWidth - lineWidth) / 2f / 0.5f));
-        Text spacing = Text.literal(spacingStr).setStyle(SPACING_FONT);
-        client.inGameHud.getChatHud().addMessage(Text.empty().append(spacing).append(line).append(spacing), null, null);
+        Component spacing = Component.literal(spacingStr).setStyle(SPACING_FONT);
+        client.gui.getChat().addMessage(Component.empty().append(spacing).append(line).append(spacing), null, null);
     }
 }

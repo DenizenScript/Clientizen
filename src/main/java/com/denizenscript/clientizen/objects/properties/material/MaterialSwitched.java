@@ -1,8 +1,8 @@
 package com.denizenscript.clientizen.objects.properties.material;
 
 import com.denizenscript.clientizen.objects.properties.material.internal.MaterialBooleanProperty;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class MaterialSwitched extends MaterialBooleanProperty {
 
@@ -24,7 +24,7 @@ public class MaterialSwitched extends MaterialBooleanProperty {
     // - a sculk_shrieker can summon a warden
     // -->
     public static final BooleanProperty[] handledProperties = {
-            Properties.POWERED, Properties.OPEN, Properties.TRIGGERED, Properties.INVERTED, Properties.LIT, Properties.EXTENDED, Properties.EYE, Properties.ENABLED, Properties.CAN_SUMMON
+            BlockStateProperties.POWERED, BlockStateProperties.OPEN, BlockStateProperties.TRIGGERED, BlockStateProperties.INVERTED, BlockStateProperties.LIT, BlockStateProperties.EXTENDED, BlockStateProperties.EYE, BlockStateProperties.ENABLED, BlockStateProperties.CAN_SUMMON
     };
 
     public static void register() {

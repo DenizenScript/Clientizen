@@ -10,7 +10,7 @@ import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import io.github.cottonmc.cotton.gui.widget.WLabeledSlider;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.Map;
 
@@ -45,7 +45,7 @@ public class LabeledSliderElement implements GuiScriptContainer.GuiElementParser
         }
         String label = getTaggedString(config, "label", context);
         if (label != null) {
-            labeledSlider.setLabel(Text.literal(label));
+            labeledSlider.setLabel(Component.literal(label));
         }
         String dynamicLabel = config.getString("dynamic_label");
         if (dynamicLabel != null) {
@@ -58,7 +58,7 @@ public class LabeledSliderElement implements GuiScriptContainer.GuiElementParser
                 contextSource.contexts = Map.of("value", new ElementTag(newValue));
                 Debug.pushErrorContext(errorContext);
                 try {
-                    return Text.literal(dynamicLabelTag.parse(labelContext).toString());
+                    return Component.literal(dynamicLabelTag.parse(labelContext).toString());
                 }
                 finally {
                     Debug.popErrorContext();

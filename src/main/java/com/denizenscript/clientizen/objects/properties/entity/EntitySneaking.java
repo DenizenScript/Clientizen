@@ -4,7 +4,7 @@ import com.denizenscript.clientizen.access.KeyBindingMixinAccess;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 public class EntitySneaking extends EntityProperty<ElementTag> {
 
@@ -23,7 +23,7 @@ public class EntitySneaking extends EntityProperty<ElementTag> {
 
     @Override
     public ElementTag getPropertyValue() {
-        return new ElementTag(getEntity().isSneaking());
+        return new ElementTag(getEntity().isShiftKeyDown());
     }
 
     @Override
@@ -37,9 +37,9 @@ public class EntitySneaking extends EntityProperty<ElementTag> {
             return;
         }
         boolean sneaking = value.asBoolean();
-        getEntity().setSneaking(sneaking);
-        if (getEntity() == MinecraftClient.getInstance().player) {
-            KeyBindingMixinAccess keyBindingMixinAccess = (KeyBindingMixinAccess) MinecraftClient.getInstance().options.sneakKey;
+        getEntity().setShiftKeyDown(sneaking);
+        if (getEntity() == Minecraft.getInstance().player) {
+            KeyBindingMixinAccess keyBindingMixinAccess = (KeyBindingMixinAccess) Minecraft.getInstance().options.keyShift;
             keyBindingMixinAccess.clientizen$forceSetPressed(sneaking);
             keyBindingMixinAccess.clientizen$disableUntilPress();
         }

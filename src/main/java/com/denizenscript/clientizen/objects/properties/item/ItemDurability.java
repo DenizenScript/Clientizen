@@ -15,12 +15,12 @@ public class ItemDurability extends ItemProperty<ElementTag> {
     // -->
 
     public static boolean describes(ItemTag item) {
-        return item.getStack().isDamageable();
+        return item.getStack().isDamageableItem();
     }
 
     @Override
     public ElementTag getPropertyValue() {
-        return new ElementTag(getStack().getDamage());
+        return new ElementTag(getStack().getDamageValue());
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ItemDurability extends ItemProperty<ElementTag> {
     @Override
     public void setPropertyValue(ElementTag value, Mechanism mechanism) {
         if (mechanism.requireInteger()) {
-            getStack().setDamage(value.asInt());
+            getStack().setDamageValue(value.asInt());
         }
     }
 

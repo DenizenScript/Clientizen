@@ -7,7 +7,7 @@ import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import io.github.cottonmc.cotton.gui.widget.WText;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedObject;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedString;
@@ -37,7 +37,7 @@ public class TextElement implements GuiScriptContainer.GuiElementParser {
             Debug.echoError("Must have text.");
             return null;
         }
-        WText text = new WText(Text.literal(textContent));
+        WText text = new WText(Component.literal(textContent));
         ColorTag color = getTaggedObject(ColorTag.class, config, "color", context);
         if (color != null) {
             text.setColor(color.asARGB());

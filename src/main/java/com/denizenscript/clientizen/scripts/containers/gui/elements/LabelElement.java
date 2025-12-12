@@ -9,7 +9,7 @@ import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedObject;
@@ -45,7 +45,7 @@ public class LabelElement implements GuiScriptContainer.GuiElementParser {
             Debug.echoError("Must have text.");
             return null;
         }
-        WLabel label = new WLabel(Text.literal(text));
+        WLabel label = new WLabel(Component.literal(text));
         VerticalAlignment verticalAlignment = getTaggedEnum(VerticalAlignment.class, config, "vertical_alignment", context);
         if (verticalAlignment != null) {
             label.setVerticalAlignment(verticalAlignment);

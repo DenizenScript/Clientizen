@@ -5,8 +5,8 @@ import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ public class EntityAttachmentPersister {
         ClientEntityEvents.ENTITY_LOAD.register((entity, world) -> loadData(entity));
         ClientEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
             // This is called for each entity when the world is unloaded on logout
-            if (MinecraftClient.getInstance().getNetworkHandler().isConnectionOpen()) {
+            if (Minecraft.getInstance().getConnection().isAcceptingMessages()) {
                 storeData(entity);
             }
         });
@@ -58,12 +58,12 @@ public class EntityAttachmentPersister {
             }
         }
         if (allData != null) {
-            persistedData.put(entity.getUuid(), allData);
+            persistedData.put(entity.getUUID(), allData);
         }
     }
 
     public static void loadData(Entity entity) {
-        List<Pair<AttachmentType<Object>, Object>> data = persistedData.remove(entity.getUuid());
+        List<Pair<AttachmentType<Object>, Object>> data = persistedData.remove(entity.getUUID());
         if (data == null) {
             return;
         }

@@ -4,7 +4,7 @@ import com.denizenscript.clientizen.access.KeyBindingMixinAccess;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 public class EntitySprinting extends EntityProperty<ElementTag> {
 
@@ -34,8 +34,8 @@ public class EntitySprinting extends EntityProperty<ElementTag> {
         }
         boolean sprinting = value.asBoolean();
         getEntity().setSprinting(sprinting);
-        if (getEntity() == MinecraftClient.getInstance().player) {
-            KeyBindingMixinAccess keyBindingMixin = (KeyBindingMixinAccess) MinecraftClient.getInstance().options.sprintKey;
+        if (getEntity() == Minecraft.getInstance().player) {
+            KeyBindingMixinAccess keyBindingMixin = (KeyBindingMixinAccess) Minecraft.getInstance().options.keySprint;
             keyBindingMixin.clientizen$forceSetPressed(sprinting);
             keyBindingMixin.clientizen$disableUntilPress();
         }

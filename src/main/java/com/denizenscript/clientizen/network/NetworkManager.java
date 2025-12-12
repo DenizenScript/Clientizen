@@ -8,10 +8,10 @@ import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public class NetworkManager {
 
@@ -27,7 +27,7 @@ public class NetworkManager {
         send(new SendConfirmationPacketOut());
     }
 
-    public static <T extends PacketIn> void registerInPacket(CustomPayload.Id<T> packetId, PacketCodec<RegistryByteBuf, T> codec) {
+    public static <T extends PacketIn> void registerInPacket(CustomPacketPayload.Type<T> packetId, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         PayloadTypeRegistry.playS2C().register(packetId, codec);
         if (!ClientPlayNetworking.registerGlobalReceiver(packetId, (packet, context) -> {
             debugNetwork("Received {} packet.", packet);
@@ -37,12 +37,12 @@ public class NetworkManager {
         }
     }
 
-    public static <T extends PacketOut> void registerOutPacket(CustomPayload.Id<T> packetId, PacketCodec<RegistryByteBuf, T> codec) {
+    public static <T extends PacketOut> void registerOutPacket(CustomPacketPayload.Type<T> packetId, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         PayloadTypeRegistry.playC2S().register(packetId, codec);
     }
 
     public static void send(PacketOut packet) {
-        if (MinecraftClient.getInstance().isInSingleplayer()) {
+        if (Minecraft.getInstance().isLocalServer()) {
             debugNetwork("Running in single player, not sending {} packet.", packet);
             return;
         }
@@ -61,9 +61,9 @@ public class NetworkManager {
         }
     }
 
-    public static void debugNetwork(String debug, CustomPayload packet) {
+    public static void debugNetwork(String debug, CustomPacketPayload packet) {
         if (CoreConfiguration.debugExtraInfo) {
-            Debug.log(debug.replace("{}", "'<LG>" + packet.getId().id() + "<W>'"));
+            Debug.log(debug.replace("{}", "'<LG>" + packet.type().id() + "<W>'"));
         }
     }
 }

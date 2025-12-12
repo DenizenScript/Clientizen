@@ -13,10 +13,16 @@ import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
+import net.minecraft.core.SectionPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
 
 import java.util.List;
@@ -74,11 +80,11 @@ public class LocationTag implements ObjectTag, VectorObject {
     }
 
     public LocationTag(Position position) {
-        this(position.getX(), position.getY(), position.getZ());
+        this(position.x(), position.y(), position.z());
     }
 
     public LocationTag(Position position, float yaw, float pitch) {
-        this(position.getX(), position.getY(), position.getZ(), yaw, pitch);
+        this(position.x(), position.y(), position.z(), yaw, pitch);
     }
 
     public LocationTag(Vec3i intVector) {
@@ -151,8 +157,8 @@ public class LocationTag implements ObjectTag, VectorObject {
         return valueOf(string, CoreUtilities.noDebugContext) != null;
     }
 
-    public static ClientWorld getWorld() {
-        return Objects.requireNonNull(MinecraftClient.getInstance().world, "Missing world! this should never happen, please report to developers.");
+    public static ClientLevel getWorld() {
+        return Objects.requireNonNull(Minecraft.getInstance().level, "Missing world! this should never happen, please report to developers.");
     }
 
     public static void register() {
@@ -264,7 +270,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         // This is equivalent to <@link tag LocationTag.backward> in the opposite direction.
         // -->
         tagProcessor.registerTag(LocationTag.class, "forward", (attribute, object) -> {
-            Vec3d vector = object.getDirection().multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            Vec3 vector = object.getDirection().scale(attribute.hasParam() ? attribute.getDoubleParam() : 1);
             return object.duplicate().add(vector);
         });
 
@@ -277,7 +283,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         // This is equivalent to <@link tag LocationTag.forward> in the opposite direction.
         // -->
         tagProcessor.registerTag(LocationTag.class, "backward", (attribute, object) -> {
-            Vec3d vector = object.getDirection().multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            Vec3 vector = object.getDirection().scale(attribute.hasParam() ? attribute.getDoubleParam() : 1);
             return object.duplicate().subtract(vector);
         });
 
@@ -290,7 +296,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         // This is equivalent to <@link tag LocationTag.forward> with a +90 degree rotation to the yaw and the pitch set to 0.
         // -->
         tagProcessor.registerTag(LocationTag.class, "left", (attribute, object) -> {
-            Vec3d vector = Vec3d.fromPolar(0, object.yaw).rotateY((float) (Math.PI / 2)).multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            Vec3 vector = Vec3.directionFromRotation(0, object.yaw).yRot((float) (Math.PI / 2)).scale(attribute.hasParam() ? attribute.getDoubleParam() : 1);
             return object.duplicate().add(vector);
         });
 
@@ -303,7 +309,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         // This is equivalent to <@link tag LocationTag.forward> with a -90 degree rotation to the yaw and the pitch set to 0.
         // -->
         tagProcessor.registerTag(LocationTag.class, "right", (attribute, object) -> {
-            Vec3d vector = Vec3d.fromPolar(0, object.yaw).rotateY((float) (Math.PI / 2)).multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            Vec3 vector = Vec3.directionFromRotation(0, object.yaw).yRot((float) (Math.PI / 2)).scale(attribute.hasParam() ? attribute.getDoubleParam() : 1);
             return object.duplicate().subtract(vector);
         });
 
@@ -317,7 +323,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         // To just get the location above this location, use <@link tag LocationTag.above> instead.
         // -->
         tagProcessor.registerTag(LocationTag.class, "up", (attribute, object) -> {
-            Vec3d vector = Vec3d.fromPolar(object.pitch - 90, object.yaw).multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            Vec3 vector = Vec3.directionFromRotation(object.pitch - 90, object.yaw).scale(attribute.hasParam() ? attribute.getDoubleParam() : 1);
             return object.duplicate().add(vector);
         });
 
@@ -331,7 +337,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         // To just get the location above this location, use <@link tag LocationTag.below> instead.
         // -->
         tagProcessor.registerTag(LocationTag.class, "down", (attribute, object) -> {
-            Vec3d vector = Vec3d.fromPolar(object.pitch - 90, object.yaw).multiply(attribute.hasParam() ? attribute.getDoubleParam() : 1);
+            Vec3 vector = Vec3.directionFromRotation(object.pitch - 90, object.yaw).scale(attribute.hasParam() ? attribute.getDoubleParam() : 1);
             return object.duplicate().subtract(vector);
         });
 
@@ -370,10 +376,10 @@ public class LocationTag implements ObjectTag, VectorObject {
             }
             ElementTag matcherElement = param.getElement("match");
             String matcher = matcherElement != null ? matcherElement.asString() : null;
-            Vec3d originPos = object.getPosVector();
+            Vec3 originPos = object.getPosVector();
             ListTag entities = new ListTag();
             int doubleRange = range * 2;
-            ((ClientWorldAccessor) getWorld()).invokeGetEntityLookup().forEachIntersects(Box.of(originPos, doubleRange, doubleRange, doubleRange), entity -> {
+            ((ClientWorldAccessor) getWorld()).invokeGetEntities().get(AABB.ofSize(originPos, doubleRange, doubleRange, doubleRange), entity -> {
                 if (!Utilities.checkLocationWithBoundingBox(originPos, entity, range)) {
                     return;
                 }
@@ -382,7 +388,7 @@ public class LocationTag implements ObjectTag, VectorObject {
                     entities.addObject(entityTag);
                 }
             });
-            entities.objectForms.sort((firstEnt, secondEnt) -> object.compare(((EntityTag) firstEnt).getEntity().getEntityPos(), ((EntityTag) secondEnt).getEntity().getEntityPos()));
+            entities.objectForms.sort((firstEnt, secondEnt) -> object.compare(((EntityTag) firstEnt).getEntity().position(), ((EntityTag) secondEnt).getEntity().position()));
             return entities;
         });
     }
@@ -447,8 +453,8 @@ public class LocationTag implements ObjectTag, VectorObject {
     }
 
     public boolean isChunkLoaded() {
-        World world = MinecraftClient.getInstance().world;
-        return world != null && world.isChunkLoaded(ChunkSectionPos.getSectionCoord(getX()), ChunkSectionPos.getSectionCoord(getZ()));
+        Level world = Minecraft.getInstance().level;
+        return world != null && world.hasChunk(SectionPos.posToSectionCoord(getX()), SectionPos.posToSectionCoord(getZ()));
     }
 
     @Override
@@ -488,8 +494,8 @@ public class LocationTag implements ObjectTag, VectorObject {
         return this;
     }
 
-    public LocationTag add(Vec3d toAdd) {
-        return add(toAdd.getX(), toAdd.getY(), toAdd.getZ());
+    public LocationTag add(Vec3 toAdd) {
+        return add(toAdd.x(), toAdd.y(), toAdd.z());
     }
 
     public LocationTag subtract(double x, double y, double z) {
@@ -499,34 +505,34 @@ public class LocationTag implements ObjectTag, VectorObject {
         return this;
     }
 
-    public LocationTag subtract(Vec3d toSub) {
-        return subtract(toSub.getX(), toSub.getY(), toSub.getZ());
+    public LocationTag subtract(Vec3 toSub) {
+        return subtract(toSub.x(), toSub.y(), toSub.z());
     }
 
     public int getBlockX() {
-        return MathHelper.floor(getX());
+        return Mth.floor(getX());
     }
     public int getBlockY() {
-        return MathHelper.floor(getY());
+        return Mth.floor(getY());
     }
 
     public int getBlockZ() {
-        return MathHelper.floor(getZ());
+        return Mth.floor(getZ());
     }
 
     public BlockPos getBlockPos() {
-        return BlockPos.ofFloored(getX(), getY(), getZ());
+        return BlockPos.containing(getX(), getY(), getZ());
     }
 
-    public Vec3d getDirection() {
-        return Vec3d.fromPolar(pitch, yaw);
+    public Vec3 getDirection() {
+        return Vec3.directionFromRotation(pitch, yaw);
     }
 
-    public Vec3d getPosVector() {
-        return new Vec3d(getX(), getY(), getZ());
+    public Vec3 getPosVector() {
+        return new Vec3(getX(), getY(), getZ());
     }
 
-    public int compare(Vec3d pos1, Vec3d pos2) {
+    public int compare(Vec3 pos1, Vec3 pos2) {
         if (pos1 == pos2) {
             return 0;
         }
@@ -539,7 +545,7 @@ public class LocationTag implements ObjectTag, VectorObject {
         if (pos1.equals(pos2)) {
             return 0;
         }
-        return Double.compare(pos1.squaredDistanceTo(getX(), getY(), getZ()), pos2.squaredDistanceTo(getX(), getY(), getZ()));
+        return Double.compare(pos1.distanceToSqr(getX(), getY(), getZ()), pos2.distanceToSqr(getX(), getY(), getZ()));
     }
 
     private String prefix = "Location";

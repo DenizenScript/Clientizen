@@ -7,8 +7,8 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 import io.github.cottonmc.cotton.gui.widget.WBar;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.ContainerData;
 
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedEnum;
 import static com.denizenscript.clientizen.scripts.containers.gui.GuiScriptContainer.getTaggedInt;
@@ -52,7 +52,7 @@ public class ProgressBarElement implements GuiScriptContainer.GuiElementParser {
         Texture backgroundTexture = parseTexture(config, "background", context);
         Texture barTexture = parseTexture(config, "bar", context);
         WBar bar = new WBar(backgroundTexture, barTexture, VALUE_INDEX, MAX_VALUE_INDEX, direction);
-        PropertyDelegate properties = new ProgressBarPropertyDelegate();
+        ContainerData properties = new ProgressBarPropertyDelegate();
         bar.setProperties(properties);
         Integer value = getTaggedInt(config, "value", context);
         if (value != null) {
@@ -64,12 +64,12 @@ public class ProgressBarElement implements GuiScriptContainer.GuiElementParser {
         }
         String tooltip = getTaggedString(config, "tooltip", context);
         if (tooltip != null) {
-            bar.withTooltip(Text.literal(tooltip));
+            bar.withTooltip(Component.literal(tooltip));
         }
         return bar;
     }
 
-    private static class ProgressBarPropertyDelegate implements PropertyDelegate {
+    private static class ProgressBarPropertyDelegate implements ContainerData {
 
         int value;
         int maxValue;
@@ -89,11 +89,11 @@ public class ProgressBarElement implements GuiScriptContainer.GuiElementParser {
                 case VALUE_INDEX -> this.value = value;
                 case MAX_VALUE_INDEX -> this.maxValue = value;
                 default -> throw new IllegalArgumentException("Invalid index: " + index);
-            };
+            }
         }
 
         @Override
-        public int size() {
+        public int getCount() {
             return 2;
         }
     }

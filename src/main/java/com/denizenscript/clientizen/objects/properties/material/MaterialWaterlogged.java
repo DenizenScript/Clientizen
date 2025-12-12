@@ -1,8 +1,8 @@
 package com.denizenscript.clientizen.objects.properties.material;
 
 import com.denizenscript.clientizen.objects.properties.material.internal.MaterialBooleanProperty;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class MaterialWaterlogged extends MaterialBooleanProperty {
 
@@ -14,7 +14,7 @@ public class MaterialWaterlogged extends MaterialBooleanProperty {
     // Whether a block is waterlogged.
     // -->
 
-    public static final BooleanProperty[] handledProperties = {Properties.WATERLOGGED};
+    public static final BooleanProperty[] handledProperties = {BlockStateProperties.WATERLOGGED};
 
     public static void register() {
         autoRegister("waterlogged", MaterialWaterlogged.class);

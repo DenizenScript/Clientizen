@@ -6,16 +6,16 @@ import com.denizenscript.clientizen.network.PacketIn;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.scripts.ScriptHelper;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.Map;
 
 public record ReceiveScriptsPacketIn(Map<String, String> scripts) implements PacketIn {
 
-    public static final CustomPayload.Id<ReceiveScriptsPacketIn> ID = new Id<>(Clientizen.id("set_scripts"));
-    public static final PacketCodec<RegistryByteBuf, ReceiveScriptsPacketIn> CODEC = Codecs.readOnly(Codecs.STRING_MAP, ReceiveScriptsPacketIn::new);
+    public static final CustomPacketPayload.Type<ReceiveScriptsPacketIn> ID = new Type<>(Clientizen.id("set_scripts"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ReceiveScriptsPacketIn> CODEC = Codecs.readOnly(Codecs.STRING_MAP, ReceiveScriptsPacketIn::new);
 
     @Override
     public void process() {
@@ -27,7 +27,7 @@ public record ReceiveScriptsPacketIn(Map<String, String> scripts) implements Pac
     }
 
     @Override
-    public Id<ReceiveScriptsPacketIn> getId() {
+    public Type<ReceiveScriptsPacketIn> type() {
         return ID;
     }
 }

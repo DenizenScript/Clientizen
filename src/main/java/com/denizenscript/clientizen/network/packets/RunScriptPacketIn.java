@@ -11,14 +11,14 @@ import com.denizenscript.denizencore.utilities.CoreConfiguration;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.ScriptUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Map;
 
 public record RunScriptPacketIn(String scriptName, String scriptPath, Map<String, String> definitions) implements PacketIn {
-    public static final Id<RunScriptPacketIn> ID = new Id<>(Clientizen.id("run_script"));
-    public static final PacketCodec<RegistryByteBuf, RunScriptPacketIn> CODEC = Codecs.readOnly(Codecs.STRING, Codecs.nullable(Codecs.STRING), Codecs.STRING_MAP, RunScriptPacketIn::new);
+    public static final Type<RunScriptPacketIn> ID = new Type<>(Clientizen.id("run_script"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, RunScriptPacketIn> CODEC = Codecs.readOnly(Codecs.STRING, Codecs.nullable(Codecs.STRING), Codecs.STRING_MAP, RunScriptPacketIn::new);
 
     @Override
     public void process() {
@@ -38,7 +38,7 @@ public record RunScriptPacketIn(String scriptName, String scriptPath, Map<String
     }
 
     @Override
-    public Id<RunScriptPacketIn> getId() {
+    public Type<RunScriptPacketIn> type() {
         return ID;
     }
 }

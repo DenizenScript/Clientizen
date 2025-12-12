@@ -11,7 +11,7 @@ import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class ToggleButtonElement implements GuiScriptContainer.GuiElementParser 
         WToggleButton toggleButton = new WToggleButton();
         String label = getTaggedString(config, "label", context);
         if (label != null) {
-            toggleButton.setLabel(Text.literal(label));
+            toggleButton.setLabel(Component.literal(label));
         }
         Texture onTexture = parseTexture(config, "on_texture", context);
         if (onTexture != null) {

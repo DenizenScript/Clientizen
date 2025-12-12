@@ -17,7 +17,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class ClientExecuteCommand implements SuggestionProvider<FabricClientComm
                         .suggests(this)
                         .executes(context -> {
                             ExCommandHelper.runString("CEXCOMMAND", getString(context, "command"), null, queue -> {
-                                queue.debugOutput = debug -> context.getSource().sendFeedback(Text.literal(debug.replace("<FORCE_ALIGN>", "")));
+                                queue.debugOutput = debug -> context.getSource().sendFeedback(Component.literal(debug.replace("<FORCE_ALIGN>", "")));
                             });
                             return 1;
                         })));
@@ -60,14 +60,14 @@ public class ClientExecuteCommand implements SuggestionProvider<FabricClientComm
         if (isCommandArg) {
             if (isNewArg || args.length == 0) {
                 for (Map.Entry<String, AbstractCommand> entry : DenizenCore.commandRegistry.instances.entrySet()) {
-                    builder.suggest(entry.getKey(), Text.literal(entry.getValue().getUsageHint()));
+                    builder.suggest(entry.getKey(), Component.literal(entry.getValue().getUsageHint()));
                 }
                 return builder.buildFuture();
             }
             String startOfName = CoreUtilities.toLowerCase(args[args.length - 1]);
             for (Map.Entry<String, AbstractCommand> entry : DenizenCore.commandRegistry.instances.entrySet()) {
                 if (entry.getKey().startsWith(startOfName)) {
-                    builder.suggest(entry.getKey(), Text.literal(entry.getValue().getUsageHint()));
+                    builder.suggest(entry.getKey(), Component.literal(entry.getValue().getUsageHint()));
                 }
             }
             return builder.buildFuture();
@@ -162,7 +162,7 @@ public class ClientExecuteCommand implements SuggestionProvider<FabricClientComm
                         for (Map.Entry<String, TagManager.TagBaseData> entry : TagManager.baseTags.entrySet()) {
                             if (entry.getKey().startsWith(fullTag)) {
                                 Class<?> returnType = entry.getValue().returnType;
-                                tagSuggestions.suggest(entry.getKey(), returnType != null ? Text.literal(DebugInternals.getClassNameOpti(returnType)) : null);
+                                tagSuggestions.suggest(entry.getKey(), returnType != null ? Component.literal(DebugInternals.getClassNameOpti(returnType)) : null);
                             }
                         }
                         return tagSuggestions.buildFuture();
@@ -174,7 +174,7 @@ public class ClientExecuteCommand implements SuggestionProvider<FabricClientComm
                             if (typeData != null && typeData.tagProcessor != null) {
                                 for (Map.Entry<String, ? extends ObjectTagProcessor.TagData<? extends ObjectTag, ? extends ObjectTag>> entry : typeData.tagProcessor.registeredObjectTags.entrySet()) {
                                     if (entry.getKey().startsWith(subComponent)) {
-                                        tagSuggestions.suggest(entry.getKey(), Text.literal(DebugInternals.getClassNameOpti(entry.getValue().returnType)));
+                                        tagSuggestions.suggest(entry.getKey(), Component.literal(DebugInternals.getClassNameOpti(entry.getValue().returnType)));
                                     }
                                 }
                             }

@@ -17,8 +17,8 @@ import com.denizenscript.denizencore.scripts.queues.ScriptQueue;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.DefinitionProvider;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 
 import java.io.File;
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
     @Override
     public File getScriptFolder() {
-        return new File(MinecraftClient.getInstance().runDirectory, "clientizen/scripts");
+        return new File(Minecraft.getInstance().gameDirectory, "clientizen/scripts");
     }
 
     @Override
@@ -123,7 +123,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
         return false;
     }
 
-    private static final Formatting[] COLORS = Arrays.stream(Formatting.values()).filter(Formatting::isColor).toArray(Formatting[]::new);
+    private static final ChatFormatting[] COLORS = Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).toArray(ChatFormatting[]::new);
 
     @Override
     public String getRandomColor() {
@@ -137,7 +137,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
     @Override
     public File getDataFolder() {
-        return new File(MinecraftClient.getInstance().runDirectory, "clientizen/data");
+        return new File(Minecraft.getInstance().gameDirectory, "clientizen/data");
     }
 
     @Override
@@ -164,22 +164,22 @@ public class DenizenCoreImpl implements DenizenImplementation {
             return uncolored;
         }
         return uncolored
-                .replace("<Y>", Formatting.YELLOW.toString())
-                .replace("<O>", Formatting.GOLD.toString())
-                .replace("<G>", Formatting.DARK_GRAY.toString())
-                .replace("<LG>", Formatting.GRAY.toString())
-                .replace("<GR>", Formatting.GREEN.toString())
-                .replace("<A>", Formatting.AQUA.toString())
-                .replace("<R>", Formatting.DARK_RED.toString())
-                .replace("<LR>", Formatting.RED.toString())
-                .replace("<LP>", Formatting.LIGHT_PURPLE.toString())
-                .replace("<W>", Formatting.WHITE.toString());
+                .replace("<Y>", ChatFormatting.YELLOW.toString())
+                .replace("<O>", ChatFormatting.GOLD.toString())
+                .replace("<G>", ChatFormatting.DARK_GRAY.toString())
+                .replace("<LG>", ChatFormatting.GRAY.toString())
+                .replace("<GR>", ChatFormatting.GREEN.toString())
+                .replace("<A>", ChatFormatting.AQUA.toString())
+                .replace("<R>", ChatFormatting.DARK_RED.toString())
+                .replace("<LR>", ChatFormatting.RED.toString())
+                .replace("<LP>", ChatFormatting.LIGHT_PURPLE.toString())
+                .replace("<W>", ChatFormatting.WHITE.toString());
     }
 
     @Override
     public void doFinalDebugOutput(String text) {
         text = text.replace("<FORCE_ALIGN>", "");
-        Clientizen.LOGGER.info(Formatting.strip(text));
+        Clientizen.LOGGER.info(ChatFormatting.stripFormatting(text));
         DebugConsole.addDebug(text);
     }
 
@@ -188,7 +188,7 @@ public class DenizenCoreImpl implements DenizenImplementation {
 
     @Override
     public String stripColor(String text) {
-        return Formatting.strip(text);
+        return ChatFormatting.stripFormatting(text);
     }
 
     @Override

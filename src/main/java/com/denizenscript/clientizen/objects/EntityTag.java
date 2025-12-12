@@ -13,21 +13,20 @@ import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.decoration.AbstractDecorationEntity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.FishEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.vehicle.VehicleEntity;
-import net.minecraft.text.Text;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -77,7 +76,7 @@ public class EntityTag implements ObjectTag, Adjustable {
 
     public EntityTag(Entity entity, boolean isFake) {
         this.entity = entity;
-        this.uuid = entity.getUuid();
+        this.uuid = entity.getUUID();
         this.isFake = isFake;
     }
 
@@ -86,7 +85,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     }
 
     public EntityTag(EntityType<?> entityType) {
-        this.entity = entityType.create(MinecraftClient.getInstance().world, SpawnReason.COMMAND);
+        this.entity = entityType.create(Minecraft.getInstance().level, EntitySpawnReason.COMMAND);
         this.uuid = null;
         this.isFake = false;
     }
@@ -122,7 +121,7 @@ public class EntityTag implements ObjectTag, Adjustable {
                 // If the UUID isn't a valid entity anymore, the type (after "/") will be used
                 return valueOfByType(string.substring(slashIndex + 1), context);
             }
-            EntityType<?> entityType = EntityType.get(string).orElse(null);
+            EntityType<?> entityType = EntityType.byString(string).orElse(null);
             // If the value isn't a valid entity type then just let it through, as we can't verify entity scripts
             if (entityType != null && entity.getType() != entityType) {
                 Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is valid, but doesn't match the provided entity type.");
@@ -150,7 +149,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     }
 
     private static EntityTag valueOfByType(String typeString, TagContext context) {
-        EntityTag entityByType = EntityType.get(typeString).map(EntityTag::new).orElse(null);
+        EntityTag entityByType = EntityType.byString(typeString).map(EntityTag::new).orElse(null);
         if (entityByType == null) {
             Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: invalid entity type '" + typeString + "'.");
             return null;
@@ -159,7 +158,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     }
 
     public static Entity getEntityByUUID(UUID uuid) {
-        return ((ClientWorldAccessor) MinecraftClient.getInstance().world).invokeGetEntityLookup().get(uuid);
+        return ((ClientWorldAccessor) Minecraft.getInstance().level).invokeGetEntities().get(uuid);
     }
 
     public static boolean matches(String string) {
@@ -180,15 +179,15 @@ public class EntityTag implements ObjectTag, Adjustable {
     }
 
     public String getTypeName() {
-        return getEntity().getType().getUntranslatedName();
+        return getEntity().getType().toShortString();
     }
 
     public float getSpigotYaw() {
         Entity entity = getEntity();
-        if (entity instanceof LivingEntity && !(entity instanceof ArmorStandEntity)) {
-            return entity.getHeadYaw();
+        if (entity instanceof LivingEntity && !(entity instanceof ArmorStand)) {
+            return entity.getYHeadRot();
         }
-        return entity.getYaw();
+        return entity.getYRot();
     }
 
     public boolean isSpawned() {
@@ -225,7 +224,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // Returns an entity's location.
         // -->
         tagProcessor.registerTag(LocationTag.class, "location", (attribute, object) -> {
-            return new LocationTag(object.getEntity().getEntityPos(), object.getSpigotYaw(), object.getEntity().getPitch());
+            return new LocationTag(object.getEntity().position(), object.getSpigotYaw(), object.getEntity().getXRot());
         });
 
         // <--[tag]
@@ -236,7 +235,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // Returns the entity's eye location.
         // -->
         tagProcessor.registerTag(LocationTag.class, "eye_location", (attribute, object) -> {
-            return new LocationTag(object.getEntity().getEyePos(), object.getSpigotYaw(), object.getEntity().getPitch());
+            return new LocationTag(object.getEntity().getEyePosition(), object.getSpigotYaw(), object.getEntity().getXRot());
         });
 
         // <--[tag]
@@ -247,7 +246,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // This does not mean the entity will always be visible, but within the camera's viewing frustum.
         // -->
         tagProcessor.registerTag(ElementTag.class, "is_rendering", (attribute, object) -> {
-            return new ElementTag(renderedEntities.contains(object.getEntity().getUuid()));
+            return new ElementTag(renderedEntities.contains(object.getEntity().getUUID()));
         });
 
         // <--[tag]
@@ -328,7 +327,7 @@ public class EntityTag implements ObjectTag, Adjustable {
                 debuggable += "FAKE:";
             }
             debuggable += "<Y>" + uuid + "<GR>(" + getTypeName();
-            Text displayName = entity.getCustomName();
+            Component displayName = entity.getCustomName();
             if (displayName != null) {
                 debuggable += "<LG>/<GR>" + displayName.getString();
             }
@@ -353,12 +352,12 @@ public class EntityTag implements ObjectTag, Adjustable {
                 switch (text) {
                     case "entity" -> true;
                     case "vehicle" -> getEntity() instanceof VehicleEntity;
-                    case "fish" -> getEntity() instanceof FishEntity;
-                    case "projectile" -> getEntity() instanceof ProjectileEntity;
-                    case "hanging" -> getEntity() instanceof AbstractDecorationEntity;
-                    case "monster" -> getEntity() instanceof Monster;
-                    case "animal" -> getEntity() instanceof AnimalEntity;
-                    case "mob" -> getEntity() instanceof MobEntity;
+                    case "fish" -> getEntity() instanceof AbstractFish;
+                    case "projectile" -> getEntity() instanceof Projectile;
+                    case "hanging" -> getEntity() instanceof HangingEntity;
+                    case "monster" -> getEntity() instanceof Enemy;
+                    case "animal" -> getEntity() instanceof Animal;
+                    case "mob" -> getEntity() instanceof Mob;
                     case "living" -> getEntity() instanceof LivingEntity;
                     default -> false;
                 }

@@ -14,7 +14,7 @@ import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class TextFieldElement implements GuiScriptContainer.GuiElementParser {
         WTextField textField = new WTextField();
         String suggestion = getTaggedString(config, "suggestion", context);
         if (suggestion != null) {
-            textField.setSuggestion(Text.literal(suggestion));
+            textField.setSuggestion(Component.literal(suggestion));
         }
         String text = getTaggedString(config, "text", context);
         if (text != null) {

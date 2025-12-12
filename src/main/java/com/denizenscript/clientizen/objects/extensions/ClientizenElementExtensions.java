@@ -3,8 +3,8 @@ package com.denizenscript.clientizen.objects.extensions;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.objects.core.ListTag;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class ClientizenElementExtensions {
 
@@ -22,7 +22,7 @@ public class ClientizenElementExtensions {
         //   - stop
         // -->
         ElementTag.tagProcessor.registerTag(ElementTag.class, "text_width", (attribute, object) -> {
-            return new ElementTag(MinecraftClient.getInstance().textRenderer.getWidth(object.asString()));
+            return new ElementTag(Minecraft.getInstance().font.width(object.asString()));
         });
 
         // <--[tag]
@@ -40,7 +40,7 @@ public class ClientizenElementExtensions {
                 attribute.echoError("Invalid width specified: " + param + '.');
                 return null;
             }
-            return new ListTag(MinecraftClient.getInstance().textRenderer.wrapLines(Text.literal(object.asString()), param.asInt()),
+            return new ListTag(Minecraft.getInstance().font.split(Component.literal(object.asString()), param.asInt()),
                     line -> new ElementTag(Utilities.orderedTextToString(line), true));
         });
     }

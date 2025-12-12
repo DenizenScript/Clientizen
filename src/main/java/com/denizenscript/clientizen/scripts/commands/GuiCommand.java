@@ -11,7 +11,7 @@ import com.denizenscript.denizencore.scripts.commands.generator.ArgLinear;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 public class GuiCommand extends AbstractCommand {
 
@@ -56,7 +56,7 @@ public class GuiCommand extends AbstractCommand {
 
     public static void autoExecute(@ArgName("action") Action action,
                                    @ArgName("script") @ArgLinear @ArgDefaultNull ScriptTag script) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         switch (action) {
             case OPEN -> {
                 if (script == null) {
@@ -72,9 +72,9 @@ public class GuiCommand extends AbstractCommand {
                     return;
                 }
                 GuiScriptScreen screen = new GuiScriptScreen(new GuiScriptGuiDescription(rootPanel), guiScript);
-                client.send(() -> client.setScreen(screen));
+                client.schedule(() -> client.setScreen(screen));
             }
-            case CLOSE -> client.send(() -> client.setScreen(null));
+            case CLOSE -> client.schedule(() -> client.setScreen(null));
         }
     }
 }

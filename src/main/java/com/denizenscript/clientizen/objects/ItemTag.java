@@ -8,14 +8,14 @@ import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.ItemLike;
 
 public class ItemTag implements ObjectTag, Adjustable {
 
@@ -51,16 +51,16 @@ public class ItemTag implements ObjectTag, Adjustable {
     // -->
 
     final ItemStack itemStack;
-    final Identifier identifier;
+    final ResourceLocation identifier;
     public String script; // Compact with server-side item scripts
 
     public ItemTag(ItemStack itemStack) {
         this.itemStack = itemStack;
-        this.identifier = Registries.ITEM.getId(itemStack.getItem());
+        this.identifier = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
     }
 
-    public ItemTag(ItemConvertible convertible) {
-        this(convertible.asItem().getDefaultStack());
+    public ItemTag(ItemLike convertible) {
+        this(convertible.asItem().getDefaultInstance());
     }
 
     public ItemTag(MaterialTag material) {
@@ -89,8 +89,8 @@ public class ItemTag implements ObjectTag, Adjustable {
         if (string.startsWith("i@")) {
             return true;
         }
-        Identifier identifier = Identifier.tryParse(string);
-        return identifier != null && (Registries.ITEM.containsId(identifier) || Registries.BLOCK.containsId(identifier));
+        ResourceLocation identifier = ResourceLocation.tryParse(string);
+        return identifier != null && (BuiltInRegistries.ITEM.containsKey(identifier) || BuiltInRegistries.BLOCK.containsKey(identifier));
     }
 
     public static void register() {
@@ -159,14 +159,14 @@ public class ItemTag implements ObjectTag, Adjustable {
                 String value = text.substring(colonIndex + 1);
                 switch (prefix) {
                     case "item_enchanted" -> {
-                        ItemEnchantmentsComponent enchantments = getStack().getEnchantments();
+                        ItemEnchantments enchantments = getStack().getEnchantments();
                         if (enchantments.isEmpty()) {
                             return false;
                         }
                         ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(value);
-                        for (RegistryEntry<Enchantment> enchantment : enchantments.getEnchantments()) {
-                            RegistryKey<Enchantment> key = enchantment.getKey().orElse(null);
-                            if (key != null && matchHelper.doesMatch(Utilities.idToString(key.getValue()))) {
+                        for (Holder<Enchantment> enchantment : enchantments.keySet()) {
+                            ResourceKey<Enchantment> key = enchantment.unwrapKey().orElse(null);
+                            if (key != null && matchHelper.doesMatch(Utilities.idToString(key.location()))) {
                                 return true;
                             }
                         }

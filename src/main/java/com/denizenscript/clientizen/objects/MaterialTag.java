@@ -10,11 +10,11 @@ import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class MaterialTag implements ObjectTag, Adjustable {
 
@@ -57,7 +57,7 @@ public class MaterialTag implements ObjectTag, Adjustable {
     }
 
     public MaterialTag(Block block) {
-        this.state = block.getDefaultState();
+        this.state = block.defaultBlockState();
     }
 
     public MaterialTag(Item item) {
@@ -75,15 +75,15 @@ public class MaterialTag implements ObjectTag, Adjustable {
         if (string.startsWith("m@")) {
             string = string.substring("m@".length());
         }
-        Identifier identifier = Identifier.tryParse(string);
+        ResourceLocation identifier = ResourceLocation.tryParse(string);
         if (identifier == null) {
             if (context == null || context.showErrors()) {
                 Debug.echoError("valueOf MaterialTag returning null, invalid material/item name or identifier specified. For input: " + string);
             }
             return null;
         }
-        MaterialTag material = Registries.BLOCK.getOptionalValue(identifier).map(MaterialTag::new)
-                .orElseGet(() -> Registries.ITEM.getOptionalValue(identifier).map(MaterialTag::new).orElse(null));
+        MaterialTag material = BuiltInRegistries.BLOCK.getOptional(identifier).map(MaterialTag::new)
+                .orElseGet(() -> BuiltInRegistries.ITEM.getOptional(identifier).map(MaterialTag::new).orElse(null));
         if (material != null) {
             return material;
         }
@@ -101,15 +101,15 @@ public class MaterialTag implements ObjectTag, Adjustable {
     }
 
     public String getName() {
-        return Utilities.idToString(state != null ? Registries.BLOCK.getId(state.getBlock()) : Registries.ITEM.getId(item));
+        return Utilities.idToString(state != null ? BuiltInRegistries.BLOCK.getKey(state.getBlock()) : BuiltInRegistries.ITEM.getKey(item));
     }
 
     public boolean isBlock() {
-        return state != null || Registries.BLOCK.containsId(Registries.ITEM.getId(item));
+        return state != null || BuiltInRegistries.BLOCK.containsKey(BuiltInRegistries.ITEM.getKey(item));
     }
 
     public boolean isItem() {
-        return item != null || Registries.ITEM.containsId(Registries.BLOCK.getId(state.getBlock()));
+        return item != null || BuiltInRegistries.ITEM.containsKey(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
     }
 
     public static void register() {

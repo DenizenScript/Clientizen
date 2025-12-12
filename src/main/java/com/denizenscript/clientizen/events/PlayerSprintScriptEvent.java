@@ -4,7 +4,7 @@ import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 public class PlayerSprintScriptEvent extends ScriptEvent {
 
