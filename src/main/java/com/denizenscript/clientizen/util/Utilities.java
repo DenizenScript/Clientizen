@@ -9,8 +9,8 @@ import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -26,8 +26,8 @@ import java.util.UUID;
 public class Utilities {
 
     @NotNull
-    public static String idToString(ResourceLocation identifier) {
-        return identifier.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? identifier.getPath() : identifier.toString();
+    public static String idToString(Identifier identifier) {
+        return identifier.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? identifier.getPath() : identifier.toString();
     }
 
     public static List<String> listRegistryKeys(Registry<?> registry) {

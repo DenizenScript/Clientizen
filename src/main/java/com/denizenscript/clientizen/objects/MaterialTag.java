@@ -11,7 +11,7 @@ import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -75,7 +75,7 @@ public class MaterialTag implements ObjectTag, Adjustable {
         if (string.startsWith("m@")) {
             string = string.substring("m@".length());
         }
-        ResourceLocation identifier = ResourceLocation.tryParse(string);
+        Identifier identifier = Identifier.tryParse(string);
         if (identifier == null) {
             if (context == null || context.showErrors()) {
                 Debug.echoError("valueOf MaterialTag returning null, invalid material/item name or identifier specified. For input: " + string);

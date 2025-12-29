@@ -10,8 +10,8 @@ import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -51,7 +51,7 @@ public class ItemTag implements ObjectTag, Adjustable {
     // -->
 
     final ItemStack itemStack;
-    final ResourceLocation identifier;
+    final Identifier identifier;
     public String script; // Compact with server-side item scripts
 
     public ItemTag(ItemStack itemStack) {
@@ -89,7 +89,7 @@ public class ItemTag implements ObjectTag, Adjustable {
         if (string.startsWith("i@")) {
             return true;
         }
-        ResourceLocation identifier = ResourceLocation.tryParse(string);
+        Identifier identifier = Identifier.tryParse(string);
         return identifier != null && (BuiltInRegistries.ITEM.containsKey(identifier) || BuiltInRegistries.BLOCK.containsKey(identifier));
     }
 
@@ -166,7 +166,7 @@ public class ItemTag implements ObjectTag, Adjustable {
                         ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(value);
                         for (Holder<Enchantment> enchantment : enchantments.keySet()) {
                             ResourceKey<Enchantment> key = enchantment.unwrapKey().orElse(null);
-                            if (key != null && matchHelper.doesMatch(Utilities.idToString(key.location()))) {
+                            if (key != null && matchHelper.doesMatch(Utilities.idToString(key.identifier()))) {
                                 return true;
                             }
                         }

@@ -25,7 +25,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +36,8 @@ public class Clientizen implements ClientModInitializer {
     public static final String ID = "clientizen";
     public static final Logger LOGGER = LoggerFactory.getLogger(ID);
 
-    public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(ID, path);
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(ID, path);
     }
 
     public static final Event<Runnable> SYNC_DISCONNECT = EventFactory.createArrayBacked(Runnable.class, listeners -> () -> {

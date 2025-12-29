@@ -29,7 +29,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.level.gameevent.EntityPositionSource;
 import net.minecraft.world.level.gameevent.PositionSource;
@@ -118,7 +118,7 @@ public class ParticleCommand extends AbstractCommand {
                                    @ArgName("scale_multiplier") @ArgPrefixed @ArgDefaultNull ElementTag scaleMultiplier,
                                    @ArgName("data") @ArgPrefixed @ArgDefaultNull MapTag data,
                                    @ArgName("raw_data") @ArgPrefixed @ArgDefaultNull String rawData) {
-        ParticleType<?> type = BuiltInRegistries.PARTICLE_TYPE.getValue(ResourceLocation.tryParse(particleName));
+        ParticleType<?> type = BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.tryParse(particleName));
         if (type == null) {
             Debug.echoError("Invalid particle type specified: " + particleName + '.');
             return;

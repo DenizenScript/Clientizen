@@ -5,7 +5,7 @@ import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.events.ScriptEventCouldMatcher;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class ClientizenScriptEventRegistry {
             ScriptEvent.addPossibleCouldMatchFailReason("Matcher doesn't match any entity type", matcher);
             return false;
         }
-        if (BuiltInRegistries.ENTITY_TYPE.containsKey(ResourceLocation.tryParse(matcher))) {
+        if (BuiltInRegistries.ENTITY_TYPE.containsKey(Identifier.tryParse(matcher))) {
             return true;
         }
         ScriptEvent.addPossibleCouldMatchFailReason("Invalid entity type", matcher);
@@ -71,7 +71,7 @@ public class ClientizenScriptEventRegistry {
             ScriptEvent.addPossibleCouldMatchFailReason("Matcher doesn't match any block/item", matcher);
             return false;
         }
-        ResourceLocation id = ResourceLocation.tryParse(matcher);
+        Identifier id = Identifier.tryParse(matcher);
         if (BuiltInRegistries.ITEM.containsKey(id) || BuiltInRegistries.BLOCK.containsKey(id)) {
             return true;
         }
@@ -97,7 +97,7 @@ public class ClientizenScriptEventRegistry {
             ScriptEvent.addPossibleCouldMatchFailReason("Matcher doesn't match any item", matcher);
             return false;
         }
-        if (BuiltInRegistries.ITEM.containsKey(ResourceLocation.tryParse(matcher))) {
+        if (BuiltInRegistries.ITEM.containsKey(Identifier.tryParse(matcher))) {
             return true;
         }
         ScriptEvent.addPossibleCouldMatchFailReason("Invalid item name", matcher);
@@ -106,7 +106,7 @@ public class ClientizenScriptEventRegistry {
 
     private static boolean registryContainsMatch(Registry<?> registry, String matcher) {
         ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(matcher);
-        for (ResourceLocation id : registry.keySet()) {
+        for (Identifier id : registry.keySet()) {
             if (matchHelper.doesMatch(Utilities.idToString(id))) {
                 return true;
             }
