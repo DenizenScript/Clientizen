@@ -26,19 +26,19 @@ public abstract class MinecraftClientMixin {
     public LocalPlayer player;
 
     @Inject(method = "setScreen", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;", opcode = Opcodes.PUTFIELD))
-    private void clientizen$onScreenOpened(Screen screen, CallbackInfo ci){
-        if (screen == null) {
+    private void clientizen$onScreenOpened(Screen newScreen, CallbackInfo ci){
+        if (newScreen == null) {
             return;
         }
         // An InventoryScreen is opened which then opens a creative screen if needed, so ignore an InventoryScreen if a creative one will be opened
-        if (screen instanceof InventoryScreen && player.hasInfiniteMaterials()) {
+        if (newScreen instanceof InventoryScreen && player.hasInfiniteMaterials()) {
             return;
         }
         Screen previousScreen = screen;
         // Since an inventory screen is opened internally but isn't actually visible, this doesn't count as having a previous screen
-        if (screen instanceof CreativeModeInventoryScreen && previousScreen instanceof InventoryScreen) {
+        if (newScreen instanceof CreativeModeInventoryScreen && previousScreen instanceof InventoryScreen) {
             previousScreen = null;
         }
-        ScreenOpenCloseEvent.instance.handleScreenChange(screen, previousScreen, true);
+        ScreenOpenCloseEvent.instance.handleScreenChange(newScreen, previousScreen, true);
     }
 }

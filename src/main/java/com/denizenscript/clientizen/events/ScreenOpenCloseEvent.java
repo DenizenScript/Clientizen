@@ -29,7 +29,7 @@ public class ScreenOpenCloseEvent extends ScriptEvent {
     public static ScreenOpenCloseEvent instance;
 
     static {
-        ScreenEvents.AFTER_INIT.register((client, openedScreen, scaledWidth, scaledHeight) -> {
+        ScreenEvents.AFTER_INIT.register((_, openedScreen, _, _) -> {
             ScreenEvents.remove(openedScreen).register(closedScreen -> ScreenOpenCloseEvent.instance.handleScreenChange(closedScreen, null, false));
         });
     }
