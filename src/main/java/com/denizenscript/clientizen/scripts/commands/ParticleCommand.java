@@ -155,7 +155,7 @@ public class ParticleCommand extends AbstractCommand {
         }
         else if (type == ParticleTypes.ITEM) {
             ItemTag item = requireData(data, "item", ItemTag.class, particleName, scriptEntry);
-            particle = new ItemParticleOption(ParticleTypes.ITEM, item.getStack());
+            particle = new ItemParticleOption(ParticleTypes.ITEM, item.asTemplate());
         }
         else if (type == ParticleTypes.VIBRATION) {
             PositionSource destination;

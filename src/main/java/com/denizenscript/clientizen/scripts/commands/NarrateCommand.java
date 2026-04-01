@@ -56,7 +56,7 @@ public class NarrateCommand extends AbstractCommand {
                                    @ArgName("center") boolean center) {
         Minecraft client = Minecraft.getInstance();
         if (!center) {
-            client.gui.getChat().addMessage(Component.literal(text), null, null);
+            client.gui.getChat().addClientSystemMessage(Component.literal(text));
             return;
         }
         int hudWidth = Mth.floor((double) client.gui.getChat().getWidth() / client.gui.getChat().getScale());
@@ -80,6 +80,6 @@ public class NarrateCommand extends AbstractCommand {
         }
         String spacingStr = " ".repeat((int) ((hudWidth - lineWidth) / 2f / 0.5f));
         Component spacing = Component.literal(spacingStr).setStyle(SPACING_FONT);
-        client.gui.getChat().addMessage(Component.empty().append(spacing).append(line).append(spacing), null, null);
+        client.gui.getChat().addClientSystemMessage(Component.empty().append(spacing).append(line).append(spacing));
     }
 }

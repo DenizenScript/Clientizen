@@ -13,6 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.ItemLike;
@@ -116,6 +117,10 @@ public class ItemTag implements ObjectTag, Adjustable {
 
     public ItemStack getStack() {
         return itemStack;
+    }
+
+    public ItemStackTemplate asTemplate() {
+        return ItemStackTemplate.fromNonEmptyStack(itemStack);
     }
 
     public String getName() {

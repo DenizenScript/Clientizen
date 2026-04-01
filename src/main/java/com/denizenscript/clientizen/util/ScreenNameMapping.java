@@ -1,6 +1,7 @@
 package com.denizenscript.clientizen.util;
 
 import com.denizenscript.clientizen.scripts.containers.gui.GuiScriptScreen;
+import net.minecraft.client.gui.components.PopupScreen;
 import net.minecraft.client.gui.screens.*;
 import net.minecraft.client.gui.screens.achievement.StatsScreen;
 import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
@@ -89,7 +90,8 @@ public class ScreenNameMapping {
         registerScreenName(ChatSelectionScreen.class, "chat_selection");
         // World screens
         registerScreenName(CreateWorldScreen.class, "create_world");
-        registerScreenName(EditGameRulesScreen.class, "edit_game_rules");
+        registerScreenName(InWorldGameRulesScreen.class, "in_game_game_rules");
+        registerScreenName(WorldCreationGameRulesScreen.class, "world_creation_game_rules");
         registerScreenName(ExperimentsScreen.class, "experiments");
         registerScreenName(OptimizeWorldScreen.class, "optimize_world");
         registerScreenName(SelectWorldScreen.class, "select_world");
@@ -107,7 +109,7 @@ public class ScreenNameMapping {
         registerScreenName(CreateFlatWorldScreen.class, "customize_flat_level");
         registerScreenName(DatapackLoadFailureScreen.class, "datapack_failure");
         registerScreenName(DeathScreen.class, "death");
-        registerScreenName(DemoIntroScreen.class, "demo");
+        registerScreenName(PopupScreen.class, "popup");
         registerScreenName(UnsupportedGraphicsWarningScreen.class, "dialog");
         registerScreenName(DirectJoinServerScreen.class, "direct_connect");
         registerScreenName(DisconnectedScreen.class, "disconnected");

@@ -28,7 +28,7 @@ public class NetworkManager {
     }
 
     public static <T extends PacketIn> void registerInPacket(CustomPacketPayload.Type<T> packetId, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
-        PayloadTypeRegistry.playS2C().register(packetId, codec);
+        PayloadTypeRegistry.clientboundPlay().register(packetId, codec);
         if (!ClientPlayNetworking.registerGlobalReceiver(packetId, (packet, context) -> {
             debugNetwork("Received {} packet.", packet);
             packet.process();
@@ -38,7 +38,7 @@ public class NetworkManager {
     }
 
     public static <T extends PacketOut> void registerOutPacket(CustomPacketPayload.Type<T> packetId, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
-        PayloadTypeRegistry.playC2S().register(packetId, codec);
+        PayloadTypeRegistry.serverboundPlay().register(packetId, codec);
     }
 
     public static void send(PacketOut packet) {
