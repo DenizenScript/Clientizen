@@ -1,6 +1,5 @@
 package com.denizenscript.clientizen.objects;
 
-import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.*;
 import com.denizenscript.denizencore.objects.properties.PropertyParser;
@@ -124,7 +123,7 @@ public class ItemTag implements ObjectTag, Adjustable {
     }
 
     public String getName() {
-        return Utilities.idToString(identifier);
+        return identifier.toShortString();
     }
 
     @Override
@@ -171,7 +170,7 @@ public class ItemTag implements ObjectTag, Adjustable {
                         ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(value);
                         for (Holder<Enchantment> enchantment : enchantments.keySet()) {
                             ResourceKey<Enchantment> key = enchantment.unwrapKey().orElse(null);
-                            if (key != null && matchHelper.doesMatch(Utilities.idToString(key.identifier()))) {
+                            if (key != null && matchHelper.doesMatch(key.identifier().toShortString())) {
                                 return true;
                             }
                         }

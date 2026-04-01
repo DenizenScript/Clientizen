@@ -1,6 +1,5 @@
 package com.denizenscript.clientizen.events;
 
-import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.events.ScriptEventCouldMatcher;
 import net.minecraft.core.Registry;
@@ -107,7 +106,7 @@ public class ClientizenScriptEventRegistry {
     private static boolean registryContainsMatch(Registry<?> registry, String matcher) {
         ScriptEvent.MatchHelper matchHelper = ScriptEvent.createMatcher(matcher);
         for (Identifier id : registry.keySet()) {
-            if (matchHelper.doesMatch(Utilities.idToString(id))) {
+            if (matchHelper.doesMatch(id.toShortString())) {
                 return true;
             }
         }

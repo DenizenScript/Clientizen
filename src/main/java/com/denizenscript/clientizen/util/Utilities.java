@@ -16,37 +16,23 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class Utilities {
 
-    @NotNull
-    public static String idToString(Identifier identifier) {
-        return identifier.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? identifier.getPath() : identifier.toString();
-    }
-
     public static List<String> listRegistryKeys(Registry<?> registry) {
-        return registry.keySet().stream().map(Utilities::idToString).toList();
+        return registry.keySet().stream().map(Identifier::toShortString).toList();
     }
 
-    @Nullable
-    public static UUID uuidFromString(String uuid) {
-        try {
-            return UUID.fromString(uuid);
-        }
-        catch (IllegalArgumentException e) {
-            return null;
-        }
+    public static <T> RegistryOps<T> registryOps(DynamicOps<T> delegate) {
+        return Minecraft.getInstance().level.registryAccess().createSerializationContext(delegate);
     }
 
-    public static void echoErrorByContext(TagContext context, String error) {
+    public static void echoErrorByContext(TagContext context, String error, Object param) {
         if (context == null || context.showErrors()) {
-            Debug.echoError(error);
+            Debug.echoError(error.formatted(param));
         }
     }
 
@@ -84,15 +70,11 @@ public class Utilities {
 
     public static String orderedTextToString(FormattedCharSequence text) {
         StringBuilder converted = new StringBuilder();
-        text.accept((index, style, codePoint) -> {
+        text.accept((_, _, codePoint) -> {
             converted.append(Character.toChars(codePoint));
             return true;
         });
         return converted.toString();
-    }
-
-    public static <T> RegistryOps<T> registryOps(DynamicOps<T> delegate) {
-        return Minecraft.getInstance().level.registryAccess().createSerializationContext(delegate);
     }
 
     public static boolean checkLocationWithBoundingBox(Vec3 basePos, Entity entity, double theLeeway) {

@@ -1,6 +1,5 @@
 package com.denizenscript.clientizen.objects;
 
-import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.*;
 import com.denizenscript.denizencore.objects.core.ElementTag;
@@ -101,7 +100,7 @@ public class MaterialTag implements ObjectTag, Adjustable {
     }
 
     public String getName() {
-        return Utilities.idToString(state != null ? BuiltInRegistries.BLOCK.getKey(state.getBlock()) : BuiltInRegistries.ITEM.getKey(item));
+        return state != null ? BuiltInRegistries.BLOCK.getKey(state.getBlock()).toShortString() : BuiltInRegistries.ITEM.getKey(item).toShortString();
     }
 
     public boolean isBlock() {
@@ -115,7 +114,7 @@ public class MaterialTag implements ObjectTag, Adjustable {
     public static void register() {
         PropertyParser.registerPropertyTagHandlers(MaterialTag.class, tagProcessor);
 
-        tagProcessor.registerTag(ElementTag.class, "name", (attribute, object) -> {
+        tagProcessor.registerTag(ElementTag.class, "name", (_, object) -> {
             return new ElementTag(object.getName());
         });
     }

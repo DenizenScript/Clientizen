@@ -108,9 +108,9 @@ public class EntityTag implements ObjectTag, Adjustable {
         int slashIndex = string.indexOf('/');
         if (slashIndex != -1) {
             String uuidString = string.substring(0, slashIndex);
-            UUID uuid = Utilities.uuidFromString(uuidString);
+            UUID uuid = CoreUtilities.tryParseUUID(uuidString);
             if (uuid == null) {
-                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is invalid.");
+                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '%s' is invalid.", uuidString);
                 return null;
             }
             Entity entity = getEntityByUUID(uuid);
@@ -121,24 +121,24 @@ public class EntityTag implements ObjectTag, Adjustable {
             EntityType<?> entityType = EntityType.byString(string).orElse(null);
             // If the value isn't a valid entity type then just let it through, as we can't verify entity scripts
             if (entityType != null && entity.getType() != entityType) {
-                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + uuidString + "' is valid, but doesn't match the provided entity type.");
+                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '%s' is valid, but doesn't match the provided entity type.", uuidString);
                 return null;
             }
             return new EntityTag(entity);
         }
         // e@(fake:)<UUID>
-        UUID uuid = Utilities.uuidFromString(string);
+        UUID uuid = CoreUtilities.tryParseUUID(string);
         if (uuid != null) {
             Entity entity = getEntityByUUID(uuid);
             if (entity == null) {
-                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + string + "' is valid but isn't matched to any entity.");
+                Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '%s' is valid but isn't matched to any entity.", string);
                 return null;
             }
             return new EntityTag(entity, isFake);
         }
         // Fake entities are always "e@fake:<UUID>", so error if there's no valid UUID
         else if (isFake) {
-            Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '" + string + "' is invalid.");
+            Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: UUID '%s' is invalid.", string);
             return null;
         }
         // e@<Entity Type>
@@ -148,7 +148,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     private static EntityTag valueOfByType(String typeString, TagContext context) {
         EntityTag entityByType = EntityType.byString(typeString).map(EntityTag::new).orElse(null);
         if (entityByType == null) {
-            Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: invalid entity type '" + typeString + "'.");
+            Utilities.echoErrorByContext(context, "valueOf EntityTag returning null: invalid entity type '%s'.", typeString);
             return null;
         }
         return entityByType;
@@ -209,7 +209,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // @description
         // Returns an entity's type.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "entity_type", (attribute, object) -> {
+        tagProcessor.registerTag(ElementTag.class, "entity_type", (_, object) -> {
             return new ElementTag(object.getTypeName(), true);
         });
 
@@ -220,7 +220,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // @description
         // Returns an entity's location.
         // -->
-        tagProcessor.registerTag(LocationTag.class, "location", (attribute, object) -> {
+        tagProcessor.registerTag(LocationTag.class, "location", (_, object) -> {
             return new LocationTag(object.getEntity().position(), object.getSpigotYaw(), object.getEntity().getXRot());
         });
 
@@ -231,7 +231,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // @description
         // Returns the entity's eye location.
         // -->
-        tagProcessor.registerTag(LocationTag.class, "eye_location", (attribute, object) -> {
+        tagProcessor.registerTag(LocationTag.class, "eye_location", (_, object) -> {
             return new LocationTag(object.getEntity().getEyePosition(), object.getSpigotYaw(), object.getEntity().getXRot());
         });
 
@@ -242,7 +242,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // Returns whether an entity is being rendered by the client.
         // This does not mean the entity will always be visible, but within the camera's viewing frustum.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "is_rendering", (attribute, object) -> {
+        tagProcessor.registerTag(ElementTag.class, "is_rendering", (_, object) -> {
             return new ElementTag(renderedEntities.contains(object.getEntity().getUUID()));
         });
 
@@ -254,7 +254,7 @@ public class EntityTag implements ObjectTag, Adjustable {
         // Returns the entity's glow color override, if any.
         // Note that this is Clientizen data, see <@link language Client-side entity data> for more information.
         // -->
-        tagProcessor.registerTag(ColorTag.class, "glow_color_override", (attribute, object) -> {
+        tagProcessor.registerTag(ColorTag.class, "glow_color_override", (_, object) -> {
             Integer glowColor = object.getEntity().getAttached(GLOW_COLOR_OVERRIDE);
             return glowColor != null ? ColorTag.fromRGB(glowColor) : null;
         });
