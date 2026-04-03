@@ -3,7 +3,7 @@ Clientizen
 
 Denizen, on your Minecraft client! Operates as a Fabric mod, and integrates with Denizen on the server directly.
 
-Currently targeting Minecraft 26.1.
+Currently targeting Minecraft 26.1.1.
 
 ### Status
 
@@ -36,7 +36,7 @@ You can do basically whatever you want, except you may not hold any developer li
 
 The MIT License (MIT)
 
-Copyright (c) 2022-2025 The Denizen Script Team
+Copyright (c) 2022-2026 The Denizen Script Team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
