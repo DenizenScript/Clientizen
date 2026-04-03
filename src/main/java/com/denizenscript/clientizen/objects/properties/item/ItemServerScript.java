@@ -39,7 +39,7 @@ public class ItemServerScript extends ItemProperty<ElementTag> {
     }
 
     public static void register() {
-        PropertyParser.registerTag(ItemServerScript.class, ElementTag.class, "server_script", (attribute, prop) -> prop.getPropertyValue());
+        PropertyParser.registerTag(ItemServerScript.class, ElementTag.class, "server_script", (_, prop) -> prop.getPropertyValue());
         // Intentionally undocumented, internal purpose only
         PropertyParser.registerMechanism(ItemServerScript.class, ElementTag.class, "script", (prop, mechanism, input) -> prop.setPropertyValue(input, mechanism));
     }

@@ -1,6 +1,6 @@
 package com.denizenscript.clientizen.objects;
 
-import com.denizenscript.clientizen.mixin.ClientWorldAccessor;
+import com.denizenscript.clientizen.mixin.ClientLevelAccessor;
 import com.denizenscript.clientizen.util.EntityAttachmentPersister;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.events.ScriptEvent;
@@ -155,7 +155,7 @@ public class EntityTag implements ObjectTag, Adjustable {
     }
 
     public static Entity getEntityByUUID(UUID uuid) {
-        return ((ClientWorldAccessor) Minecraft.getInstance().level).invokeGetEntities().get(uuid);
+        return ((ClientLevelAccessor) Minecraft.getInstance().level).invokeGetEntities().get(uuid);
     }
 
     public static boolean matches(String string) {

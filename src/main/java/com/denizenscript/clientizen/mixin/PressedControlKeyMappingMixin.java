@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeyMapping.class)
-public abstract class PressedControlKeyBindingMixin implements KeyBindingMixinAccess {
+public abstract class PressedControlKeyMappingMixin implements KeyBindingMixinAccess {
 
     @Unique
     boolean clientizen$disabled = false;
@@ -33,7 +33,7 @@ public abstract class PressedControlKeyBindingMixin implements KeyBindingMixinAc
         if (!clientizen$disabled) {
             return;
         }
-        if (pressed == this.isDown || (this instanceof StickyKeyBindingAccessor stickyKeyBindingAccessor && stickyKeyBindingAccessor.getToggleModeChecker().getAsBoolean())) {
+        if (pressed == this.isDown || (this instanceof ToggleKeyMappingAccessor toggleKeyMappingAccessor && toggleKeyMappingAccessor.getToggleModeChecker().getAsBoolean())) {
             clientizen$disabled = false;
             return;
         }

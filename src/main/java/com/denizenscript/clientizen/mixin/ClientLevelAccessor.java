@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ClientLevel.class)
-public interface ClientWorldAccessor {
+public interface ClientLevelAccessor {
 
     @Invoker
     LevelEntityGetter<Entity> invokeGetEntities();

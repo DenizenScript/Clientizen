@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Mixin(EntityRenderDispatcher.class)
-public class EntityRenderedMixin {
+public class EntityRenderDispatcherMixin {
 
     @Inject(method = "shouldRender", at = @At("RETURN"))
     private <E extends Entity> void clientizen$isEntityRendered(E entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {

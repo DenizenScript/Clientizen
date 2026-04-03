@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(SingleQuadParticle.class)
-public interface BillboardParticleAccessor {
+public interface SingleQuadParticleAccessor {
 
     @Invoker
     void invokeSetAlpha(float alpha);

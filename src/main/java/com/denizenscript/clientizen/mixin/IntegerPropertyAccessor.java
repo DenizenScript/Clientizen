@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(IntegerProperty.class)
-public interface IntPropertyAccessor {
+public interface IntegerPropertyAccessor {
 
     @Accessor
     int getMin();

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeyMapping.class)
-public abstract class EventKeyBindingMixin {
+public abstract class KeyMappingMixin {
 
     @Unique
     private static final IntSet clientizen$pressedKeys = new IntArraySet();

@@ -1,6 +1,6 @@
 package com.denizenscript.clientizen.objects;
 
-import com.denizenscript.clientizen.mixin.ClientWorldAccessor;
+import com.denizenscript.clientizen.mixin.ClientLevelAccessor;
 import com.denizenscript.clientizen.util.Utilities;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.ObjectTag;
@@ -379,7 +379,7 @@ public class LocationTag implements ObjectTag, VectorObject {
             Vec3 originPos = object.getPosVector();
             ListTag entities = new ListTag();
             int doubleRange = range * 2;
-            ((ClientWorldAccessor) getWorld()).invokeGetEntities().get(AABB.ofSize(originPos, doubleRange, doubleRange, doubleRange), entity -> {
+            ((ClientLevelAccessor) getWorld()).invokeGetEntities().get(AABB.ofSize(originPos, doubleRange, doubleRange, doubleRange), entity -> {
                 if (!Utilities.checkLocationWithBoundingBox(originPos, entity, range)) {
                     return;
                 }

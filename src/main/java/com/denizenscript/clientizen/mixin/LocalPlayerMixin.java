@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LocalPlayer.class)
-public abstract class ClientPlayerEntityMixin extends AbstractClientPlayer {
+public abstract class LocalPlayerMixin extends AbstractClientPlayer {
 
     // <editor-fold defaultstate="collapsed" desc="Dummy constructor">
-    private ClientPlayerEntityMixin(ClientLevel world, GameProfile profile) {
+    private LocalPlayerMixin(ClientLevel world, GameProfile profile) {
         super(world, profile);
     }
     // </editor-fold>

@@ -1,6 +1,6 @@
 package com.denizenscript.clientizen.scripts.commands;
 
-import com.denizenscript.clientizen.mixin.BillboardParticleAccessor;
+import com.denizenscript.clientizen.mixin.SingleQuadParticleAccessor;
 import com.denizenscript.clientizen.objects.EntityTag;
 import com.denizenscript.clientizen.objects.ItemTag;
 import com.denizenscript.clientizen.objects.LocationTag;
@@ -195,7 +195,7 @@ public class ParticleCommand extends AbstractCommand {
         }
         if (color != null && createdParticle instanceof SingleQuadParticle billboardParticle) {
             billboardParticle.setColor(color.red / 255f, color.green / 255f, color.blue / 255f);
-            ((BillboardParticleAccessor) billboardParticle).invokeSetAlpha(color.alpha / 255f);
+            ((SingleQuadParticleAccessor) billboardParticle).invokeSetAlpha(color.alpha / 255f);
         }
         if (duration != null) {
             createdParticle.setLifetime(duration.getTicksAsInt());
