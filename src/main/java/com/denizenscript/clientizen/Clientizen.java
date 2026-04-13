@@ -88,7 +88,7 @@ public class Clientizen implements ClientModInitializer {
         // Initialize Clientizen systems
         NetworkManager.init();
         ClientizenDebugScreen.register();
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> new ClientExecuteCommand(dispatcher));
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, _) -> new ClientExecuteCommand(dispatcher));
 
         // Check for the client scripts folder
         File scriptsFolder = DenizenCore.implementation.getScriptFolder();
@@ -101,11 +101,11 @@ public class Clientizen implements ClientModInitializer {
         DenizenCore.reloadScripts(false, null);
 
         // Tick Denizen-Core
-        ClientTickEvents.START_CLIENT_TICK.register(client -> DenizenCore.tick(50));
+        ClientTickEvents.START_CLIENT_TICK.register(_ -> DenizenCore.tick(50));
 
         // Shutdown Denizen-Core when the client is stopping
         // TODO: DenizenCore#shutdown saves files (e.g. flags) to disk, should not be done here
-        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> DenizenCore.shutdown());
+        ClientLifecycleEvents.CLIENT_STOPPING.register(_ -> DenizenCore.shutdown());
 
         // Remove scripts received from the server once the client disconnects from it
         SYNC_DISCONNECT.register(() -> {

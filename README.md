@@ -3,7 +3,7 @@ Clientizen
 
 Denizen, on your Minecraft client! Operates as a Fabric mod, and integrates with Denizen on the server directly.
 
-Currently targeting Minecraft 26.1.1.
+Currently targeting Minecraft 26.1.2.
 
 ### Status
 
